@@ -1,0 +1,10 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left solid half -->
+  <path d="M 47,5 A 45,45 0 0,0 47,95 Z" fill="currentColor"/>
+  <!-- Right blade 1 -->
+  <path d="M 53,6 A 45,45 0 0,1 62,94 C 57.5,65 57.5,35 53,6 Z" fill="currentColor"/>
+  <!-- Right blade 2 -->
+  <path d="M 67,9 A 45,45 0 0,1 80,91 C 73.5,64 73.5,36 67,9 Z" fill="currentColor"/>
+  <!-- Right blade 3 -->
+  <path d="M 84,17 A 45,45 0 0,1 95,50 A 45,45 0 0,1 94,78 C 88.5,61 88.5,39 84,17 Z" fill="currentColor"/>
+</svg>

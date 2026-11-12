@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liminal space — Stairwell &amp; common-area cleaning, Berlin</title>
+<meta name="description" content="Stairwell and common-area cleaning for residential buildings in Berlin.">
+<link rel="preload" href="fonts/AguzzoVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ------------------------------------------------------------------
+   Typeface — Aguzzo VF, Thin (wght 100) only. No italics.
+   ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Aguzzo";
+  src: url("fonts/AguzzoVF-TRIAL.woff2") format("woff2-variations"),
+       url("fonts/AguzzoVF-TRIAL.woff2") format("woff2");
+  font-weight: 100 800; font-style: normal; font-display: swap;
+}
+
+/* ------------------------------------------------------------------
+   System — after Jost Hochuli, Detail in Typography
+   — one family, one weight: hierarchy only through size and space
+   — a thin cut needs size: nothing below 15px, small text opened up
+   — tracking scales inversely with size; capitals always opened
+   — leading scales inversely with size; measure ≤ ~60 characters
+   — flush left / centred axis, never justified
+   — one vertical unit governs all spacing
+   ------------------------------------------------------------------ */
+:root {
+  --white: #fff;
+  --ink: #000;
+  --mint: #bcfff3;
+  --khaki: #b8b399;
+  --green: #97b077;
+  --hint: #6f6c62;
+
+  --font: "Aguzzo", Georgia, "Times New Roman", serif;
+
+  --fs-s: 0.9375rem;                               /* 15 — labels, UI   */
+  --fs-b: 1.0625rem;                               /* 17 — body         */
+  --fs-m: clamp(1.375rem, 1rem + 1.2vw, 2rem);     /* captions, lead    */
+  --fs-l: clamp(2.25rem, 1rem + 4.2vw, 5.5rem);    /* section heads     */
+  --fs-xl: clamp(3rem, 0.5rem + 8vw, 10rem);       /* block type        */
+  --fs-xxl: clamp(3.25rem, 0.2rem + 10.5vw, 13rem);/* hero              */
+
+  --u: 1.5rem;
+  --gutter: 0.75rem;
+  --margin: clamp(0.75rem, 1.6vw, 1.5rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 100;
+  font-style: normal;
+  font-size: var(--fs-b);
+  line-height: 1.45;
+  letter-spacing: 0.02em;          /* thin + small → open */
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures contextual;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-synthesis: none;
+  hanging-punctuation: first allow-end;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+b, strong, h1, h2, h3, h4, em, i { font-weight: 100; font-style: normal; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+ul, ol { list-style: none; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--ink); color: var(--white); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.wrap { padding-inline: var(--margin); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+.caps { text-transform: uppercase; letter-spacing: 0.03em; font-feature-settings: "case" 1; }
+.lnum { font-variant-numeric: lining-nums tabular-nums; }
+.label { font-size: var(--fs-s); letter-spacing: 0.035em; font-variant-numeric: lining-nums; }
+.arrow { display: inline-block; transition: transform .25s ease; }
+
+/* skip link */
+.skip { position: absolute; left: var(--margin); top: -100px; background: var(--ink); color: var(--white); padding: .5em .8em; z-index: 100; border-radius: 8px; }
+.skip:focus { top: .5rem; }
+
+/* ---------- black pill buttons (Test / Buy) ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .42em .8em .48em;
+  background: var(--ink); color: var(--white);
+  border-radius: 10px;
+  font-size: var(--fs-b);
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: background .2s, color .2s;
+}
+.btn:hover { background: var(--hint); }
+.btn:hover .arrow { transform: translate(2px, -2px); }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.btn--ghost:hover, .btn--ghost[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+.btns { display: flex; gap: .35rem; flex-wrap: wrap; }
+
+/* ---------- header ---------- */
+.site-header { position: sticky; top: 0; z-index: 50; background: var(--white); }
+.site-header .grid { align-items: center; min-height: 3.5rem; }
+.logo { grid-column: 1 / span 3; font-size: var(--fs-m); letter-spacing: 0; line-height: 1; }
+.nav { grid-column: 4 / span 6; display: flex; gap: 0 1.5em; }
+.nav a { position: relative; }
+.nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+.nav a:hover::after { transform: scaleX(1); }
+.header-cta { grid-column: 10 / -1; justify-self: end; }
+
+/* ---------- specimen block ---------- */
+.block {
+  position: relative;
+  display: grid; place-items: center;
+  overflow: hidden;
+  background: var(--c, var(--mint));
+  text-align: center;
+  isolation: isolate;
+}
+.block .art {
+  position: absolute;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: -1;
+  transition: transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.block:hover .art { transform: rotate(-4deg) scale(1.04); }
+.block-type {
+  font-size: var(--fs-xl);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  word-spacing: 0.02em;
+  text-wrap: balance;
+}
+.block-type > span { display: block; }
+.block-type .caps { letter-spacing: 0.005em; }   /* large caps need less opening */
+
+.caption {
+  display: flex; justify-content: space-between; align-items: center; gap: var(--u);
+  padding-top: .5rem;
+  min-height: 3.25rem;
+}
+.caption-name { font-size: var(--fs-m); line-height: 1.1; letter-spacing: 0; }
+
+.c-mint  { --c: var(--mint); }
+.c-khaki { --c: var(--khaki); }
+.c-green { --c: var(--green); }
+
+/* ---------- hero ---------- */
+.hero .block { min-height: min(82vh, 56vw); padding: calc(var(--u) * 2) var(--u); }
+.hero h1 {
+  font-size: var(--fs-xxl);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  word-spacing: 0.03em;
+}
+.hero h1 > span { display: block; }
+.hero h1 .caps { letter-spacing: 0; }
+.hero .block { place-items: center start; text-align: left; padding-left: calc(var(--u) * 1.25); }
+.hero .art { width: min(38%, 620px); right: -4%; top: 50%; translate: 0 -50%; }
+.hero-lead {
+  padding-block: calc(var(--u) * 2) calc(var(--u) * 3);
+}
+.hero-lead p {
+  grid-column: 3 / span 9;
+  font-size: var(--fs-l);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* ---------- section head ---------- */
+section { scroll-margin-top: 3.5rem; }
+.section-head {
+  border-top: 1px solid var(--ink);
+  padding-block: .6rem calc(var(--u) * 1.25);
+  align-items: baseline;
+}
+.section-head h2 {
+  grid-column: 1 / span 8;
+  font-size: var(--fs-l);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+.section-head .aside { grid-column: 9 / -1; justify-self: end; }
+
+/* ---------- services ---------- */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(var(--u) * .5) var(--gutter); }
+.tile[hidden] { display: none; }
+.tile .block { aspect-ratio: 16 / 10; padding: var(--u); }
+.tile .block-type { font-size: clamp(2rem, 0.5rem + 3.7vw, 4.75rem); }
+.tile .art { width: 50%; }
+.tile:nth-child(1) .art { left: -9%; bottom: -14%; }
+.tile:nth-child(2) .art { right: -5%; bottom: -12%; }
+.tile:nth-child(3) .art { left: -7%; top: -12%; }
+.tile:nth-child(4) .art { right: -7%; top: -10%; }
+
+.scope { padding-top: calc(var(--u) * 2.5); align-items: start; }
+.scope h3 { grid-column: 1 / span 5; font-size: var(--fs-m); line-height: 1.15; letter-spacing: 0; }
+.scope ul { grid-column: 7 / -1; border-top: 1px solid var(--ink); }
+.scope li {
+  display: grid; grid-template-columns: 3.5em 1fr;
+  padding-block: .55rem;
+  border-bottom: 1px solid var(--ink);
+  font-size: var(--fs-m); line-height: 1.15; letter-spacing: 0;
+}
+.scope li[hidden] { display: none; }
+.scope li .lnum { font-size: var(--fs-s); padding-top: .45em; letter-spacing: .035em; }
+
+/* ---------- how it works — one big type block ---------- */
+.how .block { min-height: min(90vh, 62vw); padding: calc(var(--u) * 2) var(--u); }
+.how .block-type { font-size: clamp(2rem, 0.4rem + 5.6vw, 7.5rem); line-height: 1.02; }
+.how .block-type li { display: block; }
+.how .block-type sup {
+  font-size: var(--fs-s);
+  letter-spacing: .035em;
+  vertical-align: top;
+  position: relative; top: .6em;
+  margin-right: .4em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.how .art { width: min(30%, 440px); right: -3%; bottom: -8%; }
+
+/* ---------- buildings ---------- */
+.buildings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+.building { display: block; width: 100%; text-align: left; }
+.building .block { aspect-ratio: 4 / 5; }
+.building .figure {
+  font-size: clamp(4rem, 1rem + 11vw, 15rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: lining-nums tabular-nums;
+  transition: letter-spacing .4s ease;
+}
+.building:hover .figure { letter-spacing: 0.02em; }
+.building[aria-pressed="true"] .block { box-shadow: inset 0 0 0 2px var(--ink); }
+.building[aria-pressed="true"] .btn { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* ---------- price ---------- */
+.price { margin-top: calc(var(--u) * 2); }
+.price .block { min-height: min(70vh, 46vw); padding: calc(var(--u) * 2) var(--u); }
+.price .art { width: min(30%, 420px); right: -6%; top: -22%; }
+.price .caption p:last-child { max-width: 24em; text-align: right; }
+
+/* ---------- form ---------- */
+.form { row-gap: calc(var(--u) * 1.25); padding-bottom: calc(var(--u) * 3); }
+.field { display: grid; gap: .35rem; }
+.field--address { grid-column: 1 / span 6; }
+.field--levels  { grid-column: 7 / -1; }
+.field--details { grid-column: 1 / -1; }
+.field input, .field select, .field textarea {
+  width: 100%; background: transparent;
+  border: 0; border-bottom: 1px solid var(--ink); border-radius: 0;
+  padding: .2em 0 .3em;
+  font-size: var(--fs-m); line-height: 1.2; letter-spacing: 0;
+  outline: none; appearance: none; -webkit-appearance: none;
+}
+.field textarea { resize: vertical; min-height: 7rem; }
+.field select {
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 10px) 55%, calc(100% - 5px) 55%;
+  background-size: 5px 5px; background-repeat: no-repeat;
+}
+.field select:invalid { color: var(--hint); }
+.field input:focus, .field select:focus, .field textarea:focus { border-bottom-width: 2px; }
+.form-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--u); flex-wrap: wrap; }
+
+/* ---------- footer ---------- */
+.site-footer { border-top: 1px solid var(--ink); padding-top: .6rem; }
+.footer-meta > :nth-child(1) { grid-column: 1 / span 4; }
+.footer-meta > :nth-child(2) { grid-column: 5 / span 3; }
+.footer-meta > :nth-child(3) { grid-column: 10 / -1; justify-self: end; }
+.footer-meta a:hover .arrow { transform: translateY(-3px); }
+.wordmark {
+  font-size: clamp(3rem, 0.2rem + 15vw, 18rem);
+  line-height: .9;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+  margin: calc(var(--u) * 1.5) 0 0 -0.04em;
+  padding-bottom: .15em;
+  overflow: hidden;
+}
+
+.mt { margin-top: calc(var(--u) * 4); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .nav { display: none; }
+  .logo { grid-column: 1 / span 6; }
+  .header-cta { grid-column: 7 / -1; }
+  .hero-lead p { grid-column: 1 / -1; }
+  .tiles { grid-template-columns: 1fr; }
+  .scope h3, .scope ul { grid-column: 1 / -1; }
+  .scope ul { margin-top: var(--u); }
+  .section-head h2, .section-head .aside { grid-column: 1 / -1; justify-self: start; }
+  .section-head .aside { margin-top: var(--u); }
+  .buildings { grid-template-columns: 1fr; }
+  .building .block { aspect-ratio: 16 / 9; }
+  .hero .block, .how .block, .price .block { min-height: 70vh; }
+  .hero .art { width: 70%; right: -28%; }
+  .how .art, .price .art { width: 50%; }
+  .tile .art { width: 40%; }
+}
+@media (max-width: 560px) {
+  .field--address, .field--levels { grid-column: 1 / -1; }
+  .footer-meta > * { grid-column: 1 / -1 !important; justify-self: start !important; }
+  .caption { flex-wrap: wrap; }
+  .price .caption p:last-child { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header wrap">
+  <div class="grid">
+    <a class="logo" href="#top">Liminal space</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#cleaning">Cleaning</a>
+      <a href="#how">How it works</a>
+      <a href="#building">Your building</a>
+    </nav>
+    <a class="btn header-cta" href="#quote">Get a quote <span class="arrow" aria-hidden="true">↗</span></a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero wrap" id="top" aria-labelledby="hero-title">
+    <div class="block c-mint">
+      <img class="art" src="img/hero-splash.png" alt="">
+      <h1 id="hero-title">
+        <span>Clean shared</span>
+        <span class="caps">spaces.</span>
+        <span>Week after week.</span>
+      </h1>
+    </div>
+    <div class="caption">
+      <span class="caption-name">Residential cleaning&ensp;Berlin,&nbsp;DE</span>
+      <a class="btn" href="#cleaning">Our services <span class="arrow" aria-hidden="true">↓</span></a>
+    </div>
+    <div class="grid hero-lead">
+      <p>Stairwell and common-area cleaning for residential buildings in&nbsp;Berlin.</p>
+    </div>
+  </section>
+
+  <!-- What we clean -->
+  <section class="wrap" id="cleaning" aria-labelledby="clean-title">
+    <div class="grid section-head">
+      <h2 id="clean-title">What we clean</h2>
+      <div class="aside btns" role="group" aria-label="Filter spaces">
+        <button type="button" class="btn btn--ghost" data-filter="all" aria-pressed="true">All spaces</button>
+        <button type="button" class="btn btn--ghost" data-filter="inside" aria-pressed="false">Inside</button>
+        <button type="button" class="btn btn--ghost" data-filter="outside" aria-pressed="false">Outside</button>
+      </div>
+    </div>
+
+    <ul class="tiles">
+      <li class="tile" data-zone="inside">
+        <div class="block c-khaki">
+          <img class="art" src="img/stairs.png" alt="">
+          <h3 class="block-type"><span class="caps">Staircases</span> <span>&amp;&nbsp;landings.</span></h3>
+        </div>
+        <div class="caption"><span class="caption-name"><span class="lnum">01</span></span><span class="btn" aria-hidden="true">↗</span></div>
+      </li>
+      <li class="tile" data-zone="inside">
+        <div class="block c-mint">
+          <img class="art" src="img/door.png" alt="">
+          <h3 class="block-type"><span class="caps">Entrances</span> <span>&amp;&nbsp;hallways.</span></h3>
+        </div>
+        <div class="caption"><span class="caption-name"><span class="lnum">02</span></span><span class="btn" aria-hidden="true">↗</span></div>
+      </li>
+      <li class="tile" data-zone="inside">
+        <div class="block c-green">
+          <img class="art" src="img/hand-rail.png" alt="">
+          <h3 class="block-type"><span class="caps">Handrails</span> <span>&amp;&nbsp;doors.</span></h3>
+        </div>
+        <div class="caption"><span class="caption-name"><span class="lnum">03</span></span><span class="btn" aria-hidden="true">↗</span></div>
+      </li>
+      <li class="tile" data-zone="outside">
+        <div class="block c-khaki">
+          <img class="art" src="img/courtyard.png" alt="">
+          <h3 class="block-type"><span class="caps">Courtyards</span> <span>&amp;&nbsp;bin areas.</span></h3>
+        </div>
+        <div class="caption"><span class="caption-name"><span class="lnum">04</span></span><span class="btn" aria-hidden="true">↗</span></div>
+      </li>
+    </ul>
+
+    <div class="grid scope">
+      <h3>Scope agreed before we&nbsp;start.</h3>
+      <ul>
+        <li data-zone="inside"><span class="lnum">05</span><span>Lifts &amp;&nbsp;corridors</span></li>
+        <li data-zone="inside"><span class="lnum">06</span><span>Basement common areas</span></li>
+        <li data-zone="inside outside"><span class="lnum">07</span><span>Communal windows</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how wrap mt" id="how" aria-labelledby="how-title">
+    <div class="block c-green">
+      <img class="art" src="img/bucket.png" alt="">
+      <ol class="block-type">
+        <li><sup>01</sup>Weekly schedule.</li>
+        <li class="caps"><sup>02</sup>Every visit recorded.</li>
+        <li><sup>03</sup>We return to fix missed&nbsp;work.</li>
+        <li class="caps"><sup>04</sup>A direct contact.</li>
+      </ol>
+    </div>
+    <div class="caption">
+      <h2 class="caption-name" id="how-title">How it works.</h2>
+    </div>
+  </section>
+
+  <!-- Your building -->
+  <section class="wrap mt" id="building" aria-labelledby="building-title">
+    <div class="grid section-head">
+      <h2 id="building-title">Choose your building.</h2>
+    </div>
+    <div class="buildings" role="group" aria-label="Number of levels">
+      <button type="button" class="building" data-levels="1–3" aria-pressed="false">
+        <span class="block c-mint"><span class="figure">1–3</span></span>
+        <span class="caption"><span class="caption-name">Levels</span><span class="btn">↗</span></span>
+      </button>
+      <button type="button" class="building" data-levels="4–5" aria-pressed="false">
+        <span class="block c-khaki"><span class="figure">4–5</span></span>
+        <span class="caption"><span class="caption-name">Levels</span><span class="btn">↗</span></span>
+      </button>
+      <button type="button" class="building" data-levels="6+" aria-pressed="false">
+        <span class="block c-green"><span class="figure">6+</span></span>
+        <span class="caption"><span class="caption-name">Levels</span><span class="btn">↗</span></span>
+      </button>
+    </div>
+
+    <div class="price">
+      <div class="block c-mint">
+        <img class="art" src="img/hero-splash.png" alt="">
+        <h3 class="block-type"><span>Weekly cleaning</span> <span class="caps">from <span class="lnum">€169</span>/month.</span></h3>
+      </div>
+      <div class="caption">
+        <p class="caption-name">Excluding VAT.</p>
+        <p>A fixed monthly quote after a visit to your&nbsp;building.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote -->
+  <section class="wrap mt" id="quote" aria-labelledby="quote-title">
+    <div class="grid section-head">
+      <h2 id="quote-title">Get a quote.&nbsp;<span aria-hidden="true">↗</span></h2>
+    </div>
+    <form class="grid form" id="enquiry" novalidate>
+      <label class="field field--address">
+        <span class="label">Building address</span>
+        <input type="text" name="address" autocomplete="street-address">
+      </label>
+      <label class="field field--levels">
+        <span class="label">Number of levels</span>
+        <select name="levels" id="levels" required>
+          <option value="" disabled selected>Choose a range</option>
+          <option value="1–3">1–3</option>
+          <option value="4–5">4–5</option>
+          <option value="6+">6+</option>
+        </select>
+      </label>
+      <label class="field field--details">
+        <span class="label">Additional details</span>
+        <textarea name="details" rows="4"></textarea>
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn">Download enquiry <span class="arrow" aria-hidden="true">↗</span></button>
+        <p class="label">Downloads a text file. Nothing is sent.</p>
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<footer class="site-footer wrap">
+  <div class="grid footer-meta">
+    <span>Stairwell &amp; common-area cleaning.</span>
+    <span>Berlin,&nbsp;DE.</span>
+    <a href="#top">Back to top <span class="arrow" aria-hidden="true">↑</span></a>
+  </div>
+  <p class="wordmark" aria-hidden="true">Liminal space</p>
+</footer>
+
+<script>
+/* Filter: All spaces / Inside / Outside */
+const tabs = document.querySelectorAll('[data-filter]');
+const zoned = document.querySelectorAll('[data-zone]');
+tabs.forEach(btn => btn.addEventListener('click', () => {
+  const f = btn.dataset.filter;
+  tabs.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+  zoned.forEach(el => { el.hidden = f !== 'all' && !el.dataset.zone.split(' ').includes(f); });
+}));
+
+/* Building chooser → form */
+const levelSelect = document.getElementById('levels');
+const buildings = document.querySelectorAll('.building');
+const mark = v => buildings.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.levels === v)));
+buildings.forEach(b => b.addEventListener('click', () => {
+  levelSelect.value = b.dataset.levels; mark(b.dataset.levels);
+  document.getElementById('quote').scrollIntoView();
+  setTimeout(() => document.querySelector('[name="address"]').focus({ preventScroll: true }), 500);
+}));
+levelSelect.addEventListener('change', () => mark(levelSelect.value));
+
+/* Download enquiry as a text file — nothing is sent */
+document.getElementById('enquiry').addEventListener('submit', e => {
+  e.preventDefault();
+  const d = new FormData(e.target);
+  const text = ['Liminal space — Enquiry', '',
+    'Building address: ' + (d.get('address') || ''),
+    'Number of levels: ' + (d.get('levels') || ''), '',
+    'Additional details:', d.get('details') || ''].join('\n');
+  const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: 'liminal-space-enquiry.txt' });
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
