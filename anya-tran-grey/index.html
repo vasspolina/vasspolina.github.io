@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Anya Tran Study</title>
+<meta name="description" content="A design study for a musician and new media artist, set like a gig poster. Not the artist's own site.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..600&family=Belleza&display=swap" rel="stylesheet">
+<style>
+  /* ------------------------------------------------------------------
+     Colours. Text is darker than on the printed poster on purpose:
+     every text colour clears 4.5:1 on the darkest part of its ground.
+     ------------------------------------------------------------------ */
+  :root {
+    --surround: #55575b;
+    --edge: #e1e2e3;          /* the pale fog at the left and right */
+    --mid: #b6b8bb;           /* the grey in the middle */
+    --core: #a8aaae;          /* the darkest patch, behind the mark */
+    --ink: #33353a;           /* body text */
+    --ink-big: #44474c;       /* display caps (large text) */
+    --mark-fill: #bfc1c4;
+    --mark-edge: #5d6065;
+    --mark-shadow: rgba(40, 42, 46, .35);
+    --focus: #111;
+    --radius: 22px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --surround: #111214; --edge: #3d3f43; --mid: #2b2d30; --core: #232427;
+      --ink: #d6d8db; --ink-big: #c9ccd0;
+      --mark-fill: #45484d; --mark-edge: #9a9ea4; --mark-shadow: rgba(0,0,0,.55);
+      --focus: #fff; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surround: #111214; --edge: #3d3f43; --mid: #2b2d30; --core: #232427;
+    --ink: #d6d8db; --ink-big: #c9ccd0;
+    --mark-fill: #45484d; --mark-edge: #9a9ea4; --mark-shadow: rgba(0,0,0,.55);
+    --focus: #fff; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--surround); }
+  body {
+    margin: 0;
+    padding: 10px;
+    background: var(--surround);
+    color: var(--ink);
+    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    font-variation-settings: "wdth" 100;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .poster {
+    position: relative;
+    min-height: calc(100svh - 20px);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 38% 55% at 58% 48%, var(--core), transparent 70%),
+      linear-gradient(90deg, var(--edge) 0%, var(--mid) 16%, var(--mid) 84%, var(--edge) 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 40%) minmax(0, 60%);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "top  top"
+      "col  mark"
+      "bot  bot";
+  }
+
+  /* ---------------- the letter-spaced bands ---------------- */
+  .band {
+    margin: 0;
+    padding: 22px clamp(20px, 3.4vw, 48px);
+    font-family: "Belleza", "Optima", "Candara", sans-serif;
+    font-weight: 400;
+    font-size: clamp(22px, 3.2vw, 46px);
+    line-height: 1;
+    color: var(--ink-big);
+    text-transform: uppercase;
+  }
+  .band.top { grid-area: top; }
+  .band.bot { grid-area: bot; }
+  .spread-row { display: flex; justify-content: space-between; }
+  .spread-row span { display: block; min-width: .3em; text-align: center; }
+
+  /* ---------------- the centred column ---------------- */
+  .col {
+    grid-area: col;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px clamp(16px, 3vw, 40px) 40px;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .names { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .names a {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: inherit; text-decoration: none;
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .name {
+    font-family: "Belleza", "Optima", "Candara", sans-serif;
+    font-size: clamp(30px, 3.4vw, 50px);
+    line-height: 1;
+    color: var(--ink-big);
+    text-transform: uppercase;
+    letter-spacing: .01em;
+  }
+  .sub {
+    font-size: 13px;
+    line-height: 1.1;
+    font-variation-settings: "wdth" 125;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .names a:hover .name,
+  .names a:focus-visible .name { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .14em; }
+
+  /* The statement stands where the poster has its date: letters stacked. */
+  .stack {
+    margin: 38px 0 0;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    text-transform: uppercase;
+    font-family: "Belleza", "Optima", "Candara", sans-serif;
+    font-size: clamp(22px, 2vw, 28px);
+    letter-spacing: .26em;
+    line-height: 1.55;
+    height: 13.5em;            /* about 11 letters to a column */
+    color: var(--ink-big);
+  }
+
+  /* One word to a line, as on the poster. */
+  .narrow {
+    margin: 40px 0 0;
+    max-width: 100%;
+    font-size: 16px;
+    line-height: 1.1;
+    font-weight: 400;
+    word-spacing: 100vw;       /* every word gets its own line */
+    hyphens: manual;
+  }
+  .narrow + .narrow { margin-top: 22px; }
+
+  .note {
+    margin: 46px 0 0;
+    font-size: 18px;
+    line-height: 1.25;
+    max-width: 22ch;
+  }
+
+  /* ---------------- the mark ---------------- */
+  .mark {
+    grid-area: mark;
+    position: relative;
+    min-height: 0;
+  }
+  .mark svg {
+    position: sticky;
+    top: 0;
+    display: block;
+    width: 100%;
+    height: min(100svh, 1100px);
+    overflow: visible;
+  }
+  .mark .strand { fill: var(--mark-fill); }
+
+  /* ---------------- controls ---------------- */
+  .controls {
+    margin-top: 28px;
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  }
+  .controls button {
+    font: inherit;
+    font-size: 15px;
+    line-height: 1;
+    font-variation-settings: "wdth" 112;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid var(--ink);
+    background: var(--edge);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .controls button[aria-pressed="true"] { background: var(--ink); color: var(--edge); }
+  .controls button:hover { background: var(--mid); }
+  .controls button[aria-pressed="true"]:hover { background: var(--ink-big); }
+  .controls [hidden] { display: none; }
+
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+  /* ---------------- editing ---------------- */
+  body.editing [data-edit] { outline: 1px dashed var(--ink); outline-offset: 4px; cursor: text; }
+  body.editing [data-edit]:focus { outline-style: solid; }
+  body.editing .names a { cursor: text; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------------- phone ---------------- */
+  @media (max-width: 760px) {
+    body { padding: 0; }
+    .poster {
+      border-radius: 0;
+      min-height: 100svh;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "top" "col" "bot";
+      background:
+        radial-gradient(ellipse 70% 40% at 50% 45%, var(--core), transparent 70%),
+        linear-gradient(90deg, var(--edge) 0%, var(--mid) 22%, var(--mid) 78%, var(--edge) 100%);
+    }
+    .band { padding: 16px 16px; font-size: clamp(20px, 6vw, 30px); }
+    .col { padding: 20px 16px 48px; }
+    /* The mark goes behind the column, pale, so the text keeps its contrast. */
+    .mark {
+      grid-area: col;
+      opacity: .42;
+      pointer-events: none;
+    }
+    .mark svg { height: min(100svh, 900px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<!--
+  EDITING THE TEXT
+  Every piece of copy is plain text below, marked with data-edit. Change it
+  here, or press "Edit text" on the page (changes are kept in this browser
+  only; "Reset" brings this source text back). The two link addresses are the
+  href attributes on the two <a> elements.
+-->
+<main class="poster">
+  <h1 class="sr-only">Anya Tran</h1>
+
+  <p class="band top spread" data-edit="band-top">Brooklyn based</p>
+
+  <div class="col">
+    <ul class="names">
+      <li>
+        <a href="https://www.instagram.com/anya_tran/" rel="noopener">
+          <span class="name" data-edit="link1-name">Instagram</span>
+          <span class="sub" data-edit="link1-sub">@anya_tran</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://ra.co/search?q=Anya%20Tran" rel="noopener">
+          <span class="name" data-edit="link2-name">Resident Advisor</span>
+          <span class="sub" data-edit="link2-sub">ra.co</span>
+        </a>
+      </li>
+    </ul>
+
+    <p class="stack" data-edit="statement">Musician and new media artist originally from Moscow with Vietnamese roots.</p>
+
+    <p class="narrow" data-edit="para1">Steeped in a rigorous classical piano background, she shifted her focus to the theremin, embracing a direct, almost tactile encounter with sound that breaks free from traditional constraints.</p>
+
+    <p class="narrow" data-edit="para2">Anya invites audiences into a realm where technology, personal history, and the human body converge in immersive sonic and visual experiences</p>
+
+    <p class="note" data-edit="note">A design study, not the artist’s own site</p>
+    <div class="controls">
+      <button type="button" id="sound" aria-pressed="false">Sound</button>
+      <button type="button" id="edit" aria-pressed="false">Edit text</button>
+      <button type="button" id="reset" hidden>Reset</button>
+    </div>
+  </div>
+
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="-20 0 440 1000" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <defs>
+        <filter id="erode" x="-25%" y="-5%" width="150%" height="110%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+          <!-- a speckled darker rim, like ink pooling at the edge -->
+          <feMorphology in="rough" operator="dilate" radius="1.3" result="fat"/>
+          <feComposite in="fat" in2="rough" operator="out" result="rim"/>
+          <feTurbulence type="fractalNoise" baseFrequency="2.2" numOctaves="1" seed="2" result="grain"/>
+          <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 9 -3.6" result="dots"/>
+          <feComposite in="rim" in2="dots" operator="in" result="rimDots"/>
+          <feFlood class="edge-flood" flood-color="#5d6065" result="edgeCol"/>
+          <feComposite in="edgeCol" in2="rimDots" operator="in" result="edge"/>
+          <!-- soft shadow below the stroke -->
+          <feGaussianBlur in="rough" stdDeviation="6" result="blur"/>
+          <feOffset in="blur" dx="2" dy="7" result="off"/>
+          <feFlood class="shadow-flood" flood-color="rgba(40,42,46,.35)" result="shCol"/>
+          <feComposite in="shCol" in2="off" operator="in" result="shadow"/>
+          <feMerge>
+            <feMergeNode in="shadow"/>
+            <feMergeNode in="rough"/>
+            <feMergeNode in="edge"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#erode)" id="strands"></g>
+    </svg>
+  </div>
+
+  <p class="band bot spread" data-edit="band-bot">New York</p>
+</main>
+
+
+<script>
+(() => {
+  const KEY = "anya-tran-study-text-v1";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const editable = [...document.querySelectorAll("[data-edit]")];
+
+  /* ---------------- text: source, saved edits, rendering ---------------- */
+  const original = {}, text = {};
+  editable.forEach(el => { original[el.dataset.edit] = text[el.dataset.edit] = el.textContent.trim(); });
+
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  Object.keys(saved).forEach(k => { if (k in text && typeof saved[k] === "string") text[k] = saved[k]; });
+
+  // A band is spread letter by letter across the full width. The letters are
+  // hidden from screen readers and the words are given once, whole.
+  function renderSpread(el, value) {
+    el.textContent = "";
+    const sr = document.createElement("span");
+    sr.className = "sr-only";
+    sr.textContent = value;
+    const row = document.createElement("span");
+    row.className = "spread-row";
+    row.setAttribute("aria-hidden", "true");
+    for (const ch of value) {
+      const s = document.createElement("span");
+      s.textContent = ch === " " ? " " : ch;
+      row.appendChild(s);
+    }
+    el.append(sr, row);
+  }
+  function render(el) {
+    const v = text[el.dataset.edit];
+    if (el.classList.contains("spread") && !editing) renderSpread(el, v);
+    else el.textContent = v;
+  }
+
+  /* ---------------- edit mode ---------------- */
+  let editing = false;
+  const editBtn = document.getElementById("edit");
+  const resetBtn = document.getElementById("reset");
+  const changed = () => editable.some(el => text[el.dataset.edit] !== original[el.dataset.edit]);
+  const syncReset = () => { resetBtn.hidden = !changed(); };
+
+  function save() {
+    const out = {};
+    editable.forEach(el => { const k = el.dataset.edit; if (text[k] !== original[k]) out[k] = text[k]; });
+    try { localStorage.setItem(KEY, JSON.stringify(out)); } catch (e) {}
+    syncReset();
+  }
+
+  function setEditing(on) {
+    editing = on;
+    document.body.classList.toggle("editing", on);
+    editBtn.setAttribute("aria-pressed", String(on));
+    editBtn.textContent = on ? "Done" : "Edit text";
+    editable.forEach(el => {
+      render(el);
+      if (on) { el.contentEditable = "plaintext-only"; if (el.contentEditable !== "plaintext-only") el.contentEditable = "true"; el.spellcheck = false; }
+      else el.removeAttribute("contenteditable");
+    });
+    if (on) editable[0].focus();
+  }
+
+  editable.forEach(el => {
+    el.addEventListener("input", () => {
+      text[el.dataset.edit] = el.textContent.replace(/\s+/g, " ").trim();
+      save();
+    });
+    el.addEventListener("paste", e => {        // keep pasted text plain
+      e.preventDefault();
+      document.execCommand("insertText", false, (e.clipboardData || window.clipboardData).getData("text/plain"));
+    });
+    el.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); } if (e.key === "Escape") { setEditing(false); editBtn.focus(); } });
+  });
+  // While editing, a click in a link places the caret instead of leaving the page.
+  document.querySelectorAll(".names a").forEach(a => a.addEventListener("click", e => { if (editing) e.preventDefault(); }));
+
+  editBtn.addEventListener("click", () => setEditing(!editing));
+  resetBtn.addEventListener("click", () => {
+    Object.assign(text, original);
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    editable.forEach(render);
+    syncReset();
+  });
+
+  editable.forEach(render);
+  syncReset();
+
+  /* ---------------- the mark: five sound strands ---------------- */
+  const NS = "http://www.w3.org/2000/svg";
+  const g = document.getElementById("strands");
+  const STRANDS = [
+    { phase: 0.0, amp: 1.00, width: 30, freq: 1.00, lean:  110, h: 0.35 },
+    { phase: 1.9, amp: 0.80, width: 20, freq: 1.25, lean:   40, h: 0.50 },
+    { phase: 3.6, amp: 0.95, width: 16, freq: 0.80, lean:  -70, h: 0.25 },
+    { phase: 5.1, amp: 0.60, width: 10, freq: 1.70, lean:  150, h: 0.60 },
+    { phase: 2.6, amp: 0.45, width:  6, freq: 2.20, lean:  -20, h: 0.40 },
+  ];
+  const paths = STRANDS.map(() => {
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("class", "strand");
+    g.appendChild(p);
+    return p;
+  });
+
+  // state the pointer steers: f = how many waves, a = how wide they swing
+  const cur = { f: 1.4, a: 150, t: 0 };
+  const tgt = { f: 1.4, a: 150 };
+
+  function strandPath(s, f, a, t) {
+    const top = 50, bottom = 960, steps = 120;
+    const L = [], R = [];
+    for (let i = 0; i <= steps; i++) {
+      const u = i / steps;
+      const y = top + u * (bottom - top);
+      const env = Math.pow(Math.sin(Math.PI * Math.min(1, u * 1.08)), 0.7);      // swells, then thins out at the foot
+      // a second, faster partial makes the line uneven, as a hand is
+      const x = 200 + s.lean * Math.pow(u - 0.5, 3) * 8
+              + a * s.amp * env * (Math.sin(2 * Math.PI * f * s.freq * u + s.phase + t)
+              + s.h * Math.sin(2 * Math.PI * f * s.freq * 2.7 * u + s.phase * 1.7 - t * 1.4)) / (1 + s.h * 0.6);
+      // width tapers to a hairline at both ends, a brush stroke rather than a tube
+      const w = Math.max(0.4, s.width * Math.pow(Math.sin(Math.PI * u), 1.4)
+              * (0.75 + 0.25 * Math.sin(9 * u + s.phase)));
+      // offset along the normal so the swing does not pinch the stroke
+      const dx = a * s.amp * env * Math.cos(2 * Math.PI * f * s.freq * u + s.phase + t) * 2 * Math.PI * f * s.freq / (bottom - top);
+      const n = Math.hypot(1, dx);
+      L.push([x - w / n, y + (w * dx) / n]);
+      R.push([x + w / n, y - (w * dx) / n]);
+    }
+    const pts = L.concat(R.reverse());
+    return "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join("L") + "Z";
+  }
+  function draw() {
+    STRANDS.forEach((s, i) => paths[i].setAttribute("d", strandPath(s, cur.f, cur.a, cur.t)));
+  }
+  draw();
+
+  // theme colours for the filter (SVG flood-color does not take var())
+  function syncFilterColours() {
+    const cs = getComputedStyle(document.documentElement);
+    document.querySelector(".edge-flood").setAttribute("flood-color", cs.getPropertyValue("--mark-edge").trim());
+    document.querySelector(".shadow-flood").setAttribute("flood-color", cs.getPropertyValue("--mark-shadow").trim());
+  }
+  syncFilterColours();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncFilterColours);
+
+  /* ---------------- theremin: pitch on x, volume on y ---------------- */
+  let audio = null;
+  const soundBtn = document.getElementById("sound");
+  const pointer = { x: innerWidth * 0.5, y: innerHeight * 0.5 };
+
+  function startAudio() {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    const ctx = new Ctx();
+    const osc = ctx.createOscillator(); osc.type = "sine";
+    const shape = ctx.createWaveShaper();             // a little warmth, as an analogue theremin has
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) { const x = i / 128 - 1; curve[i] = Math.tanh(1.6 * x); }
+    shape.curve = curve;
+    const vol = ctx.createGain(); vol.gain.value = 0;
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 5.6;
+    const lfoAmt = ctx.createGain(); lfoAmt.gain.value = 5;
+    lfo.connect(lfoAmt).connect(osc.frequency);
+    osc.connect(shape).connect(vol).connect(ctx.destination);
+    osc.start(); lfo.start();
+    return { ctx, osc, vol };
+  }
+  function pitchFor(x) { return 130 * Math.pow(2, 3 * Math.min(1, Math.max(0, x / innerWidth))); } // C3 to C6
+  function volumeFor(y) { return 0.16 * (1 - Math.min(1, Math.max(0, y / innerHeight))); }       // hand low = quiet
+
+  soundBtn.addEventListener("click", async () => {
+    const on = soundBtn.getAttribute("aria-pressed") !== "true";
+    soundBtn.setAttribute("aria-pressed", String(on));
+    if (on) {
+      if (!audio) audio = startAudio();
+      if (!audio) { soundBtn.setAttribute("aria-pressed", "false"); return; }
+      await audio.ctx.resume();
+      const now = audio.ctx.currentTime;
+      audio.osc.frequency.setTargetAtTime(pitchFor(pointer.x), now, 0.03);
+      audio.vol.gain.setTargetAtTime(volumeFor(pointer.y), now, 0.08);
+      kick();
+    } else if (audio) {
+      audio.vol.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.06);
+      setTimeout(() => { if (soundBtn.getAttribute("aria-pressed") !== "true") audio.ctx.suspend(); }, 400);
+    }
+  });
+  const soundOn = () => soundBtn.getAttribute("aria-pressed") === "true";
+
+  /* ---------------- motion ---------------- */
+  let raf = 0;
+  function tick() {
+    raf = 0;
+    cur.f += (tgt.f - cur.f) * 0.08;
+    cur.a += (tgt.a - cur.a) * 0.08;
+    if (soundOn()) cur.t += 0.018 + 0.05 * (tgt.f - 0.8) / 2.6;   // the strands run while it sings, faster when higher
+    draw();
+    const settling = Math.abs(tgt.f - cur.f) > 0.002 || Math.abs(tgt.a - cur.a) > 0.2;
+    if (settling || soundOn()) kick();
+  }
+  function kick() { if (!reduce && !raf) raf = requestAnimationFrame(tick); }
+
+  addEventListener("pointermove", e => {
+    pointer.x = e.clientX; pointer.y = e.clientY;
+    const ux = e.clientX / innerWidth, uy = e.clientY / innerHeight;
+    tgt.f = 0.8 + 2.6 * ux;                 // further right, more waves: higher pitch
+    tgt.a = 80 + 120 * (1 - uy);            // higher hand, wider swing: louder
+    if (audio && soundOn()) {
+      const now = audio.ctx.currentTime;
+      audio.osc.frequency.setTargetAtTime(pitchFor(e.clientX), now, 0.03);
+      audio.vol.gain.setTargetAtTime(volumeFor(e.clientY), now, 0.08);
+    }
+    kick();
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
