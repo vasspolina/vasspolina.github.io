@@ -1107,6 +1107,31 @@ a, button { transition: background .2s, color .2s; }
 .footer-meta { position: relative; z-index: 3; align-items: center; }
 .wordmark-wrap { position: relative; isolation: isolate; z-index: 2;
   margin-inline: calc(var(--margin) * -1); padding-inline: var(--margin); }
+/* ---------- embossed ink (after the grey Anya Tran study) ----------
+   The line drawings are inlined by the script at the end of the page and
+   drawn as one broad stroke a shade off the ground, roughened at the edge,
+   with a speckled rim and a soft shadow under it. Sizes are set in screen
+   pixels and converted per drawing, so a small card drawing and the big
+   hero drawing get the same stroke. The plain <img> stays if the script
+   cannot fetch the files. */
+:root {
+  --emboss-fill: #343a31;
+  --emboss-rim: #c2cfb0;
+  --emboss-shadow: rgba(0, 0, 0, .9);
+}
+html[data-theme="light"] {
+  --emboss-fill: #d3d0c0;
+  --emboss-rim: #4a5340;
+  --emboss-shadow: rgba(40, 44, 32, .38);
+}
+svg.art { overflow: visible; }
+html[data-theme="light"] svg.art { filter: none; }   /* drawn in theme colours, no inversion */
+svg.art .emboss { fill: none; stroke: var(--emboss-fill); stroke-linecap: round; stroke-linejoin: round; }
+svg.art .emboss circle { fill: var(--emboss-fill); stroke: none; }
+/* drawings woven over a title (.mid) let the words behind them read through */
+svg.art.mid .emboss { opacity: .62; }
+svg.art .emboss-rim { flood-color: var(--emboss-rim); }
+svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
 </style>
 </head>
 <body>
@@ -1530,6 +1555,113 @@ document.querySelectorAll('#enquiry, #hero-enquiry').forEach(form => {
     URL.revokeObjectURL(url);
   });
 });
+
+/* Embossed ink: inline each line drawing and draw it as an eroded stroke. */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  // in screen pixels, for a drawing about 800px tall (the hero); smaller
+  // drawings take a lighter stroke, down to half, or the dense ones fill in
+  // warp: a slow, wide swell that bends the straight lines of the drawing
+  // into strands; rough: the fine eroded edge on top of it
+  const PX = { stroke: 7, warp: 38, warpFreq: 0.005, rough: 3, rim: 1.1, blur: 5, dx: 1.5, dy: 5, noise: 0.9, grain: 2.2 };
+  const MIN_PART = 0.035;   // strokes shorter than this share of the drawing's height are left out
+  const REF_H = 800;
+  const items = [];
+  let n = 0;
+
+  function filterMarkup(id) {
+    return `<filter id="${id}" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" numOctaves="2" seed="11" result="swell" data-k="warpFreq"/>
+      <feDisplacementMap in="SourceGraphic" in2="swell" xChannelSelector="R" yChannelSelector="G" result="warped" data-k="warp"/>
+      <feTurbulence type="fractalNoise" numOctaves="2" seed="7" result="noise" data-k="noise"/>
+      <feDisplacementMap in="warped" in2="noise" xChannelSelector="R" yChannelSelector="G" result="rough" data-k="rough"/>
+      <feMorphology in="rough" operator="dilate" result="fat" data-k="rim"/>
+      <feComposite in="fat" in2="rough" operator="out" result="rim"/>
+      <feTurbulence type="fractalNoise" numOctaves="1" seed="2" result="grain" data-k="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 9 -3.6" result="dots"/>
+      <feComposite in="rim" in2="dots" operator="in" result="rimDots"/>
+      <feFlood class="emboss-rim" result="rimCol"/>
+      <feComposite in="rimCol" in2="rimDots" operator="in" result="edge"/>
+      <feGaussianBlur in="rough" result="blur" data-k="blur"/>
+      <feOffset in="blur" result="off" data-k="off"/>
+      <feFlood class="emboss-shadow" result="shCol"/>
+      <feComposite in="shCol" in2="off" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="rough"/><feMergeNode in="edge"/></feMerge>
+    </filter>`;
+  }
+
+  // user units per screen pixel differ per drawing, so every value is rescaled
+  function fit(it) {
+    const r = it.svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const s = Math.min(r.width / it.vw, r.height / it.vh);   // screen px per user unit
+    const k = Math.min(1, Math.max(0.5, (it.vh * s) / REF_H));
+    const u = v => (v * k / s).toFixed(2);
+    const f = it.filter;
+    it.g.setAttribute('stroke-width', u(PX.stroke));
+    f.querySelector('[data-k="noise"]').setAttribute('baseFrequency', (PX.noise * s).toFixed(4));
+    f.querySelector('[data-k="warpFreq"]').setAttribute('baseFrequency', (PX.warpFreq * s / k).toFixed(5));
+    f.querySelector('[data-k="warp"]').setAttribute('scale', u(PX.warp));
+    f.querySelector('[data-k="grain"]').setAttribute('baseFrequency', (PX.grain * s).toFixed(4));
+    f.querySelector('[data-k="rough"]').setAttribute('scale', u(PX.rough));
+    f.querySelector('[data-k="rim"]').setAttribute('radius', (PX.rim / s).toFixed(2));
+    f.querySelector('[data-k="blur"]').setAttribute('stdDeviation', u(PX.blur));
+    const off = f.querySelector('[data-k="off"]');
+    off.setAttribute('dx', u(PX.dx)); off.setAttribute('dy', u(PX.dy));
+  }
+
+  function build(img, text) {
+    const src = new DOMParser().parseFromString(text, 'image/svg+xml').documentElement;
+    const vb = (src.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    if (vb.length !== 4 || !vb[2] || !vb[3]) return;
+    const id = 'emboss-' + (++n);
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', vb.join(' '));
+    svg.setAttribute('width', vb[2]);
+    svg.setAttribute('height', vb[3]);
+    svg.setAttribute('class', img.getAttribute('class'));
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    svg.innerHTML = '<defs>' + filterMarkup(id) + '</defs>';
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'emboss');
+    g.setAttribute('filter', `url(#${id})`);
+    // keep the long strokes only: the drawing loses its small detail and
+    // reads as a few broad gestures
+    const minLen = MIN_PART * vb[3];
+    src.querySelectorAll('path').forEach(el => {
+      const parts = (el.getAttribute('d') || '').split(/(?=M)/).filter(part => {
+        const nums = (part.match(/-?\d*\.?\d+/g) || []).map(Number);
+        let len = 0;
+        for (let i = 2; i + 1 < nums.length; i += 2) len += Math.hypot(nums[i] - nums[i - 2], nums[i + 1] - nums[i - 1]);
+        return len >= minLen;
+      });
+      if (!parts.length) return;
+      const c = document.createElementNS(NS, 'path');
+      c.setAttribute('d', parts.join(' '));
+      g.appendChild(c);
+    });
+    svg.appendChild(g);
+    img.replaceWith(svg);
+    const it = { svg, g, vw: vb[2], vh: vb[3], filter: svg.querySelector('filter') };
+    items.push(it);
+    fit(it);
+    if (ro) ro.observe(svg);
+  }
+
+  const ro = 'ResizeObserver' in window
+    ? new ResizeObserver(entries => entries.forEach(e => { const it = items.find(i => i.svg === e.target); if (it) fit(it); }))
+    : null;
+  if (!ro) addEventListener('resize', () => items.forEach(fit));
+
+  document.querySelectorAll('img.art[src$="-line.svg"]').forEach(img => {
+    fetch(img.getAttribute('src'))
+      .then(r => r.ok ? r.text() : Promise.reject(r.status))
+      .then(t => build(img, t))
+      .catch(() => {});                        // keep the plain drawing
+  });
+})();
+
 </script>
 </body>
 </html>
