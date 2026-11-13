@@ -26,6 +26,16 @@
     --mark-shadow: rgba(40, 42, 46, .35);
     --focus: #111;
     --radius: 22px;
+    /* theremin controls: shades of grey, no outlines.
+       Text on --dock-btn 5.7:1, on --dock-on 9:1; the handle 4.6:1 on the bar. */
+    --dock-bar: #cfd1d3;
+    --dock-btn: #a9acb0;
+    --dock-btn-hover: #9da0a4;
+    --dock-btn-text: #2e3034;
+    --dock-on: #4a4d52;
+    --dock-on-text: #eceded;
+    --dock-knob: #5d6065;
+    --dock-line: #8a8d92;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
@@ -34,6 +44,8 @@
       --ink: #d6d8db; --ink-big: #c9ccd0;
       --mark-fill: #45484d; --mark-edge: #9a9ea4; --mark-shadow: rgba(0,0,0,.55);
       --focus: #fff; color-scheme: dark;
+      --dock-bar: #3a3c40; --dock-btn: #4e5156; --dock-btn-hover: #5a5d62; --dock-btn-text: #eceded;
+      --dock-on: #c9ccd0; --dock-on-text: #1d1e20; --dock-knob: #c9ccd0; --dock-line: #7d8086;
     }
   }
   :root[data-theme="dark"] {
@@ -41,6 +53,8 @@
     --ink: #d6d8db; --ink-big: #c9ccd0;
     --mark-fill: #45484d; --mark-edge: #9a9ea4; --mark-shadow: rgba(0,0,0,.55);
     --focus: #fff; color-scheme: dark;
+    --dock-bar: #3a3c40; --dock-btn: #4e5156; --dock-btn-hover: #5a5d62; --dock-btn-text: #eceded;
+    --dock-on: #c9ccd0; --dock-on-text: #1d1e20; --dock-knob: #c9ccd0; --dock-line: #7d8086;
   }
 
   * { box-sizing: border-box; }
@@ -317,12 +331,13 @@
     min-height: 56px;
     padding: 0 22px 0 calc(22px + .2em);   /* the trailing letter-space, balanced */
     white-space: nowrap;
-    background: transparent;
-    border: 1px solid var(--ink);
-    color: var(--ink-big);
+    background: var(--dock-btn);
+    border: 0;
+    color: var(--dock-btn-text);
   }
-  .sound-dock #sound:hover { background: var(--edge); }
-  .sound-dock #sound[data-on="true"] { background: var(--ink-big); color: var(--edge); border-color: var(--ink-big); }
+  .sound-dock #sound:hover { background: var(--dock-btn-hover); }
+  .sound-dock #sound[data-on="true"] { background: var(--dock-on); color: var(--dock-on-text); }
+  .sound-dock #sound[data-on="true"]:hover { background: var(--dock-on); }
   /* on a wide screen the word sits over its slider, so the dock stays narrow beside the names */
   .sound-dock .vol { flex-direction: column; align-items: flex-start; gap: 2px; min-height: 0; padding: 0; color: var(--ink-big); }
   .sound-dock .vol-icon { display: none; width: 26px; height: 26px; flex: none; }
@@ -339,21 +354,21 @@
   .sound-dock input[type="range"]::-webkit-slider-runnable-track {
     height: 22px;
     background:
-      linear-gradient(var(--ink-big), var(--ink-big)) 0 50% / var(--fill) 3px no-repeat,
-      linear-gradient(var(--ink-big), var(--ink-big)) 0 50% / 100% 1px no-repeat;
+      linear-gradient(var(--dock-knob), var(--dock-knob)) 0 50% / var(--fill) 3px no-repeat,
+      linear-gradient(var(--dock-line), var(--dock-line)) 0 50% / 100% 1px no-repeat;
   }
   .sound-dock input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 22px; height: 22px;
     border-radius: 50%;
-    background: var(--edge);
-    border: 1px solid var(--ink-big);
+    background: var(--dock-knob);
+    border: 0;
   }
-  .sound-dock input[type="range"]::-moz-range-track { height: 1px; background: var(--ink-big); }
-  .sound-dock input[type="range"]::-moz-range-progress { height: 3px; background: var(--ink-big); }
+  .sound-dock input[type="range"]::-moz-range-track { height: 1px; background: var(--dock-line); }
+  .sound-dock input[type="range"]::-moz-range-progress { height: 3px; background: var(--dock-knob); }
   .sound-dock input[type="range"]::-moz-range-thumb {
     width: 20px; height: 20px; border-radius: 50%;
-    background: var(--edge); border: 1px solid var(--ink-big);
+    background: var(--dock-knob); border: 0;
   }
   .sound-dock input[type="range"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
@@ -364,8 +379,8 @@
       gap: 12px;
       max-width: calc(100vw - 32px);
       padding: 6px 16px 6px 6px;
-      background: linear-gradient(90deg, var(--edge), var(--mid) 60%, var(--edge));
-      border: 1px solid var(--ink);
+      background: var(--dock-bar);
+      border: 0;
     }
     .sound-dock #sound { font-size: 18px; letter-spacing: .14em; min-height: 50px; padding: 0 16px 0 calc(16px + .14em); }
     /* no room for the word on a phone: a speaker mark stands for it (the label keeps the word for screen readers) */
