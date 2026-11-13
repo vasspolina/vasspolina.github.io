@@ -224,7 +224,9 @@
     transform-origin: 50% 0;
     overflow: visible;
   }
-  .mark .strand { fill: var(--mark-fill); }
+  .mark .solid { fill: var(--mark-fill); }
+  .mark .rod { fill: none; stroke: var(--mark-fill); stroke-linecap: round; stroke-linejoin: round; }
+  .mark .knob { fill: none; stroke: var(--mark-edge); }
 
   /* ---------------- controls ---------------- */
   .controls {
@@ -456,7 +458,7 @@
   </div>
 
   <div class="mark" aria-hidden="true">
-    <svg viewBox="-42 0 440 1000" preserveAspectRatio="xMidYMid meet" focusable="false">
+    <svg viewBox="-16 0 400 1000" preserveAspectRatio="xMidYMid meet" focusable="false">
       <defs>
         <filter id="erode" x="-25%" y="-5%" width="150%" height="110%" color-interpolation-filters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
@@ -578,52 +580,69 @@
   editable.forEach(render);
   syncReset();
 
-  /* ---------------- the mark: five sound strands ---------------- */
+  /* ---------------- the mark: a theremin, its waves following the hand ---------------- */
   const NS = "http://www.w3.org/2000/svg";
   const g = document.getElementById("strands");
-  const STRANDS = [
-    { phase: 0.0, amp: 1.00, width: 30, freq: 1.00, lean:  110, h: 0.35 },
-    { phase: 1.9, amp: 0.80, width: 20, freq: 1.25, lean:   40, h: 0.50 },
-    { phase: 3.6, amp: 0.95, width: 16, freq: 0.80, lean:  -70, h: 0.25 },
-    { phase: 5.1, amp: 0.60, width: 10, freq: 1.70, lean:  150, h: 0.60 },
-    { phase: 2.6, amp: 0.45, width:  6, freq: 2.20, lean:  -20, h: 0.40 },
-  ];
-  const paths = STRANDS.map(() => {
-    const p = document.createElementNS(NS, "path");
-    p.setAttribute("class", "strand");
-    g.appendChild(p);
-    return p;
-  });
+  // The instrument is drawn once, front on: a cabinet on a three-legged stand,
+  // the volume loop reaching out to the left and the pitch antenna rising on the
+  // right. Lines wander a little, as if drawn by hand; the eroding filter does the rest.
+  const ANT_X = 268, ANT_TOP = 70;
+  function part(tag, cls, attrs) {
+    const el = document.createElementNS(NS, tag);
+    el.setAttribute("class", cls);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    g.appendChild(el);
+    return el;
+  }
+  // stand: a centre pole, a collar and three splayed legs
+  part("path", "rod", { d: "M196 690 C198 760 194 830 198 884", "stroke-width": 10 });
+  part("path", "rod", { d: "M198 878 C172 903 140 930 102 964", "stroke-width": 7 });
+  part("path", "rod", { d: "M198 878 C228 904 260 932 298 962", "stroke-width": 7 });
+  part("path", "rod", { d: "M198 884 C199 914 201 944 200 974", "stroke-width": 6 });
+  part("ellipse", "solid", { cx: 198, cy: 880, rx: 13, ry: 7 });
+  // cabinet, its lid a touch deeper than its body
+  part("path", "solid", { d: "M70 574 Q71 559 84 560 L296 558 Q311 559 311 573 L310 679 Q309 692 296 691 L84 692 Q70 692 70 679 Z" });
+  part("path", "rod", { d: "M76 582 C150 580 230 583 305 580", "stroke-width": 2, style: "stroke: var(--mark-edge)" });
+  // volume loop, out to the left
+  part("path", "rod", { d: "M72 606 C42 603 15 598 9 617 C3 637 32 643 72 641", "stroke-width": 7 });
+  // pitch antenna and its tip
+  part("path", "rod", { d: `M${ANT_X} 562 C${ANT_X - 2} 430 ${ANT_X + 2} 260 ${ANT_X} ${ANT_TOP}`, "stroke-width": 7 });
+  part("circle", "solid", { cx: ANT_X, cy: ANT_TOP, r: 7 });
+  // three knobs on the front, as rings
+  [118, 160, 202].forEach(cx => part("circle", "knob", { cx, cy: 642, r: 10, "stroke-width": 2 }));
+
+  // The sound: three wavy lines either side of the antenna, wider apart and
+  // wider in swing the further out they are, like rings spreading on water.
+  const WAVES = [-1, 1].flatMap(side => [
+    { d: 26, amp: 6,  w: 3.4 },
+    { d: 50, amp: 10, w: 2.7 },
+    { d: 76, amp: 15, w: 2.0 },
+  ].map((o, i) => ({ side, ...o, phase: i * 0.9 + (side > 0 ? 0 : Math.PI) })));
+  const paths = WAVES.map(() => part("path", "solid", {}));
 
   // state the pointer steers: f = how many waves, a = how wide they swing
   const cur = { f: 1.4, a: 150, t: 0 };
   const tgt = { f: 1.4, a: 150 };
 
-  function strandPath(s, f, a, t) {
-    const top = 50, bottom = 960, steps = 120;
+  function wavePath(o, f, a, t) {
+    const top = ANT_TOP + 34, bottom = 540, steps = 90;
     const L = [], R = [];
     for (let i = 0; i <= steps; i++) {
       const u = i / steps;
       const y = top + u * (bottom - top);
-      const env = Math.pow(Math.sin(Math.PI * Math.min(1, u * 1.08)), 0.7);      // swells, then thins out at the foot
-      // a second, faster partial makes the line uneven, as a hand is
-      const x = 200 + s.lean * Math.pow(u - 0.5, 3) * 8
-              + a * s.amp * env * (Math.sin(2 * Math.PI * f * s.freq * u + s.phase + t)
-              + s.h * Math.sin(2 * Math.PI * f * s.freq * 2.7 * u + s.phase * 1.7 - t * 1.4)) / (1 + s.h * 0.6);
-      // width tapers to a hairline at both ends, a brush stroke rather than a tube
-      const w = Math.max(0.4, s.width * Math.pow(Math.sin(Math.PI * u), 1.4)
-              * (0.75 + 0.25 * Math.sin(9 * u + s.phase)));
-      // offset along the normal so the swing does not pinch the stroke
-      const dx = a * s.amp * env * Math.cos(2 * Math.PI * f * s.freq * u + s.phase + t) * 2 * Math.PI * f * s.freq / (bottom - top);
-      const n = Math.hypot(1, dx);
-      L.push([x - w / n, y + (w * dx) / n]);
-      R.push([x + w / n, y - (w * dx) / n]);
+      const env = Math.pow(Math.sin(Math.PI * u), 0.8);              // quiet at both ends of the antenna
+      // more waves along the line as the pitch rises, a wider swing as it gets louder
+      const x = ANT_X + o.side * o.d
+              + o.amp * (a / 150) * env * Math.sin(2 * Math.PI * f * 2.2 * u + o.phase - t * 1.5);
+      const w = Math.max(0.3, o.w * Math.pow(Math.sin(Math.PI * u), 1.2));
+      L.push([x - w, y]);
+      R.push([x + w, y]);
     }
     const pts = L.concat(R.reverse());
     return "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join("L") + "Z";
   }
   function draw() {
-    STRANDS.forEach((s, i) => paths[i].setAttribute("d", strandPath(s, cur.f, cur.a, cur.t)));
+    WAVES.forEach((o, i) => paths[i].setAttribute("d", wavePath(o, cur.f, cur.a, cur.t)));
   }
   draw();
 
