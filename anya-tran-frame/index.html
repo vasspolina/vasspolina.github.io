@@ -5,20 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Anya Tran</title>
 <meta name="description" content="Anya Tran, musician and new media artist. A design study, not the artist’s own site.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Michroma&display=swap" rel="stylesheet">
 <style>
+  /* Saans (Displaay, trial) — the same files /liminal-space/ already serves */
+  @font-face {
+    font-family: "Saans";
+    src: url("../liminal-space/fonts/Saans-TRIAL-Light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Saans";
+    src: url("../liminal-space/fonts/Saans-TRIAL-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Saans";
+    src: url("../liminal-space/fonts/Saans-TRIAL-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
   :root {
     --paper: #f2f1ec;
     --ink: #111110;
     --frame: #121212;
-    --orange: #d6552a;
-    --violet: #a37fd8;
-    --green: #587a58;
-    --mark-green: #3d8b67;
-    --mark-orange: #e0461d;
-    --mark-violet: #b48ae8;
+    /* the squares print in black and white: ink ground, paper marks */
+    --orange: var(--ink);
+    --violet: var(--ink);
+    --green: var(--ink);
+    --mark-green: var(--paper);
+    --mark-orange: var(--paper);
+    --mark-violet: var(--paper);
     /* a printed poster: one paper look in both themes, chosen on purpose */
     color-scheme: light;
   }
@@ -33,7 +53,7 @@
     /* paper grain */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
     color: var(--ink);
-    font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Saans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
     line-height: 1.25;
   }
@@ -107,15 +127,12 @@
 
   /* ---------- the frame ---------- */
   .frame {
-    border: clamp(16px, 4.6vw, 44px) solid var(--frame);
     background: transparent;
     padding: clamp(40px, 7vw, 76px) clamp(12px, 3vw, 32px);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    /* the frame's black has a faint printed edge */
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
   }
 
   .art {
@@ -142,9 +159,8 @@
 
   h1 {
     margin: clamp(22px, 3.4vw, 30px) 0 0;
-    font-family: "Michroma", "Eurostile", sans-serif;
-    font-weight: 400;
-    font-size: clamp(19px, 4.8vw, 40px);
+    font-weight: 300;
+    font-size: clamp(22px, 5.4vw, 46px);
     line-height: 1;
     letter-spacing: 1.05em;
     text-indent: 1.05em; /* balances the trailing letter-space */
@@ -153,9 +169,8 @@
 
   .no {
     margin: clamp(22px, 3.4vw, 30px) 0 clamp(36px, 5.4vw, 48px);
-    font-family: "Michroma", "Eurostile", sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.06em;
+    font-size: 15px;
+    letter-spacing: 0.02em;
   }
 
   .facts {
@@ -208,7 +223,7 @@
       min-width: 0;
     }
     .colophon { order: 4; margin-top: 4px; }
-    h1 { font-size: 5vw; letter-spacing: 0.7em; text-indent: 0.7em; }
+    h1 { font-size: 5.6vw; letter-spacing: 0.7em; text-indent: 0.7em; }
   }
 
   @media (prefers-reduced-motion: reduce) {
