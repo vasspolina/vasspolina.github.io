@@ -182,34 +182,21 @@
     letter-spacing: 0.02em;
   }
 
-  /* the note that switches on the page-wide theremin (from /anya-tran-grey/) */
+  /* the theremin note: the hint's own type, a button only in behaviour */
   .listen {
-    position: fixed;
-    left: 50%;
-    bottom: max(16px, env(safe-area-inset-bottom, 0px));
-    transform: translateX(-50%);
-    z-index: 10;
-    max-width: calc(100vw - 32px);
-    min-height: 44px;
-    padding: 6px 20px;
-    border: 1px solid var(--ink);
-    border-radius: 999px;
-    background: var(--paper);
-    color: var(--ink);
+    display: inline-block;
+    margin: 2px 0 0;
+    padding: 10px 8px;        /* a 44px-ish target without moving the text */
+    border: 0;
+    background: none;
+    color: inherit;
     font: inherit;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
-    text-transform: uppercase;
-    text-align: center;
-    width: max-content;      /* one line where it fits, wraps on the narrowest phones */
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
     cursor: pointer;
   }
-  .listen:hover { background: #e4e3dd; }
-  .listen[data-on="true"] { background: var(--ink); color: var(--paper); }
-  /* room under the colophon so the fixed note never covers it */
-  body { padding-bottom: 76px; }
+  .listen:hover, .listen:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
 
   .colophon {
     grid-column: 1 / -1;
@@ -334,6 +321,7 @@
     </button>
 
     <p class="hint">Press and drag across a drawing to play it</p>
+    <button class="listen" type="button" data-on="false">Click anywhere to hear the theremin</button>
   </main>
 
   <!-- right margin -->
@@ -352,15 +340,13 @@
   <p class="colophon">A design study, not the artist’s own site</p>
 </div>
 
-<button class="listen" type="button" data-on="false">Click to hear the theremin</button>
-
 <script>
   // The theremin from /anya-tran-grey/: a sine through a soft tanh curve for
   // an analogue warmth, with a 5.6 Hz vibrato. Two ways to play it:
   //   · press and drag across a drawing (x is pitch from its own base note,
   //     height is volume), as before;
-  //   · click the note at the bottom and the whole page plays: x is pitch
-  //     from C3 to C6, the hand higher is louder. Click again to stop.
+  //   · click anywhere and the whole page plays: x is pitch from C3 to C6,
+  //     the hand higher is louder. The note under the hint stops it.
   (() => {
     let ctx, osc, vibrato, amp;
 
@@ -402,8 +388,8 @@
 
     /* ---- the whole page ---- */
     const btn = document.querySelector('.listen');
-    const LABEL_OFF = 'Click to hear the theremin';
-    const LABEL_ON = 'Theremin on: move to play · click to stop';
+    const LABEL_OFF = 'Click anywhere to hear the theremin';
+    const LABEL_ON = 'Theremin on: move to play · click here to stop';
     const pointer = { x: innerWidth / 2, y: innerHeight / 2, inside: false };
     let drawing = null;                       // the drawing being played, if any
     const soundOn = () => btn.dataset.on === 'true';
@@ -421,23 +407,34 @@
       else hush();
     }
 
+    let stoppedByHand = false;              // after "stop", only the note starts it again
+
+    function start(x, y) {
+      if (!ensure()) { btn.textContent = 'This browser cannot play sound'; return; }
+      wake();
+      setOn(true);
+      pointer.x = x; pointer.y = y; pointer.inside = true;
+      playPage();
+    }
+    function stop() {
+      setOn(false);
+      hush();
+      setTimeout(() => { if (!soundOn() && !drawing && ctx) ctx.suspend(); }, 400);
+    }
+
+    // the first click anywhere on the page starts it (browsers allow sound only after one)
+    document.addEventListener('pointerdown', e => {
+      if (soundOn() || stoppedByHand || e.target.closest('.listen')) return;
+      start(e.clientX, e.clientY);
+    });
+
     btn.addEventListener('click', e => {
-      if (!soundOn()) {
-        if (!ensure()) { btn.textContent = 'This browser cannot play sound'; return; }
-        wake();
-        setOn(true);
-        // where the click was (or the note itself, for a keyboard press)
-        if (e.detail === 0 || !e.clientX) {
-          const r = btn.getBoundingClientRect();
-          pointer.x = r.left + r.width / 2; pointer.y = r.top + r.height / 2;
-        } else { pointer.x = e.clientX; pointer.y = e.clientY; }
-        pointer.inside = true;
-        playPage();
-      } else {
-        setOn(false);
-        hush();
-        setTimeout(() => { if (!soundOn() && !drawing && ctx) ctx.suspend(); }, 400);
-      }
+      if (soundOn()) { stoppedByHand = true; stop(); return; }
+      stoppedByHand = false;
+      if (e.detail === 0 || !e.clientX) {     // a keyboard press: sound from the note itself
+        const r = btn.getBoundingClientRect();
+        start(r.left + r.width / 2, r.top + r.height / 2);
+      } else start(e.clientX, e.clientY);
     });
 
     addEventListener('pointermove', e => {
