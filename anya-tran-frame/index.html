@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anya Tran</title>
+<meta name="description" content="Anya Tran, musician and new media artist. A design study, not the artist’s own site.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Michroma&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f2f1ec;
+    --ink: #111110;
+    --frame: #121212;
+    --orange: #d6552a;
+    --violet: #a37fd8;
+    --green: #587a58;
+    --mark-green: #3d8b67;
+    --mark-orange: #e0461d;
+    --mark-violet: #b48ae8;
+    /* a printed poster: one paper look in both themes, chosen on purpose */
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    /* paper grain */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    color: var(--ink);
+    font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.25;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  a:hover, a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  /* ---------- the sheet: margin · frame · margin ---------- */
+  .sheet {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 760px) 56px;
+    justify-content: center;
+    column-gap: clamp(16px, 3vw, 40px);
+    padding-block: clamp(24px, 4vw, 48px) 24px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    min-height: 100vh;
+  }
+
+  .margin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 6vh 0;
+  }
+
+  /* sideways sentences, as on the poster's edges */
+  .side {
+    margin: 0;
+    writing-mode: vertical-rl;
+    font-size: 15px;
+    line-height: 1.2;
+    max-height: 70vh;
+  }
+  .margin-left .side { transform: rotate(180deg); }
+
+  /* letters stacked one above the other */
+  .stack {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: -0.12em;
+    line-height: 1;
+  }
+
+  .links {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 40px;
+    font-size: 7px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+  /* ---------- the frame ---------- */
+  .frame {
+    border: clamp(16px, 4.6vw, 44px) solid var(--frame);
+    background: transparent;
+    padding: clamp(40px, 7vw, 76px) clamp(12px, 3vw, 32px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* the frame's black has a faint printed edge */
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+  }
+
+  .art {
+    display: block;
+    width: clamp(120px, 23vw, 170px);
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: crosshair;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .art svg { display: block; width: 100%; height: 100%; }
+  .art:active { transform: scale(0.995); }
+
+  .kicker {
+    margin: clamp(32px, 5vw, 44px) 0 0;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: clamp(22px, 3.4vw, 30px) 0 0;
+    font-family: "Michroma", "Eurostile", sans-serif;
+    font-weight: 400;
+    font-size: clamp(19px, 4.8vw, 40px);
+    line-height: 1;
+    letter-spacing: 1.05em;
+    text-indent: 1.05em; /* balances the trailing letter-space */
+    white-space: nowrap;
+  }
+
+  .no {
+    margin: clamp(22px, 3.4vw, 30px) 0 clamp(36px, 5.4vw, 48px);
+    font-family: "Michroma", "Eurostile", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+
+  .facts {
+    margin: clamp(52px, 9vw, 92px) 0;
+    font-size: clamp(15px, 1.9vw, 17px);
+    line-height: 1.15;
+  }
+
+  .hint {
+    margin: 14px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  .colophon {
+    grid-column: 1 / -1;
+    margin: 20px 0 0;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  /* only for assistive technology */
+  .sr {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------- phone: margins fold under the frame ---------- */
+  @media (max-width: 700px) {
+    .sheet {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 28px;
+    }
+    .frame { order: 1; }
+    .margin {
+      order: 2;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 0;
+      gap: 20px;
+    }
+    .margin-right { order: 3; }
+    .side,
+    .margin-left .side {
+      writing-mode: horizontal-tb;
+      transform: none;
+      max-height: none;
+      flex: 1;
+      min-width: 0;
+    }
+    .colophon { order: 4; margin-top: 4px; }
+    h1 { font-size: 5vw; letter-spacing: 0.7em; text-indent: 0.7em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .art:active { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- left margin -->
+  <aside class="margin margin-left" aria-label="About">
+    <p class="side">Anya invites audiences into a realm where technology, personal history, and the human body converge in immersive sonic and visual experiences.</p>
+    <span class="stack" aria-label="Brooklyn based">Brooklyn based</span>
+  </aside>
+
+  <!-- the framed sheet -->
+  <main class="frame">
+
+    <button class="art" type="button" data-base="196" aria-label="Play a theremin tone">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <filter id="rough-a" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="4" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <filter id="print">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="9"/>
+            <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.22 0"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+        </defs>
+        <rect width="200" height="200" fill="var(--orange)"/>
+        <g filter="url(#rough-a)" fill="none" stroke="var(--mark-green)" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke-width="2.4" d="M38 30 C70 24 120 34 168 26"/>
+          <path stroke-width="2"   d="M34 58 C80 52 118 62 166 54 M36 86 C76 80 126 92 170 82 M30 114 C78 108 124 120 168 110 M34 142 C82 134 120 148 164 138 M40 168 C86 162 120 172 160 166"/>
+          <path stroke-width="2.2" d="M44 24 C40 70 48 120 42 172 M72 30 C70 80 78 120 72 170 M100 26 C96 70 104 130 98 176 M128 30 C124 76 132 118 128 172 M156 26 C150 80 160 130 154 168"/>
+          <path stroke-width="1.2" d="M50 40 l14 10 M80 66 l12 -8 M108 94 l14 6 M60 122 l10 12 M136 128 l12 -6 M88 150 l14 8 M140 44 l10 12 M118 70 l-8 12"/>
+        </g>
+        <rect width="200" height="200" filter="url(#print)"/>
+      </svg>
+    </button>
+
+    <p class="kicker">Musician and new media artist</p>
+    <h1><span class="sr">Anya Tran</span><span aria-hidden="true">anya tran</span></h1>
+    <p class="no">theremin</p>
+
+    <button class="art" type="button" data-base="262" aria-label="Play a theremin tone">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <filter id="rough-b" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="11" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <rect width="200" height="200" fill="var(--violet)"/>
+        <g filter="url(#rough-b)" fill="none" stroke="var(--mark-orange)" stroke-linecap="round">
+          <path stroke-width="2.6" d="M102 22 C100 60 106 96 98 132 C96 150 100 166 98 180"/>
+          <path stroke-width="2.4" d="M40 98 C70 94 96 102 122 96 C138 92 150 100 164 96"/>
+          <path stroke-width="1.6" d="M74 70 C84 80 92 84 104 86 M118 112 C128 122 134 126 146 128 M86 118 C80 128 76 134 64 140 M120 64 C128 58 134 52 146 50"/>
+          <path stroke-width="1.2" d="M56 92 l-8 -10 M150 104 l10 8 M98 46 l-10 -6 M104 152 l10 6 M132 82 l6 -4 M70 108 l-6 6"/>
+          <path stroke-width="3.2" d="M112 104 C118 108 122 112 124 120"/>
+        </g>
+        <rect width="200" height="200" filter="url(#print)"/>
+      </svg>
+    </button>
+
+    <p class="facts">Originally from Moscow<br>with Vietnamese roots<br>New York</p>
+
+    <button class="art" type="button" data-base="330" aria-label="Play a theremin tone">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <filter id="spatter" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G" result="d"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="2" seed="2" result="h"/>
+            <feComponentTransfer in="h" result="holes">
+              <feFuncA type="discrete" tableValues="0 0 0 0 0 0 1 1"/>
+            </feComponentTransfer>
+            <feComposite in="d" in2="holes" operator="out"/>
+          </filter>
+        </defs>
+        <rect width="200" height="200" fill="var(--green)"/>
+        <g filter="url(#spatter)" fill="var(--mark-violet)">
+          <path d="M42 108 C60 88 92 78 124 80 C146 82 164 70 172 76 C176 84 160 98 138 106 C118 114 92 126 66 128 C50 130 36 122 42 108 Z"/>
+          <path d="M60 82 C72 70 88 68 96 74 C88 80 74 84 60 82 Z"/>
+          <circle cx="150" cy="122" r="5"/>
+          <circle cx="58" cy="140" r="4"/>
+        </g>
+        <rect width="200" height="200" filter="url(#print)"/>
+      </svg>
+    </button>
+
+    <p class="hint">Press and drag across a square to play it</p>
+  </main>
+
+  <!-- right margin -->
+  <aside class="margin margin-right" aria-label="Background and links">
+    <p class="side">Steeped in a rigorous classical piano background, she shifted her focus to the theremin, embracing a direct, almost tactile encounter with sound that breaks free from traditional constraints.</p>
+    <ul class="links">
+      <li><a class="stack" href="https://www.instagram.com/anya_tran/" aria-label="Instagram, @anya_tran">Instagram</a></li>
+      <li><a class="stack" href="https://ra.co/" aria-label="Resident Advisor">Resident Advisor</a></li>
+    </ul>
+    <span class="badge" aria-label="New York">
+      <svg viewBox="0 0 56 40" aria-hidden="true"><path d="M6 14 C10 4 22 3 30 6 C40 2 52 8 50 18 C55 26 46 36 34 34 C24 39 10 36 7 28 C1 24 2 18 6 14 Z" fill="none" stroke="currentColor" stroke-width="0.8"/></svg>
+      <span aria-hidden="true">New York</span>
+    </span>
+  </aside>
+
+  <p class="colophon">A design study, not the artist’s own site</p>
+</div>
+
+<script>
+  // A small theremin: the pointer's x is pitch, its height is volume.
+  (() => {
+    let ctx, osc, lfo, lfoGain, amp;
+
+    function ensure() {
+      if (ctx) return;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      ctx = new AC();
+      osc = ctx.createOscillator();
+      osc.type = 'sine';
+      lfo = ctx.createOscillator();
+      lfo.frequency.value = 5.2;
+      lfoGain = ctx.createGain();
+      lfoGain.gain.value = 0;
+      amp = ctx.createGain();
+      amp.gain.value = 0;
+      lfo.connect(lfoGain).connect(osc.frequency);
+      osc.connect(amp).connect(ctx.destination);
+      osc.start(); lfo.start();
+    }
+
+    function voice(freq, vol) {
+      if (!ctx) return;
+      const t = ctx.currentTime;
+      osc.frequency.setTargetAtTime(freq, t, 0.03);
+      lfoGain.gain.setTargetAtTime(freq * 0.012, t, 0.2);
+      amp.gain.setTargetAtTime(vol, t, 0.04);
+    }
+
+    function hush() {
+      if (!ctx) return;
+      amp.gain.setTargetAtTime(0, ctx.currentTime, 0.12);
+    }
+
+    function fromPointer(el, e) {
+      const r = el.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      const y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+      const base = Number(el.dataset.base);
+      voice(base * Math.pow(2, x * 2), 0.04 + (1 - y) * 0.18);
+    }
+
+    document.querySelectorAll('.art').forEach(el => {
+      el.addEventListener('pointerdown', e => {
+        ensure();
+        if (ctx && ctx.state === 'suspended') ctx.resume();
+        el.setPointerCapture(e.pointerId);
+        fromPointer(el, e);
+      });
+      el.addEventListener('pointermove', e => {
+        if (el.hasPointerCapture(e.pointerId)) fromPointer(el, e);
+      });
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => el.addEventListener(t, hush));
+
+      // keyboard: a short held note, sliding up a fifth
+      el.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        if (e.repeat) return;
+        ensure();
+        if (!ctx) return;
+        if (ctx.state === 'suspended') ctx.resume();
+        const base = Number(el.dataset.base);
+        voice(base, 0.15);
+        osc.frequency.setTargetAtTime(base * 1.5, ctx.currentTime + 0.3, 0.25);
+        setTimeout(hush, 1100);
+      });
+    });
+  })();
+</script>
+</body>
+</html>
