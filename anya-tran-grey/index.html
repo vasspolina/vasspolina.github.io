@@ -219,6 +219,9 @@
     height: min(100svh, 1100px);
     /* 30% of its own height higher than where it would sit; still sticky at the top of the screen once scrolled */
     margin-top: calc(min(100svh, 1100px) * -0.3);
+    /* 20% bigger, grown from its top edge so it starts where it did and stays centred */
+    transform: scale(1.2);
+    transform-origin: 50% 0;
     overflow: visible;
   }
   .mark .strand { fill: var(--mark-fill); }
