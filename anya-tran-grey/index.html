@@ -200,6 +200,16 @@
   .controls button:hover { background: var(--mid); }
   .controls button[aria-pressed="true"]:hover { background: var(--ink-big); }
   .controls [hidden] { display: none; }
+  .controls #sound[data-on="true"] { background: var(--ink); color: var(--edge); }
+  .controls #sound[data-on="true"]:hover { background: var(--ink-big); }
+  .vol {
+    display: inline-flex; align-items: center; gap: 10px;
+    min-height: 44px; padding: 0 4px;
+    font-size: 15px; line-height: 1;
+    text-transform: uppercase; letter-spacing: .05em;
+    font-variation-settings: "wdth" 112;
+  }
+  .vol input { width: 110px; accent-color: var(--ink); cursor: pointer; }
 
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
@@ -271,7 +281,8 @@
 
     <p class="note" data-edit="note">A design study, not the artist’s own site</p>
     <div class="controls">
-      <button type="button" id="sound" aria-pressed="false">Sound</button>
+      <button type="button" id="sound" data-on="false">Sound</button>
+      <label class="vol">Volume <input type="range" id="volume" min="0" max="100" step="1" value="70"></label>
       <button type="button" id="edit" aria-pressed="false">Edit text</button>
       <button type="button" id="reset" hidden>Reset</button>
     </div>
@@ -463,6 +474,21 @@
   const soundBtn = document.getElementById("sound");
   const pointer = { x: innerWidth * 0.5, y: innerHeight * 0.5 };
 
+  // The button says what it will do: "Sound" starts, "Stop sound" stops.
+  function setSoundState(on) {
+    soundBtn.dataset.on = String(on);
+    soundBtn.textContent = on ? "Stop sound" : "Sound";
+  }
+
+  // Volume: 70 is the level the page was tuned at, 0 is silent, 100 a little louder.
+  const volumeSlider = document.getElementById("volume");
+  const masterFor = v => Number(v) / 70;
+  try { const v = localStorage.getItem("anya-tran-volume"); if (v !== null) volumeSlider.value = v; } catch (e) {}
+  volumeSlider.addEventListener("input", () => {
+    if (audio) audio.master.gain.setTargetAtTime(masterFor(volumeSlider.value), audio.ctx.currentTime, 0.05);
+    try { localStorage.setItem("anya-tran-volume", volumeSlider.value); } catch (e) {}
+  });
+
   function startAudio() {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
@@ -476,19 +502,20 @@
     const lfo = ctx.createOscillator(); lfo.frequency.value = 5.6;
     const lfoAmt = ctx.createGain(); lfoAmt.gain.value = 5;
     lfo.connect(lfoAmt).connect(osc.frequency);
-    osc.connect(shape).connect(vol).connect(ctx.destination);
+    const master = ctx.createGain(); master.gain.value = masterFor(volumeSlider.value);
+    osc.connect(shape).connect(vol).connect(master).connect(ctx.destination);
     osc.start(); lfo.start();
-    return { ctx, osc, vol };
+    return { ctx, osc, vol, master };
   }
   function pitchFor(x) { return 130 * Math.pow(2, 3 * Math.min(1, Math.max(0, x / innerWidth))); } // C3 to C6
   function volumeFor(y) { return 0.16 * (1 - Math.min(1, Math.max(0, y / innerHeight))); }       // hand low = quiet
 
   soundBtn.addEventListener("click", async () => {
-    const on = soundBtn.getAttribute("aria-pressed") !== "true";
-    soundBtn.setAttribute("aria-pressed", String(on));
+    const on = soundBtn.dataset.on !== "true";
+    setSoundState(on);
     if (on) {
       if (!audio) audio = startAudio();
-      if (!audio) { soundBtn.setAttribute("aria-pressed", "false"); return; }
+      if (!audio) { setSoundState(false); return; }
       await audio.ctx.resume();
       const now = audio.ctx.currentTime;
       audio.osc.frequency.setTargetAtTime(pitchFor(pointer.x), now, 0.03);
@@ -496,10 +523,10 @@
       kick();
     } else if (audio) {
       audio.vol.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.06);
-      setTimeout(() => { if (soundBtn.getAttribute("aria-pressed") !== "true") audio.ctx.suspend(); }, 400);
+      setTimeout(() => { if (soundBtn.dataset.on !== "true") audio.ctx.suspend(); }, 400);
     }
   });
-  const soundOn = () => soundBtn.getAttribute("aria-pressed") === "true";
+  const soundOn = () => soundBtn.dataset.on === "true";
 
   // The first click anywhere on the page starts the theremin as well (a click
   // is what browsers require before sound). The Sound button shows it is on and
