@@ -217,6 +217,8 @@
     display: block;
     width: 100%;
     height: min(100svh, 1100px);
+    /* 30% of its own height higher than where it would sit; still sticky at the top of the screen once scrolled */
+    margin-top: calc(min(100svh, 1100px) * -0.3);
     overflow: visible;
   }
   .mark .strand { fill: var(--mark-fill); }
@@ -311,7 +313,7 @@
       background: var(--edge);
     }
     .sound-dock .vol input { width: 90px; }
-    .mark svg { height: min(100svh, 900px); }
+    .mark svg { height: min(100svh, 900px); margin-top: calc(min(100svh, 900px) * -0.3); }
   }
 
   /* ---------------- the theremin dock, in the page's own type ----------------
@@ -698,6 +700,15 @@
   // stops it; after that, only the button starts it again.
   let stoppedByHand = false;
   soundBtn.addEventListener("click", () => { stoppedByHand = !soundOn(); });
+  // Enter stops the sound while it plays (Escape too). Not while editing text, and
+  // not on a focused button, link or slider, where Enter already means that control.
+  document.addEventListener("keydown", e => {
+    if ((e.key !== "Enter" && e.key !== "Escape") || !soundOn() || editing) return;
+    if (e.target.closest && e.target.closest("button, a, input, [contenteditable]")) return;
+    e.preventDefault();
+    soundBtn.click();
+  });
+
   document.addEventListener("click", e => {
     if (soundOn() || stoppedByHand || editing) return;
     if (e.target.closest(".controls, a")) return;
