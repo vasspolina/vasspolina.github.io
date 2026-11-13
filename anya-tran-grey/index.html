@@ -8,7 +8,7 @@
 <meta name="description" content="A design study for a musician and new media artist, set like a gig poster. Not the artist's own site.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..600&family=Belleza&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..600&family=Belleza&family=Cinzel:wght@400&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet">
 <style>
   /* ------------------------------------------------------------------
      Colours. Text is darker than on the printed poster on purpose:
@@ -59,15 +59,15 @@
     position: relative;
     min-height: calc(100svh - 20px);
     border-radius: var(--radius);
-    overflow: hidden;
+    overflow: clip;           /* not hidden: hidden would stop the sticky drawing and dock from following the scroll */
     background:
       radial-gradient(ellipse 38% 55% at 50% 48%, var(--core), transparent 70%),
       linear-gradient(90deg, var(--edge) 0%, var(--mid) 16%, var(--mid) 84%, var(--edge) 100%);
     display: grid;
     /* One centred column: the text down the middle, the drawing behind it. */
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas: "top" "col" "bot";
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: "top" "name" "col" "bot";
   }
 
   /* ---------------- the letter-spaced bands ---------------- */
@@ -85,6 +85,37 @@
   .band.bot { grid-area: bot; }
   .spread-row { display: flex; justify-content: space-between; }
   .spread-row span { display: block; min-width: .3em; text-align: center; }
+
+  /* ---------------- the name, as on /anya-tran/ ----------------
+     Trajan-style capitals in red, each line spread letter by letter: ANYA over a
+     little more than half the width, TRẦN over four fifths. Cinzel has no
+     Vietnamese glyphs, so Cormorant SC behind it supplies only the Ầ.
+     The red is darkened from that page's #b8232d to clear 3:1 (large text) on
+     the darkest grey here (#a8aaae); the grain is light specks over it. */
+  .name-title {
+    grid-area: name;
+    margin: 0;
+    padding: clamp(4px, 1vw, 12px) clamp(20px, 3.4vw, 48px) clamp(8px, 2vw, 24px);
+    font-family: "Cinzel", "Cormorant SC", "Trajan Pro", "Optima", serif;
+    font-weight: 400;
+    font-size: clamp(44px, 8.4vw, 124px);
+    line-height: 1.12;
+    text-transform: uppercase;
+    color: #9e1d27;
+    position: relative;
+    z-index: 1;
+  }
+  .name-title .spread { display: block; }
+  .name-title .l1 { width: 56%; }
+  .name-title .l2 { width: 82%; }
+  .name-title .spread-row span {
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -1.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+      #9e1d27;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 
   /* ---------------- the centred column ---------------- */
   .col {
@@ -200,6 +231,31 @@
   .controls button:hover { background: var(--mid); }
   .controls button[aria-pressed="true"]:hover { background: var(--ink-big); }
   .controls [hidden] { display: none; }
+  .controls #sound[data-on="true"] { background: var(--ink); color: var(--edge); }
+  .controls #sound[data-on="true"]:hover { background: var(--ink-big); }
+  .vol {
+    display: inline-flex; align-items: center; gap: 10px;
+    min-height: 44px; padding: 0 4px;
+    font-size: 15px; line-height: 1;
+    text-transform: uppercase; letter-spacing: .05em;
+    font-variation-settings: "wdth" 112;
+  }
+  .vol input { width: 110px; accent-color: var(--ink); cursor: pointer; }
+
+  /* The theremin controls sit to the left of the drawing and travel with it:
+     sticky at the height of the drawing's middle, in the same grid cell. */
+  .sound-dock {
+    grid-area: col;
+    position: sticky;
+    top: calc(50svh - 46px);
+    z-index: 2;
+    align-self: start;
+    justify-self: start;
+    margin: 0 0 0 max(16px, calc(50% - 460px));
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
@@ -226,6 +282,21 @@
     .band { padding: 16px 16px; font-size: clamp(20px, 6vw, 30px); }
     .col { padding: 20px 16px 48px; }
     .mark { opacity: .42; }
+    .name-title { padding: 4px 16px 12px; font-size: 13vw; }
+    .name-title .l1 { width: 70%; }
+    .name-title .l2 { width: 100%; }
+    .sound-dock {
+      top: auto;
+      bottom: 12px;
+      align-self: end;
+      margin: 0 0 12px 16px;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 12px 0 0;
+      border-radius: 999px;
+      background: var(--edge);
+    }
+    .sound-dock .vol input { width: 90px; }
     .mark svg { height: min(100svh, 900px); }
   }
 
@@ -243,9 +314,13 @@
   href attributes on the two <a> elements.
 -->
 <main class="poster">
-  <h1 class="sr-only">Anya Tran</h1>
 
   <p class="band top spread" data-edit="band-top">Brooklyn based</p>
+
+  <h1 class="name-title">
+    <span class="spread l1" data-edit="name-first">Anya</span>
+    <span class="spread l2" data-edit="name-last">Trần</span>
+  </h1>
 
   <div class="col">
     <ul class="names">
@@ -271,10 +346,14 @@
 
     <p class="note" data-edit="note">A design study, not the artist’s own site</p>
     <div class="controls">
-      <button type="button" id="sound" aria-pressed="false">Sound</button>
       <button type="button" id="edit" aria-pressed="false">Edit text</button>
       <button type="button" id="reset" hidden>Reset</button>
     </div>
+  </div>
+
+  <div class="controls sound-dock" role="group" aria-label="Theremin">
+    <button type="button" id="sound" data-on="false">Sound</button>
+    <label class="vol">Volume <input type="range" id="volume" min="0" max="100" step="1" value="70"></label>
   </div>
 
   <div class="mark" aria-hidden="true">
@@ -463,6 +542,21 @@
   const soundBtn = document.getElementById("sound");
   const pointer = { x: innerWidth * 0.5, y: innerHeight * 0.5 };
 
+  // The button says what it will do: "Sound" starts, "Stop sound" stops.
+  function setSoundState(on) {
+    soundBtn.dataset.on = String(on);
+    soundBtn.textContent = on ? "Stop sound" : "Sound";
+  }
+
+  // Volume: 70 is the level the page was tuned at, 0 is silent, 100 a little louder.
+  const volumeSlider = document.getElementById("volume");
+  const masterFor = v => Number(v) / 70;
+  try { const v = localStorage.getItem("anya-tran-volume"); if (v !== null) volumeSlider.value = v; } catch (e) {}
+  volumeSlider.addEventListener("input", () => {
+    if (audio) audio.master.gain.setTargetAtTime(masterFor(volumeSlider.value), audio.ctx.currentTime, 0.05);
+    try { localStorage.setItem("anya-tran-volume", volumeSlider.value); } catch (e) {}
+  });
+
   function startAudio() {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
@@ -476,19 +570,20 @@
     const lfo = ctx.createOscillator(); lfo.frequency.value = 5.6;
     const lfoAmt = ctx.createGain(); lfoAmt.gain.value = 5;
     lfo.connect(lfoAmt).connect(osc.frequency);
-    osc.connect(shape).connect(vol).connect(ctx.destination);
+    const master = ctx.createGain(); master.gain.value = masterFor(volumeSlider.value);
+    osc.connect(shape).connect(vol).connect(master).connect(ctx.destination);
     osc.start(); lfo.start();
-    return { ctx, osc, vol };
+    return { ctx, osc, vol, master };
   }
   function pitchFor(x) { return 130 * Math.pow(2, 3 * Math.min(1, Math.max(0, x / innerWidth))); } // C3 to C6
   function volumeFor(y) { return 0.16 * (1 - Math.min(1, Math.max(0, y / innerHeight))); }       // hand low = quiet
 
   soundBtn.addEventListener("click", async () => {
-    const on = soundBtn.getAttribute("aria-pressed") !== "true";
-    soundBtn.setAttribute("aria-pressed", String(on));
+    const on = soundBtn.dataset.on !== "true";
+    setSoundState(on);
     if (on) {
       if (!audio) audio = startAudio();
-      if (!audio) { soundBtn.setAttribute("aria-pressed", "false"); return; }
+      if (!audio) { setSoundState(false); return; }
       await audio.ctx.resume();
       const now = audio.ctx.currentTime;
       audio.osc.frequency.setTargetAtTime(pitchFor(pointer.x), now, 0.03);
@@ -496,10 +591,10 @@
       kick();
     } else if (audio) {
       audio.vol.gain.setTargetAtTime(0, audio.ctx.currentTime, 0.06);
-      setTimeout(() => { if (soundBtn.getAttribute("aria-pressed") !== "true") audio.ctx.suspend(); }, 400);
+      setTimeout(() => { if (soundBtn.dataset.on !== "true") audio.ctx.suspend(); }, 400);
     }
   });
-  const soundOn = () => soundBtn.getAttribute("aria-pressed") === "true";
+  const soundOn = () => soundBtn.dataset.on === "true";
 
   // The first click anywhere on the page starts the theremin as well (a click
   // is what browsers require before sound). The Sound button shows it is on and
