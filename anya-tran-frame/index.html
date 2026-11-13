@@ -182,6 +182,22 @@
     letter-spacing: 0.02em;
   }
 
+  /* the theremin note: the hint's own type, a button only in behaviour */
+  .listen {
+    display: inline-block;
+    margin: 2px 0 0;
+    padding: 10px 8px;        /* a 44px-ish target without moving the text */
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+    cursor: pointer;
+  }
+  .listen:hover, .listen:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+
   .colophon {
     grid-column: 1 / -1;
     margin: 20px 0 0;
@@ -305,6 +321,7 @@
     </button>
 
     <p class="hint">Press and drag across a drawing to play it</p>
+    <button class="listen" type="button" data-on="false">Click anywhere to hear the theremin</button>
   </main>
 
   <!-- right margin -->
@@ -324,73 +341,146 @@
 </div>
 
 <script>
-  // A small theremin: the pointer's x is pitch, its height is volume.
+  // The theremin from /anya-tran-grey/: a sine through a soft tanh curve for
+  // an analogue warmth, with a 5.6 Hz vibrato. Two ways to play it:
+  //   · press and drag across a drawing (x is pitch from its own base note,
+  //     height is volume), as before;
+  //   · click anywhere and the whole page plays: x is pitch from C3 to C6,
+  //     the hand higher is louder. The note under the hint stops it.
   (() => {
-    let ctx, osc, lfo, lfoGain, amp;
+    let ctx, osc, vibrato, amp;
 
     function ensure() {
-      if (ctx) return;
+      if (ctx) return true;
       const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
+      if (!AC) return false;
       ctx = new AC();
       osc = ctx.createOscillator();
       osc.type = 'sine';
-      lfo = ctx.createOscillator();
-      lfo.frequency.value = 5.2;
-      lfoGain = ctx.createGain();
-      lfoGain.gain.value = 0;
+      const shape = ctx.createWaveShaper();
+      const curve = new Float32Array(256);
+      for (let i = 0; i < 256; i++) curve[i] = Math.tanh(1.6 * (i / 128 - 1));
+      shape.curve = curve;
       amp = ctx.createGain();
       amp.gain.value = 0;
-      lfo.connect(lfoGain).connect(osc.frequency);
-      osc.connect(amp).connect(ctx.destination);
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 5.6;
+      vibrato = ctx.createGain();
+      vibrato.gain.value = 5;
+      lfo.connect(vibrato).connect(osc.frequency);
+      osc.connect(shape).connect(amp).connect(ctx.destination);
       osc.start(); lfo.start();
+      return true;
     }
+    function wake() { if (ctx && ctx.state === 'suspended') ctx.resume(); }
 
     function voice(freq, vol) {
       if (!ctx) return;
       const t = ctx.currentTime;
       osc.frequency.setTargetAtTime(freq, t, 0.03);
-      lfoGain.gain.setTargetAtTime(freq * 0.012, t, 0.2);
-      amp.gain.setTargetAtTime(vol, t, 0.04);
+      vibrato.gain.setTargetAtTime(Math.max(3, freq * 0.012), t, 0.2);
+      amp.gain.setTargetAtTime(vol, t, 0.06);
     }
-
     function hush() {
       if (!ctx) return;
-      amp.gain.setTargetAtTime(0, ctx.currentTime, 0.12);
+      amp.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
     }
 
-    function fromPointer(el, e) {
+    /* ---- the whole page ---- */
+    const btn = document.querySelector('.listen');
+    const LABEL_OFF = 'Click anywhere to hear the theremin';
+    const LABEL_ON = 'Theremin on: move to play · click here to stop';
+    const pointer = { x: innerWidth / 2, y: innerHeight / 2, inside: false };
+    let drawing = null;                       // the drawing being played, if any
+    const soundOn = () => btn.dataset.on === 'true';
+    const clamp01 = v => Math.min(1, Math.max(0, v));
+    const pagePitch = x => 130.81 * Math.pow(2, 3 * clamp01(x / innerWidth));   // C3 to C6
+    const pageVolume = y => 0.16 * (1 - clamp01(y / innerHeight));               // hand low = quiet
+
+    function setOn(on) {
+      btn.dataset.on = String(on);
+      btn.textContent = on ? LABEL_ON : LABEL_OFF;
+    }
+    function playPage() {
+      if (!soundOn() || drawing) return;
+      if (pointer.inside) voice(pagePitch(pointer.x), pageVolume(pointer.y));
+      else hush();
+    }
+
+    let stoppedByHand = false;              // after "stop", only the note starts it again
+
+    function start(x, y) {
+      if (!ensure()) { btn.textContent = 'This browser cannot play sound'; return; }
+      wake();
+      setOn(true);
+      pointer.x = x; pointer.y = y; pointer.inside = true;
+      playPage();
+    }
+    function stop() {
+      setOn(false);
+      hush();
+      setTimeout(() => { if (!soundOn() && !drawing && ctx) ctx.suspend(); }, 400);
+    }
+
+    // the first click anywhere on the page starts it (browsers allow sound only after one)
+    document.addEventListener('pointerdown', e => {
+      if (soundOn() || stoppedByHand || e.target.closest('.listen')) return;
+      start(e.clientX, e.clientY);
+    });
+
+    btn.addEventListener('click', e => {
+      if (soundOn()) { stoppedByHand = true; stop(); return; }
+      stoppedByHand = false;
+      if (e.detail === 0 || !e.clientX) {     // a keyboard press: sound from the note itself
+        const r = btn.getBoundingClientRect();
+        start(r.left + r.width / 2, r.top + r.height / 2);
+      } else start(e.clientX, e.clientY);
+    });
+
+    addEventListener('pointermove', e => {
+      pointer.x = e.clientX; pointer.y = e.clientY; pointer.inside = true;
+      playPage();
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { pointer.inside = false; playPage(); });
+    addEventListener('blur', () => { pointer.inside = false; playPage(); });
+
+    /* ---- the drawings ---- */
+    function fromDrawing(el, e) {
       const r = el.getBoundingClientRect();
-      const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-      const y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
-      const base = Number(el.dataset.base);
-      voice(base * Math.pow(2, x * 2), 0.04 + (1 - y) * 0.18);
+      const x = clamp01((e.clientX - r.left) / r.width);
+      const y = clamp01((e.clientY - r.top) / r.height);
+      voice(Number(el.dataset.base) * Math.pow(2, x * 2), 0.04 + (1 - y) * 0.18);
+    }
+    function release() {
+      drawing = null;
+      if (soundOn()) playPage(); else hush();
     }
 
     document.querySelectorAll('.art').forEach(el => {
       el.addEventListener('pointerdown', e => {
-        ensure();
-        if (ctx && ctx.state === 'suspended') ctx.resume();
+        if (!ensure()) return;
+        wake();
+        drawing = el;
         el.setPointerCapture(e.pointerId);
-        fromPointer(el, e);
+        fromDrawing(el, e);
       });
       el.addEventListener('pointermove', e => {
-        if (el.hasPointerCapture(e.pointerId)) fromPointer(el, e);
+        if (el.hasPointerCapture(e.pointerId)) fromDrawing(el, e);
       });
-      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => el.addEventListener(t, hush));
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t =>
+        el.addEventListener(t, () => { if (drawing === el) release(); }));
 
       // keyboard: a short held note, sliding up a fifth
       el.addEventListener('keydown', e => {
         if (e.key !== 'Enter' && e.key !== ' ') return;
         e.preventDefault();
-        if (e.repeat) return;
-        ensure();
-        if (!ctx) return;
-        if (ctx.state === 'suspended') ctx.resume();
+        if (e.repeat || !ensure()) return;
+        wake();
+        drawing = el;
         const base = Number(el.dataset.base);
         voice(base, 0.15);
         osc.frequency.setTargetAtTime(base * 1.5, ctx.currentTime + 0.3, 0.25);
-        setTimeout(hush, 1100);
+        setTimeout(() => { if (drawing === el) release(); }, 1100);
       });
     });
   })();
