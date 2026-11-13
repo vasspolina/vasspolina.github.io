@@ -32,13 +32,10 @@
     --paper: #f2f1ec;
     --ink: #111110;
     --frame: #121212;
-    /* the squares print in black and white: ink ground, paper marks */
-    --orange: var(--ink);
-    --violet: var(--ink);
-    --green: var(--ink);
-    --mark-green: var(--paper);
-    --mark-orange: var(--paper);
-    --mark-violet: var(--paper);
+    /* the drawings alone: ink marks straight on the paper, no ground */
+    --mark-green: var(--ink);
+    --mark-orange: var(--ink);
+    --mark-violet: var(--ink);
     /* a printed poster: one paper look in both themes, chosen on purpose */
     color-scheme: light;
   }
@@ -251,20 +248,13 @@
             <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="4" result="n"/>
             <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
-          <filter id="print">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="9"/>
-            <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.22 0"/>
-            <feComposite in2="SourceGraphic" operator="in"/>
-          </filter>
         </defs>
-        <rect width="200" height="200" fill="var(--orange)"/>
         <g filter="url(#rough-a)" fill="none" stroke="var(--mark-green)" stroke-linecap="round" stroke-linejoin="round">
           <path stroke-width="2.4" d="M38 30 C70 24 120 34 168 26"/>
           <path stroke-width="2"   d="M34 58 C80 52 118 62 166 54 M36 86 C76 80 126 92 170 82 M30 114 C78 108 124 120 168 110 M34 142 C82 134 120 148 164 138 M40 168 C86 162 120 172 160 166"/>
           <path stroke-width="2.2" d="M44 24 C40 70 48 120 42 172 M72 30 C70 80 78 120 72 170 M100 26 C96 70 104 130 98 176 M128 30 C124 76 132 118 128 172 M156 26 C150 80 160 130 154 168"/>
           <path stroke-width="1.2" d="M50 40 l14 10 M80 66 l12 -8 M108 94 l14 6 M60 122 l10 12 M136 128 l12 -6 M88 150 l14 8 M140 44 l10 12 M118 70 l-8 12"/>
         </g>
-        <rect width="200" height="200" filter="url(#print)"/>
       </svg>
     </button>
 
@@ -280,7 +270,6 @@
             <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
         </defs>
-        <rect width="200" height="200" fill="var(--violet)"/>
         <g filter="url(#rough-b)" fill="none" stroke="var(--mark-orange)" stroke-linecap="round">
           <path stroke-width="2.6" d="M102 22 C100 60 106 96 98 132 C96 150 100 166 98 180"/>
           <path stroke-width="2.4" d="M40 98 C70 94 96 102 122 96 C138 92 150 100 164 96"/>
@@ -288,7 +277,6 @@
           <path stroke-width="1.2" d="M56 92 l-8 -10 M150 104 l10 8 M98 46 l-10 -6 M104 152 l10 6 M132 82 l6 -4 M70 108 l-6 6"/>
           <path stroke-width="3.2" d="M112 104 C118 108 122 112 124 120"/>
         </g>
-        <rect width="200" height="200" filter="url(#print)"/>
       </svg>
     </button>
 
@@ -307,18 +295,16 @@
             <feComposite in="d" in2="holes" operator="out"/>
           </filter>
         </defs>
-        <rect width="200" height="200" fill="var(--green)"/>
         <g filter="url(#spatter)" fill="var(--mark-violet)">
           <path d="M42 108 C60 88 92 78 124 80 C146 82 164 70 172 76 C176 84 160 98 138 106 C118 114 92 126 66 128 C50 130 36 122 42 108 Z"/>
           <path d="M60 82 C72 70 88 68 96 74 C88 80 74 84 60 82 Z"/>
           <circle cx="150" cy="122" r="5"/>
           <circle cx="58" cy="140" r="4"/>
         </g>
-        <rect width="200" height="200" filter="url(#print)"/>
       </svg>
     </button>
 
-    <p class="hint">Press and drag across a square to play it</p>
+    <p class="hint">Press and drag across a drawing to play it</p>
   </main>
 
   <!-- right margin -->
