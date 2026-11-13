@@ -61,15 +61,13 @@
     border-radius: var(--radius);
     overflow: hidden;
     background:
-      radial-gradient(ellipse 38% 55% at 58% 48%, var(--core), transparent 70%),
+      radial-gradient(ellipse 38% 55% at 50% 48%, var(--core), transparent 70%),
       linear-gradient(90deg, var(--edge) 0%, var(--mid) 16%, var(--mid) 84%, var(--edge) 100%);
     display: grid;
-    grid-template-columns: minmax(0, 40%) minmax(0, 60%);
+    /* One centred column: the text down the middle, the drawing behind it. */
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-      "top  top"
-      "col  mark"
-      "bot  bot";
+    grid-template-areas: "top" "col" "bot";
   }
 
   /* ---------------- the letter-spaced bands ---------------- */
@@ -160,10 +158,13 @@
   }
 
   /* ---------------- the mark ---------------- */
+  /* The drawing sits behind the column, centred and pale, so the text keeps its contrast. */
   .mark {
-    grid-area: mark;
+    grid-area: col;
     position: relative;
     min-height: 0;
+    opacity: .55;
+    pointer-events: none;
   }
   .mark svg {
     position: sticky;
@@ -218,20 +219,13 @@
     .poster {
       border-radius: 0;
       min-height: 100svh;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: "top" "col" "bot";
       background:
         radial-gradient(ellipse 70% 40% at 50% 45%, var(--core), transparent 70%),
         linear-gradient(90deg, var(--edge) 0%, var(--mid) 22%, var(--mid) 78%, var(--edge) 100%);
     }
     .band { padding: 16px 16px; font-size: clamp(20px, 6vw, 30px); }
     .col { padding: 20px 16px 48px; }
-    /* The mark goes behind the column, pale, so the text keeps its contrast. */
-    .mark {
-      grid-area: col;
-      opacity: .42;
-      pointer-events: none;
-    }
+    .mark { opacity: .42; }
     .mark svg { height: min(100svh, 900px); }
   }
 
@@ -284,7 +278,7 @@
   </div>
 
   <div class="mark" aria-hidden="true">
-    <svg viewBox="-20 0 440 1000" preserveAspectRatio="xMidYMid meet" focusable="false">
+    <svg viewBox="-42 0 440 1000" preserveAspectRatio="xMidYMid meet" focusable="false">
       <defs>
         <filter id="erode" x="-25%" y="-5%" width="150%" height="110%" color-interpolation-filters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
