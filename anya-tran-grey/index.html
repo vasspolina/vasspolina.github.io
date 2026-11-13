@@ -251,7 +251,7 @@
     z-index: 2;
     align-self: start;
     justify-self: start;
-    margin: 0 0 0 max(16px, calc(50% - 460px));
+    margin: 0 0 0 max(16px, calc(50% - 500px));
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
@@ -298,6 +298,85 @@
     }
     .sound-dock .vol input { width: 90px; }
     .mark svg { height: min(100svh, 900px); }
+  }
+
+  /* ---------------- the theremin dock, in the page's own type ----------------
+     Belleza capitals tracked wide as in the bands, a hairline ink outline for
+     the button, and the slider drawn as a hairline with a ring for its handle
+     (the filled part a heavier line), instead of the browser's own control. */
+  .sound-dock { gap: 14px; }
+  .sound-dock #sound,
+  .sound-dock .vol-word {
+    font-family: "Belleza", "Optima", "Candara", sans-serif;
+    font-variation-settings: normal;
+    font-size: 22px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+  .sound-dock #sound {
+    min-height: 56px;
+    padding: 0 22px 0 calc(22px + .2em);   /* the trailing letter-space, balanced */
+    white-space: nowrap;
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink-big);
+  }
+  .sound-dock #sound:hover { background: var(--edge); }
+  .sound-dock #sound[data-on="true"] { background: var(--ink-big); color: var(--edge); border-color: var(--ink-big); }
+  /* on a wide screen the word sits over its slider, so the dock stays narrow beside the names */
+  .sound-dock .vol { flex-direction: column; align-items: flex-start; gap: 2px; min-height: 0; padding: 0; color: var(--ink-big); }
+  .sound-dock .vol-icon { display: none; width: 26px; height: 26px; flex: none; }
+  .sound-dock input[type="range"] {
+    --fill: 70%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 170px;
+    height: 44px;
+    margin: 0;
+    background: transparent;
+    accent-color: auto;
+  }
+  .sound-dock input[type="range"]::-webkit-slider-runnable-track {
+    height: 22px;
+    background:
+      linear-gradient(var(--ink-big), var(--ink-big)) 0 50% / var(--fill) 3px no-repeat,
+      linear-gradient(var(--ink-big), var(--ink-big)) 0 50% / 100% 1px no-repeat;
+  }
+  .sound-dock input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--edge);
+    border: 1px solid var(--ink-big);
+  }
+  .sound-dock input[type="range"]::-moz-range-track { height: 1px; background: var(--ink-big); }
+  .sound-dock input[type="range"]::-moz-range-progress { height: 3px; background: var(--ink-big); }
+  .sound-dock input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--edge); border: 1px solid var(--ink-big);
+  }
+  .sound-dock input[type="range"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  @media (max-width: 760px) {
+    /* the bar along the foot of the screen takes the poster's own ground */
+    .sound-dock {
+      left: 0;
+      gap: 12px;
+      max-width: calc(100vw - 32px);
+      padding: 6px 16px 6px 6px;
+      background: linear-gradient(90deg, var(--edge), var(--mid) 60%, var(--edge));
+      border: 1px solid var(--ink);
+    }
+    .sound-dock #sound { font-size: 18px; letter-spacing: .14em; min-height: 50px; padding: 0 16px 0 calc(16px + .14em); }
+    /* no room for the word on a phone: a speaker mark stands for it (the label keeps the word for screen readers) */
+    .sound-dock .vol-word { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .sound-dock .vol-icon { display: block; }
+    .sound-dock { flex-wrap: nowrap; }
+    .sound-dock .vol { flex-direction: row; align-items: center; gap: 8px; min-height: 50px; flex: 1 1 auto; min-width: 0; }
+    .sound-dock input[type="range"] { width: auto; flex: 1 1 auto; min-width: 64px; }
+  }
+  @media (max-width: 360px) {
+    .sound-dock #sound { font-size: 16px; letter-spacing: .1em; padding: 0 14px 0 calc(14px + .1em); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -353,7 +432,7 @@
 
   <div class="controls sound-dock" role="group" aria-label="Theremin">
     <button type="button" id="sound" data-on="false">Sound</button>
-    <label class="vol">Volume <input type="range" id="volume" min="0" max="100" step="1" value="70"></label>
+    <label class="vol"><span class="vol-word">Volume</span><svg class="vol-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><input type="range" id="volume" min="0" max="100" step="1" value="70"></label>
   </div>
 
   <div class="mark" aria-hidden="true">
@@ -552,6 +631,9 @@
   const volumeSlider = document.getElementById("volume");
   const masterFor = v => Number(v) / 70;
   try { const v = localStorage.getItem("anya-tran-volume"); if (v !== null) volumeSlider.value = v; } catch (e) {}
+  const paintVolume = () => volumeSlider.style.setProperty("--fill", volumeSlider.value + "%");
+  paintVolume();
+  volumeSlider.addEventListener("input", paintVolume);
   volumeSlider.addEventListener("input", () => {
     if (audio) audio.master.gain.setTargetAtTime(masterFor(volumeSlider.value), audio.ctx.currentTime, 0.05);
     try { localStorage.setItem("anya-tran-volume", volumeSlider.value); } catch (e) {}
