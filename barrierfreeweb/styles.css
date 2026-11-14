@@ -1,0 +1,177 @@
+/* BarrierFreeWeb: the studio site, set in the Accessible Scan widget's design.
+   Ink on paper (#000 and #fff, swapped in dark), Jokker, literal px sizes,
+   pill buttons, 1px ink rules over 15px labels, and a marker highlight with
+   black text on the few phrases that matter. Every highlight fill measures
+   7:1 or better against #000; see ../CLAUDE.md for the measured rules. */
+
+@font-face {
+  font-family: "Jokker";
+  src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ink: #000; --paper: #fff;
+  --hl-orange: #ff8a4c; --hl-blue: #6fa8ff; --hl-green: #4fe0a8;
+  --hl-cap-a: #ffe14d; --hl-cap-b: #ff9ad5;
+  --tile: #f0efe8;
+  --gutter: 20px;
+  --hang: 4.5em;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --ink: #fff; --paper: #000; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --ink: #fff; --paper: #000; color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--paper); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 1em; }
+
+body {
+  margin: 0;
+  background: var(--paper); color: var(--ink);
+  font-family: "Jokker", "DejaVu Sans", sans-serif;
+  font-size: 27px; font-weight: 400; line-height: 1.2; letter-spacing: 0;
+  font-kerning: normal; font-feature-settings: "ss04", "ss05"; font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility; font-synthesis: none;
+  hyphens: auto; hyphenate-limit-chars: 7 3 3; overflow-wrap: break-word; text-wrap: pretty;
+}
+
+.wrap { max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
+
+a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+a:hover { text-decoration-thickness: 3px; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; box-shadow: 0 0 0 2px var(--paper); }
+
+.skip {
+  position: absolute; left: var(--gutter); top: -100px;
+  font-size: 18px; letter-spacing: 0.01em; font-weight: 500;
+  padding: 0.5em 1.1em; background: var(--ink); color: var(--paper); border-radius: 999px; text-decoration: none;
+}
+.skip:focus { top: 10px; z-index: 10; }
+
+/* ── Top bar: the brand and the one navigation ─────────────────────────── */
+.top { border-bottom: 1px solid var(--ink); }
+.top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 30px; padding-block: 12px; }
+.brand { font-size: 18px; letter-spacing: 0.01em; font-weight: 500; text-decoration: none; padding-block: 8px; }
+.nav ul { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; margin: 0; padding: 0; list-style: none; }
+.nav a { display: inline-block; font-size: 18px; letter-spacing: 0.01em; text-decoration: none; padding-block: 8px; }
+.nav a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+.nav a[aria-current="page"] { padding-block: 0; }
+
+/* ── The marker highlight: black text in both themes ───────────────────── */
+.hl, .nav a[aria-current="page"] {
+  background: var(--hl-orange); color: #000;
+  padding: 0 0.12em; margin-inline: 0.14em;
+  box-shadow: 0.14em 0 0 var(--hl-cap-a), -0.14em 0 0 var(--hl-cap-b);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.hl-blue { background: var(--hl-blue); }
+.hl-green { background: var(--hl-green); }
+
+/* ── Buttons: pills, 1px ink edge, marker yellow on hover ──────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; letter-spacing: 0.01em; font-weight: 500; line-height: 1.2;
+  min-height: 44px; padding: 0.5em 1.3em; border: 1px solid var(--ink); border-radius: 999px;
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.btn-primary { background: var(--ink); color: var(--paper); }
+.btn:hover { background: var(--hl-cap-a); border-color: var(--hl-cap-a); color: #000; }
+.nav .btn { min-height: 34px; padding-block: 0.3em; }
+.nav .btn:hover { text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .btn, .blocks a { transition: none; } }
+
+/* ── Display type: Light, 40px and up only ─────────────────────────────── */
+.hero { padding-block: 96px 72px; }
+.display { margin: 0; font-size: 56px; font-weight: 300; letter-spacing: -0.01em; line-height: 1.02; max-width: 19em; }
+.hero .lede { margin: 36px 0 0; max-width: 30em; }
+.hero .btn { margin-top: 36px; }
+.closing { padding-block: 72px 120px; }
+
+/* ── Sections: a number hung in the margin, everything else on one edge ── */
+main { counter-reset: poster; }
+.sec { display: grid; grid-template-columns: var(--hang) minmax(0, 1fr); padding-block: 0 72px; }
+.sec::before {
+  counter-increment: poster; content: counter(poster, decimal-leading-zero) / "";
+  font-size: 15px; letter-spacing: 0.01em; line-height: 1.2; padding-top: 12px;
+}
+.sec > div { min-width: 0; }
+h2 { margin: 0 0 0.5em; font-size: 32px; font-weight: 500; line-height: 1.05; letter-spacing: -0.005em; max-width: 26em; }
+h3 { margin: 0; font-size: 32px; font-weight: 500; line-height: 1.05; letter-spacing: -0.005em; }
+p, ul, ol, dl { margin: 0 0 1.2em; }
+.sec p, .sec .dash { max-width: 30em; }
+.sec > div > :last-child { margin-bottom: 0; }
+strong, b { font-weight: 500; }
+
+/* A run of capitals in prose: 25px at +0.06em, no hole in O, C or G. */
+.caps { font-size: 25px; letter-spacing: 0.06em; }
+
+/* A bullet is an en dash hung outside the block. */
+.dash { list-style: none; padding: 0; }
+.dash li { position: relative; padding-inline-start: 1.2em; }
+.dash li::before { content: "\2013" / ""; position: absolute; inset-inline-start: 0; }
+
+/* ── Groups of parallel items: a 15px label over a 1px ink rule, 18px lines */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2em 15px; margin: 1.2em 0; padding: 0; }
+.cols > div { min-width: 0; }
+.cols dt, .label {
+  font-size: 15px; letter-spacing: 0.01em; line-height: 1.2; font-weight: 400;
+  padding: 0 0 6px; margin: 0 0 10px; border-bottom: 1px solid var(--ink);
+}
+.cols dd { margin: 0; font-size: 18px; letter-spacing: 0.01em; line-height: 1.2; }
+.lines { list-style: none; padding: 0; margin: 0 0 1.2em; columns: 2 280px; column-gap: 15px; font-size: 18px; letter-spacing: 0.01em; }
+.lines li { break-inside: avoid; padding-block: 0.3em; }
+.group { margin-block: 1.2em; }
+
+/* ── Round tappable blocks: 20px corners, fixed ground, black text ─────── */
+.blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 1.2em 0; padding: 0; list-style: none; }
+.blocks a {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 128px; padding: 20px; border-radius: 20px;
+  background: var(--tile); color: #000; text-decoration: none; font-size: 27px; line-height: 1.2;
+  transition: background-color 0.15s;
+}
+.blocks a:hover { background: var(--hl-cap-a); }
+.blocks a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+
+/* ── The scan widget: its title in the hung column, the widget full width.
+   It mounts in a shadow root and brings its own styles and 1em padding. ── */
+.scan { padding-bottom: 72px; }
+.scan .sec { padding-bottom: 0; }
+.scan #a11y-widget-business-root { min-height: 320px; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.2em; }
+
+/* ── Foot ──────────────────────────────────────────────────────────────── */
+.foot { border-top: 4px solid var(--ink); padding-block: 24px 72px; }
+.foot .cols { margin: 0; }
+.foot a { display: inline-block; padding-block: 0.3em; }
+.foot ul { list-style: none; padding: 0; margin: 0; }
+
+/* ── Phone typesetting, after displaay.net: 10px gutter, 22px prose ────── */
+@media (max-width: 640px) {
+  :root { --gutter: 10px; }
+  body { font-size: 22px; letter-spacing: 0.005em; }
+  .display { font-size: 40px; }
+  h2, h3 { font-size: 27px; letter-spacing: 0; }
+  .caps { font-size: 20px; }
+  .hero { padding-block: 48px 48px; }
+  .hero .lede, .hero .btn { margin-top: 24px; }
+  .closing { padding-block: 24px 72px; }
+  .sec { grid-template-columns: minmax(0, 1fr); padding-bottom: 53px; }
+  .scan { padding-bottom: 53px; }
+  .sec::before { padding: 0 0 6px; }
+  .blocks a { font-size: 22px; min-height: 96px; }
+  .top .wrap { padding-block: 6px; }
+  .nav ul { gap: 0 18px; }
+}
+
+@media print {
+  .nav, .skip { display: none; }
+  .hl { box-shadow: none; }
+}
