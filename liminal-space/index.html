@@ -10,7 +10,9 @@
 /* ------------------------------------------------------------------
    Typefaces:
    — Coolkit Variable Font (CoolkitVF-TRIAL.woff2)
-   — Display & sizes >= 18px: Thin/ExtraLight (font-weight: 100)
+   — Headlines (hero, section, tile and price titles): Light (font-weight: 300),
+     so the strokes hold where a line drawing crosses the words
+   — Other sizes >= 18px: Thin (font-weight: 100)
    — Body & sizes < 18px: Regular (font-weight: 400)
    ------------------------------------------------------------------ */
 @font-face {
@@ -118,7 +120,8 @@ html[data-theme="light"] {
   --step-3-fg: #0a0b0a;
   --panel-bg: #b5b29c;
   --panel-fg: #0a0b0a;
-  --btn: #b5b29c;
+  --btn: #fdf8ad;          /* pale yellow: Get a quote, Back to top; black text 19:1 */
+  --btn-alt: #c9fff4;      /* mint: theme switch, nav and filter pills; black text 18:1 */
   --btn-tx-color: #0a0b0a;
   --btn-ic-bg: #0a0b0a;
   --btn-ic-fg: #f3f1e9;
@@ -272,6 +275,9 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
   background: var(--ink); color: var(--paper);
 }
 
+/* the pills take the second button colour where a theme sets one (light: mint) */
+.nav a, .tabs button, .theme-toggle { background: var(--btn-alt, var(--btn)); }
+
 /* buttons — solid colour blocks, no outlines; mixed shapes set flush side by side:
    a round icon disc joined to a label */
 :root { --btn-h: 2.35em; }
@@ -342,7 +348,7 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
 }
 .hero h1 {
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   color: var(--ink);
   line-height: .98;
   letter-spacing: -0.02em;
@@ -446,7 +452,7 @@ section {
 .section-head h2 {
   grid-column: 1 / span 6;
   font-size: var(--fs-l);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 0.98;
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -499,7 +505,7 @@ section {
   z-index: 2;
   text-align: left;
   font-size: var(--fs-l);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 0.98;
   letter-spacing: -0.02em;
   max-width: 14ch;
@@ -791,7 +797,7 @@ section {
 }
 .price h3 {
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   line-height: .98;
   letter-spacing: -0.02em;
 }
