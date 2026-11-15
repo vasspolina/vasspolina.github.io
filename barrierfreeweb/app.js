@@ -186,8 +186,8 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const email = form.elements.email.value.trim();
-    const subject = encodeURIComponent("Contact request");
-    const body = encodeURIComponent(`Please get in touch with me at ${email}.`);
+    const subject = encodeURIComponent("Request");
+    const body = encodeURIComponent(`I would like to send a request. Please reply to ${email}.`);
     window.location.href = `mailto:gf@barrierfreeweb.de?subject=${subject}&body=${body}`;
   });
 })();

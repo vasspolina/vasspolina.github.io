@@ -772,7 +772,7 @@ em, i, cite { font-style: italic; }
    typeface opening, one screen tall with a small line at its foot). The
    title band takes the height left under the header (--head, measured) and
    above the contact line; the contact line is one row on the same green:
-   its label, an email field and a button. Cream field, black text 18.4:1;
+   its label, an email field and a Send request button. Cream field, black text 18.4:1;
    lime button, green text 11.0:1; label lime on green 11.0:1.
    The header is 77px, 121px where the navigation drops to a second row
    (under 1060px), then 146px and, under 440px, 188px on a phone. */
