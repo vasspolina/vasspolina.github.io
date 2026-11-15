@@ -1457,7 +1457,7 @@ svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
         <p class="form-status" role="status"></p>
       </form>
       <div class="quote-art-wrap">
-        <img class="art quote-art" src="img/bucket-line.svg" alt="">
+        <img class="art quote-art" src="img/lift-line.svg" alt="">
       </div>
     </div>
   </section>
@@ -1774,7 +1774,7 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     // every stroke of the drawing is kept; the filter closes the narrow gaps
     src.querySelectorAll('path, circle').forEach(el => {
       const c = document.importNode(el, true);
-      ['stroke', 'fill', 'stroke-width', 'style', 'class'].forEach(a => c.removeAttribute(a));
+      ['stroke', 'fill', 'stroke-width', 'style', 'class', 'vector-effect'].forEach(a => c.removeAttribute(a));
       g.appendChild(c);
     });
     svg.appendChild(g);
