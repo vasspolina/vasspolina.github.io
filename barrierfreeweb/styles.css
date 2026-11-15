@@ -810,3 +810,40 @@ em, i, cite { font-style: italic; }
   .signup__btn { padding: 0 16px; }
 }
 @media (max-width: 439px) { .title--lede { --head: 188px; } }
+
+/* The request, after the row is sent: the assistant's questions, then what
+   will be sent and the consent box, on the same green as the opening. Lime
+   on green 11.0:1; fields and buttons as in the row. */
+.signup__trap { display: none; }
+.request {
+  background: var(--forest); color: var(--lime-ink);
+  box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
+  font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
+  padding: 8px 0 56px;
+}
+.request > * { max-width: 640px; margin-inline: auto; }
+.request__title { font: inherit; font-size: 28px; line-height: 32px; margin-block: 0 16px; text-wrap: balance; }
+.request__title:focus { outline: none; }
+.request__title:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.request__note, .request__status { margin-block: 0 12px; }
+.request__row { display: flex; gap: 10px; }
+.request .request__input { flex: 1 1 0; width: auto; min-width: 0; }
+.request__link {
+  font: inherit; color: inherit; background: none; border: 0; padding: 12px 0; margin-top: 4px;
+  display: block; width: 100%; text-align: left; text-decoration: underline; text-underline-offset: 0.15em; cursor: pointer;
+}
+.request__link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.request__brief { margin-block: 0 24px; border-top: 1px solid var(--lime-ink); }
+.request__brief > div { display: grid; grid-template-columns: 11em minmax(0, 1fr); gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid var(--lime-ink); }
+.request__brief dt, .request__brief dd { margin: 0; overflow-wrap: anywhere; }
+.request__send { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.request__consent { display: flex; align-items: flex-start; gap: 10px; flex: 1 1 320px; cursor: pointer; }
+.request__consent input { width: 22px; height: 22px; margin: 1px 0 0; flex: none; accent-color: var(--lime-ink); }
+.request__consent input:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.request__mail { display: inline-flex; align-items: center; text-decoration: none; }
+.request + .plates { margin-top: 0; }
+@media (max-width: 640px) {
+  .request { font-size: 16px; line-height: 22px; padding-bottom: 40px; }
+  .request__title { font-size: 22px; line-height: 26px; }
+  .request__brief > div { grid-template-columns: minmax(0, 1fr); }
+}

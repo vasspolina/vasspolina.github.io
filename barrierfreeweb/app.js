@@ -176,19 +176,144 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
   send.disabled = true;
 });
 
-// The contact line on the home page. The site has no server of its own, so
-// the form writes an email to the studio in the visitor's mail app, with
-// their address and their request in it. Without this script the form's mailto action does
-// the same, less tidily.
+// The request form on the home page.
+//
+// The row takes an email address and one sentence. On submit the studio's
+// scanner server (data-api-base) is asked for a follow-up question, written
+// by an AI assistant: at most three, each skippable. Then the visitor sees
+// what will be sent, ticks the consent box and sends it; the server mails
+// it to the studio. If the server cannot ask (no assistant, no network) the
+// questions are skipped. If it cannot send, the visitor is given the same
+// request as an email to send from their own mail app, which is also what
+// the form's mailto action does without this script.
 (() => {
   const form = document.querySelector("[data-signup]");
-  if (!form) return;
+  const panel = document.querySelector("[data-request]");
+  if (!form || !panel) return;
+  const api = form.dataset.apiBase;
+  const MAIL = "gf@barrierfreeweb.de";
+  const BRIEF = [
+    ["projectType", "Project"], ["currentSite", "Current site"], ["scope", "Scope"], ["services", "Also wanted"],
+    ["timing", "Timing"], ["budget", "Budget"], ["references", "Sites you like"],
+  ];
+  let state = null;
+
+  const el = (tag, attrs = {}, ...kids) => {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "text") node.textContent = v;
+      else if (v === true) node.setAttribute(k, "");
+      else if (v !== false && v != null) node.setAttribute(k, v);
+    }
+    node.append(...kids);
+    return node;
+  };
+  const show = (...kids) => {
+    panel.hidden = false;
+    panel.replaceChildren(...kids);
+    panel.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  };
+  const heading = (text) => el("h2", { class: "request__title", tabindex: "-1", text });
+  const post = async (path, body) => {
+    const res = await fetch(api + path, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    return res.json();
+  };
+
+  const waiting = (text) => show(el("p", { class: "request__status", role: "status", text }));
+
+  async function next() {
+    waiting("One moment.");
+    let step;
+    try {
+      step = await post("/api/inquiry/next", { request: state.request, answers: state.answers });
+    } catch {
+      step = { done: true, brief: null };
+    }
+    if (step.done) { state.brief = step.brief; review(); } else ask(step.question);
+  }
+
+  function ask(question) {
+    const title = heading(question);
+    const input = el("input", { class: "signup__input request__input", id: "request-answer", type: "text", maxlength: "1000", required: true, "aria-labelledby": "request-question" });
+    title.id = "request-question";
+    const f = el("form", { class: "request__row" }, input,
+      el("button", { class: "signup__btn", type: "submit", text: "Next" }));
+    const skip = el("button", { class: "request__link", type: "button", text: "Skip the questions" });
+    f.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const answer = input.value.trim();
+      if (!answer) return;
+      state.answers.push({ question, answer });
+      next();
+    });
+    skip.addEventListener("click", () => { state.brief = null; review(); });
+    show(
+      el("p", { class: "request__note", text: `Question ${state.answers.length + 1} of up to 3, written by an AI assistant.` }),
+      title, f, skip,
+    );
+    input.focus();
+  }
+
+  function review() {
+    const title = heading("This is what we will receive");
+    const list = el("dl", { class: "request__brief" });
+    const row = (k, v) => list.append(el("div", {}, el("dt", { text: k }), el("dd", { text: v })));
+    row("Email", state.email);
+    row("Request", state.request);
+    for (const a of state.answers) row(a.question, a.answer);
+    const parts = [title, list];
+    const b = state.brief;
+    if (b && (b.summary || BRIEF.some(([k]) => b[k]))) {
+      const brief = el("dl", { class: "request__brief" });
+      if (b.summary) brief.append(el("div", {}, el("dt", { text: "Summary" }), el("dd", { text: b.summary })));
+      for (const [k, label] of BRIEF) if (b[k]) brief.append(el("div", {}, el("dt", { text: label }), el("dd", { text: b[k] })));
+      parts.push(el("p", { class: "request__note", text: "A summary written by the AI assistant from your answers:" }), brief);
+    }
+    const box = el("input", { type: "checkbox", id: "request-consent", required: true });
+    const f = el("form", { class: "request__send" },
+      el("label", { class: "request__consent", for: "request-consent" }, box,
+        el("span", { text: "I agree that BarrierFreeWeb may use these details to reply to my request." })),
+      el("button", { class: "signup__btn", type: "submit", text: "Send request" }));
+    f.addEventListener("submit", (e) => { e.preventDefault(); send(); });
+    parts.push(f);
+    show(...parts);
+    title.focus();
+  }
+
+  const mailto = () => {
+    const lines = [state.request, ""];
+    for (const a of state.answers) lines.push(`${a.question}`, `${a.answer}`, "");
+    lines.push(`Please reply to ${state.email}.`);
+    return `mailto:${MAIL}?subject=${encodeURIComponent("Website design request")}&body=${encodeURIComponent(lines.join("\n"))}`;
+  };
+
+  async function send() {
+    waiting("Sending.");
+    try {
+      await post("/api/inquiry", {
+        email: state.email, request: state.request, answers: state.answers, brief: state.brief,
+        consent: true, company_url: form.elements.company_url.value,
+      });
+      const title = heading("Your request is sent");
+      show(title, el("p", { class: "request__note", text: `We will reply to ${state.email}.` }));
+      title.focus();
+      form.reset();
+    } catch {
+      const title = heading("We could not send it from this page");
+      show(title,
+        el("p", { class: "request__note", text: "Nothing was sent. You can send the same request from your own email:" }),
+        el("p", {}, el("a", { class: "signup__btn request__mail", href: mailto(), text: "Open it as an email" })));
+      title.focus();
+    }
+  }
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email = form.elements.email.value.trim();
-    const subject = encodeURIComponent("Request");
-    const request = form.elements.request.value.trim();
-    const body = encodeURIComponent(`${request}\n\nPlease reply to ${email}.`);
-    window.location.href = `mailto:gf@barrierfreeweb.de?subject=${subject}&body=${body}`;
+    state = { email: form.elements.email.value.trim(), request: form.elements.request.value.trim(), answers: [], brief: null };
+    next();
   });
 })();
