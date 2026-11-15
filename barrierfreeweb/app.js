@@ -179,8 +179,8 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
 // The request form on the home page.
 //
 // The row takes an email address and one sentence. On submit the studio's
-// scanner server (data-api-base) is asked for a follow-up question, written
-// by an AI assistant: at most three, each skippable. Then the visitor sees
+// scanner server (data-api-base) is asked for a follow-up question, which
+// an AI assistant writes: at most three, each skippable. Then the visitor sees
 // what will be sent, ticks the consent box and sends it; the server mails
 // it to the studio. If the server cannot ask (no assistant, no network) the
 // questions are skipped. If it cannot send, the visitor is given the same
@@ -252,7 +252,7 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
     });
     skip.addEventListener("click", () => { state.brief = null; review(); });
     show(
-      el("p", { class: "request__note", text: `Question ${state.answers.length + 1} of up to 3, written by an AI assistant.` }),
+      el("p", { class: "request__note", text: `Question ${state.answers.length + 1} of up to 3.` }),
       title, f, skip,
     );
     input.focus();
@@ -271,7 +271,7 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
       const brief = el("dl", { class: "request__brief" });
       if (b.summary) brief.append(el("div", {}, el("dt", { text: "Summary" }), el("dd", { text: b.summary })));
       for (const [k, label] of BRIEF) if (b[k]) brief.append(el("div", {}, el("dt", { text: label }), el("dd", { text: b[k] })));
-      parts.push(el("p", { class: "request__note", text: "A summary written by the AI assistant from your answers:" }), brief);
+      parts.push(el("p", { class: "request__note", text: "A summary of your answers:" }), brief);
     }
     const box = el("input", { type: "checkbox", id: "request-consent", required: true });
     const f = el("form", { class: "request__send" },
