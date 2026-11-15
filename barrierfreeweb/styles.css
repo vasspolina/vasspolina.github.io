@@ -1,9 +1,5 @@
-/* BarrierFreeWeb: the studio site, set in the Accessible Scan widget's design.
-   Ink on paper (#000 and #fff, swapped in dark), Jokker, literal px sizes,
-   pill buttons, 1px ink rules over 15px labels, and a marker highlight with
-   black text on the few phrases that matter. Every highlight fill measures
-   7:1 or better against #000; see ../CLAUDE.md for the measured rules. */
-
+/* Jokker VF (Displaay, trial licence), wght 100-900, no italic cut. Check the
+   trial terms before the site goes public. */
 @font-face {
   font-family: "Jokker";
   src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2");
@@ -11,167 +7,763 @@
   font-style: normal;
   font-display: swap;
 }
+/* the same file again for the italics: Jokker's own slant axis (slnt 0 to -16),
+   drawn by the designer, so nothing is skewed by the browser */
+@font-face {
+  font-family: "Jokker";
+  src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: oblique 0deg 16deg;
+  font-display: swap;
+}
+
+/* BarrierFreeWeb.
+   Layout after the Source Type store page: a dark crumb pill, a centred
+   title, 605px of text beside a 390px grey card, a "Related" row under a
+   rule. Sizes are theirs: 38/40 title, 23/26 headings, 21/27 text,
+   19/24 controls, 15/20 small print; 23/27, 16/21 and 14/19 on a phone.
+   Type as on Source Type. Their faces, Times NR Seven and Rekord, are
+   licensed; the stand-ins were tuned to the same line lengths: STIX Two
+   Text 420 at 0.076em breaks their paragraph on the same words (titles at
+   0.09em, as theirs), Saans Light at 0.1em (0.087em at 19px) matches Rekord at 15px
+   with 1px tracking. Both have true italics. No bold.
+   "What we offer" follows their Information rows (see that block). The
+   displaay colours below are kept but unused; each
+   with black text at 13:1 or better. */
 
 :root {
-  --ink: #000; --paper: #fff;
-  --hl-orange: #ff8a4c; --hl-blue: #6fa8ff; --hl-green: #4fe0a8;
-  --hl-cap-a: #ffe14d; --hl-cap-b: #ff9ad5;
-  --tile: #f0efe8;
-  --gutter: 20px;
-  --hang: 4.5em;
+  --paper: #ffffff;
+  --ink: #000000;
+  --plate: #000000;
+  --plate-ink: #ffffff;
+  --card: #e3e3e3;      /* Source Type's card */
+  --quiet: #595959;     /* 7:1 on paper, 5.9:1 on the card */
+  --pill: #414141;      /* crumb, current page and buttons: 10.4:1 with white */
+  --chip: #ebebeb;
+  --info-green: #a6ddae; /* Source Type Information page */
+  --brown: #6b3e16;     /* row hover: 8.1:1 on the lime band, 9.6:1 on white */
+  --lime: #e4f5a4;      /* "What we offer" band, light green-yellow: black text 18:1, blue links 8:1 */
+  --page: var(--paper);  /* the ground the sticky header paints */
+  --link: #0000ff;      /* 8.6:1 on paper */
+
+  /* displaay specimen grounds, tiles only */
+  --mint: #beffbd;
+  --cyan: #b8fbff;
+  --sky: #a2e3ff;
+  --pink: #ffa0ff;
+  --yellow: #f8ff58;
+  --cream: #f2f0e6;
+
+  --serif: "Jokker", "Helvetica Neue", Helvetica, Arial, sans-serif;  /* the serif roles, now set in Jokker */
+  --sans: "Jokker", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif-track: 0.076em;
+  --title-track: 0.09em;
+  --sans-track: 0.1em;
+  --ui-track: 0.087em;
+
+  --margin: 20px;       /* page margin, as displaay.net: 20px, 10px on a phone */
+  --text-col: 50%;      /* the text runs half the page */
+  --card-col: 390px;
+  --gap: 40px;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --ink: #fff; --paper: #000; color-scheme: dark; }
-}
-:root[data-theme="dark"] { --ink: #fff; --paper: #000; color-scheme: dark; }
 
-*, *::before, *::after { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-html { background: var(--paper); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 1em; }
+html { background: var(--paper); scroll-padding-top: 100px; }
 
 body {
   margin: 0;
-  background: var(--paper); color: var(--ink);
-  font-family: "Jokker", "DejaVu Sans", sans-serif;
-  font-size: 27px; font-weight: 400; line-height: 1.2; letter-spacing: 0;
-  font-kerning: normal; font-feature-settings: "ss04", "ss05"; font-variant-ligatures: common-ligatures;
-  text-rendering: optimizeLegibility; font-synthesis: none;
-  hyphens: auto; hyphenate-limit-chars: 7 3 3; overflow-wrap: break-word; text-wrap: pretty;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 420;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: var(--sans-track);
+  font-kerning: normal;
+  font-synthesis: none;  /* Jokker has no italic cut and a sloped roman is not one: emphasis is weight */
+  font-feature-settings: "ss04", "ss05";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.wrap { max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
+h1, h2, h3, strong, b { font-weight: inherit; }
+em, i, cite { font-style: italic; }
 
-a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
-a:hover { text-decoration-thickness: 3px; }
-:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; box-shadow: 0 0 0 2px var(--paper); }
+a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; border-radius: 4px; }
 
 .skip {
-  position: absolute; left: var(--gutter); top: -100px;
-  font-size: 18px; letter-spacing: 0.01em; font-weight: 500;
-  padding: 0.5em 1.1em; background: var(--ink); color: var(--paper); border-radius: 999px; text-decoration: none;
+  position: absolute; left: var(--margin); top: -100px; z-index: 100;
+  background: var(--pill); color: #fff; text-decoration: none;
+  font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
+  padding: 5px 15px; border-radius: 21px;
 }
-.skip:focus { top: 10px; z-index: 10; }
+.skip:focus { top: 16px; }
 
-/* ── Top bar: the brand and the one navigation ─────────────────────────── */
-.top { border-bottom: 1px solid var(--ink); }
-.top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 30px; padding-block: 12px; }
-.brand { font-size: 18px; letter-spacing: 0.01em; font-weight: 500; text-decoration: none; padding-block: 8px; }
-.nav ul { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; margin: 0; padding: 0; list-style: none; }
-.nav a { display: inline-block; font-size: 18px; letter-spacing: 0.01em; text-decoration: none; padding-block: 8px; }
-.nav a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
-.nav a[aria-current="page"] { padding-block: 0; }
-
-/* ── The marker highlight: black text in both themes ───────────────────── */
-.hl, .nav a[aria-current="page"] {
-  background: var(--hl-orange); color: #000;
-  padding: 0 0.12em; margin-inline: 0.14em;
-  box-shadow: 0.14em 0 0 var(--hl-cap-a), -0.14em 0 0 var(--hl-cap-b);
-  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+.wrap {
+  padding-left: max(var(--margin), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--margin), env(safe-area-inset-right, 0px));
 }
-.hl-blue { background: var(--hl-blue); }
-.hl-green { background: var(--hl-green); }
 
-/* ── Buttons: pills, 1px ink edge, marker yellow on hover ──────────────── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 18px; letter-spacing: 0.01em; font-weight: 500; line-height: 1.2;
-  min-height: 44px; padding: 0.5em 1.3em; border: 1px solid var(--ink); border-radius: 999px;
-  background: var(--paper); color: var(--ink); text-decoration: none;
-  transition: background-color 0.15s, border-color 0.15s;
+/* ---------- Header: brand, the dark crumb pill, page pills ---------- */
+
+/* The header stays at the top while the page scrolls, on the page's own
+   ground; the band above it (a phone's status bar) is painted to match. */
+body > header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--page);
+  padding-bottom: 14px;
 }
-.btn-primary { background: var(--ink); color: var(--paper); }
-.btn:hover { background: var(--hl-cap-a); border-color: var(--hl-cap-a); color: #000; }
-.nav .btn { min-height: 34px; padding-block: 0.3em; }
-.nav .btn:hover { text-decoration: none; }
-@media (prefers-reduced-motion: reduce) { .btn, .blocks a { transition: none; } }
-
-/* ── Display type: Light, 40px and up only ─────────────────────────────── */
-.hero { padding-block: 96px 72px; }
-.display { margin: 0; font-size: 56px; font-weight: 300; letter-spacing: -0.01em; line-height: 1.02; max-width: 19em; }
-.hero .lede { margin: 36px 0 0; max-width: 30em; }
-.hero .btn { margin-top: 36px; }
-.closing { padding-block: 72px 120px; }
-
-/* ── Sections: a number hung in the margin, everything else on one edge ── */
-main { counter-reset: poster; }
-.sec { display: grid; grid-template-columns: var(--hang) minmax(0, 1fr); padding-block: 0 72px; }
-.sec::before {
-  counter-increment: poster; content: counter(poster, decimal-leading-zero) / "";
-  font-size: 15px; letter-spacing: 0.01em; line-height: 1.2; padding-top: 12px;
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 21;
+  background: var(--page);
 }
-.sec > div { min-width: 0; }
-h2 { margin: 0 0 0.5em; font-size: 32px; font-weight: 500; line-height: 1.05; letter-spacing: -0.005em; max-width: 26em; }
-h3 { margin: 0; font-size: 32px; font-weight: 500; line-height: 1.05; letter-spacing: -0.005em; }
-p, ul, ol, dl { margin: 0 0 1.2em; }
-.sec p, .sec .dash { max-width: 30em; }
-.sec > div > :last-child { margin-bottom: 0; }
-strong, b { font-weight: 500; }
 
-/* A run of capitals in prose: 25px at +0.06em, no hole in O, C or G. */
-.caps { font-size: 25px; letter-spacing: 0.06em; }
-
-/* A bullet is an en dash hung outside the block. */
-.dash { list-style: none; padding: 0; }
-.dash li { position: relative; padding-inline-start: 1.2em; }
-.dash li::before { content: "\2013" / ""; position: absolute; inset-inline-start: 0; }
-
-/* ── Groups of parallel items: a 15px label over a 1px ink rule, 18px lines */
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2em 15px; margin: 1.2em 0; padding: 0; }
-.cols > div { min-width: 0; }
-.cols dt, .label {
-  font-size: 15px; letter-spacing: 0.01em; line-height: 1.2; font-weight: 400;
-  padding: 0 0 6px; margin: 0 0 10px; border-bottom: 1px solid var(--ink);
+.top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding-block: 25px 0;
 }
-.cols dd { margin: 0; font-size: 18px; letter-spacing: 0.01em; line-height: 1.2; }
-.lines { list-style: none; padding: 0; margin: 0 0 1.2em; columns: 2 280px; column-gap: 15px; font-size: 18px; letter-spacing: 0.01em; }
-.lines li { break-inside: avoid; padding-block: 0.3em; }
-.group { margin-block: 1.2em; }
+.top > * { min-width: 0; }
 
-/* ── Round tappable blocks: 20px corners, fixed ground, black text ─────── */
-.blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 1.2em 0; padding: 0; list-style: none; }
-.blocks a {
-  display: flex; align-items: center; justify-content: center; text-align: center;
-  min-height: 128px; padding: 20px; border-radius: 20px;
-  background: var(--tile); color: #000; text-decoration: none; font-size: 27px; line-height: 1.2;
-  transition: background-color 0.15s;
+.brand {
+  justify-self: start;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
 }
-.blocks a:hover { background: var(--hl-cap-a); }
-.blocks a[aria-current="page"] { background: var(--ink); color: var(--paper); }
 
-/* ── The scan widget: its title in the hung column, the widget full width.
-   It mounts in a shadow root and brings its own styles and 1em padding. ── */
-.scan { padding-bottom: 72px; }
-.scan .sec { padding-bottom: 0; }
-.scan #a11y-widget-business-root { min-height: 320px; }
+.crumb {
+  justify-self: center;
+  background: var(--pill);
+  color: #fff;
+  border-radius: 21px;
+  padding: 5px 15px;
+  font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
+  white-space: nowrap;
+}
+.crumb a { color: #fff; text-decoration: none; }
+.crumb a:hover { text-decoration: underline; }
+.crumb ol { list-style: none; margin: 0; padding: 0; display: flex; }
+.crumb li + li::before { content: "\2009\2192\2009"; }
 
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.2em; }
+.nav { justify-self: end; }
+.nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.nav a {
+  display: inline-block;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--chip);
+  border-radius: 21px;
+  padding: 4px 8px;
+}
+.nav a:hover { background: var(--ink); color: var(--paper); }
+.nav a[aria-current="page"] { background: var(--pill); color: #fff; }
 
-/* ── Foot ──────────────────────────────────────────────────────────────── */
-.foot { border-top: 4px solid var(--ink); padding-block: 24px 72px; }
-.foot .cols { margin: 0; }
-.foot a { display: inline-block; padding-block: 0.3em; }
-.foot ul { list-style: none; padding: 0; margin: 0; }
+/* ---------- Title ---------- */
 
-/* ── Phone typesetting, after displaay.net: 10px gutter, 22px prose ────── */
+.title {
+  font-family: var(--serif);
+  font-size: 38px;
+  line-height: 40px;
+  letter-spacing: var(--title-track);
+  text-align: center;
+  margin: 87px auto 50px;
+  max-width: 980px;
+  text-wrap: balance;
+}
+.title em { display: block; font-style: italic; }
+
+/* ---------- Columns: 605px of text, 40px, a 390px card ---------- */
+
+.content {
+  display: grid;
+  gap: 81px;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, var(--text-col)) minmax(0, var(--card-col));
+  gap: var(--gap);
+  justify-content: space-between;
+  align-items: start;
+}
+.cols--single { grid-template-columns: minmax(0, var(--text-col)); }
+
+.text {
+  font-family: var(--serif);
+  letter-spacing: var(--serif-track);
+  font-size: 21px;
+  line-height: 27px;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.text > * { margin: 0; }
+.text > * + * { margin-top: 27px; }
+.text p { text-wrap: pretty; }
+.text h2 { font-size: 23px; line-height: 26px; text-wrap: balance; }
+.text h2 + * { margin-top: 13px; }
+.text h3 { font: inherit; font-style: italic; }
+.text h3 + * { margin-top: 0; }
+
+.text ul { padding: 0 0 0 1.05em; list-style: disc; }
+.text ul li::marker { font-size: 0.8em; }
+
+.terms { margin: 0; }
+.terms dt, .terms dd { display: inline; margin: 0; }
+.terms dt { font-style: italic; }
+/* the separator is drawn, not written, so each <dt>/<dd> pair stays a valid list item;
+   the empty alt keeps screen readers from reading "dash" */
+.terms dt::after { content: " - " / ""; font-style: normal; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* the card: Source Type's store popup */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 0;
+  position: sticky;
+  top: 100px;
+}
+.card > * { margin: 0; }
+.card > * + * { margin-top: 20px; }
+.card h2 { font: inherit; font-style: italic; margin: 0; }
+.card h2 + * { margin-top: 6px; }
+.card a { color: var(--ink); }
+
+.offer { list-style: none; margin: 0; padding: 0; }
+.offer li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding-block: 6px 7px;
+  border-bottom: 1px solid var(--ink);
+}
+.offer li:first-child { border-top: 1px solid var(--ink); }
+
+.action { display: flex; justify-content: flex-end; }
+.text .action { justify-content: flex-start; }
+.btn, .card .btn {
+  display: inline-block;
+  background: var(--pill);
+  color: #fff;
+  font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+}
+.btn:hover { background: var(--ink); }
+
+/* ---------- The home plates: black, white type, switching ---------- */
+
+/* Full bleed: the plate runs from one edge of the window to the other,
+   out through the page gutter, and is as tall as the window allows. */
+.plates {
+  margin: 0 calc(-1 * max(var(--margin), env(safe-area-inset-right, 0px))) 72px calc(-1 * max(var(--margin), env(safe-area-inset-left, 0px)));
+}
+.plates__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.plates__track::-webkit-scrollbar { display: none; }
+.plate {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  height: clamp(320px, 56.25vw, calc(100vh - 220px));
+  max-width: 100%;
+  background: var(--plate);
+  color: var(--plate-ink);
+  display: grid;
+  place-items: center;
+  padding: 8%;
+  text-align: center;
+}
+.plate p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.6vw, 88px);
+  line-height: 1.08;
+  letter-spacing: var(--title-track);
+  text-wrap: balance;
+}
+.plates__bar {
+  display: flex; justify-content: center; align-items: center; gap: 18px;
+  margin-top: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.plates__btn {
+  font: inherit; color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  border-radius: 21px;
+  width: 34px; height: 34px;
+  cursor: pointer;
+}
+.plates__btn:hover { background: var(--ink); color: var(--paper); }
+.plates__count { min-width: 3.5em; text-align: center; }
+@media (prefers-reduced-motion: reduce) { .plates__track { scroll-behavior: auto; } }
+
+/* ---------- Instagram posts ---------- */
+
+.post { margin: 0; min-width: 0; }
+.post__img {
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  background: var(--paper);          /* "White background with black sans-serif text" */
+  border: 1px solid var(--ink);
+  display: grid;
+  place-items: center;
+  padding: 10%;
+  text-align: center;
+}
+.post__img p { margin: 0; letter-spacing: 0.02em; font-size: clamp(22px, 2.6vw, 32px); line-height: 1.12; text-wrap: balance; }
+.post__img--todo { background: var(--card); border-color: var(--card); }
+.post__img--todo p { font-size: 15px; line-height: 20px; }
+.post figcaption { margin-top: 10px; color: var(--quiet); }
+.tags { font-family: var(--sans); letter-spacing: var(--sans-track); font-size: 15px; line-height: 20px; color: var(--quiet); }
+
+/* ---------- Accessibility: Source Type's Information page ----------
+   Green ground (#a6ddae, black text at 14:1, blue links at 5.9:1), a 100px
+   title, 38/40 section headings with a 2px rule between sections, then
+   three 323px columns: 23/29 subheadings over 17.5/23 text. */
+
+.page-info, html:has(.page-info) { background: var(--info-green); }
+.page-info { --page: var(--info-green); }
+.title--info { font-size: 100px; line-height: 100px; letter-spacing: 0.01em; margin: 60px auto 80px; }
+
+.info {
+  font-family: var(--serif);
+  letter-spacing: 1px;
+}
+.info__section + .info__section { border-top: 2px solid var(--ink); margin-top: 37px; padding-top: 37px; }
+.info__section > h2 { margin: 0 0 37px; font-size: 38px; line-height: 40px; letter-spacing: 0.02em; text-wrap: balance; }
+.info__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 37px 33px;
+  align-items: start;
+}
+.info__item { min-width: 0; font-size: 17.5px; line-height: 23px; }
+.info__item > * { margin: 0; }
+.info__item > * + * { margin-top: 23px; }
+.info__item h3 { font-size: 23px; line-height: 29px; margin: 0 0 6px; }
+.info__item h3 + p { margin-top: 0; }
+.info__item ul { padding-left: 1em; }
+.info__item .action { justify-content: flex-start; margin-top: 16px; }
+
+@media (max-width: 860px) {
+  .info__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 640px) {
-  :root { --gutter: 10px; }
-  body { font-size: 22px; letter-spacing: 0.005em; }
-  .display { font-size: 40px; }
-  h2, h3 { font-size: 27px; letter-spacing: 0; }
-  .caps { font-size: 20px; }
-  .hero { padding-block: 48px 48px; }
-  .hero .lede, .hero .btn { margin-top: 24px; }
-  .closing { padding-block: 24px 72px; }
-  .sec { grid-template-columns: minmax(0, 1fr); padding-bottom: 53px; }
-  .scan { padding-bottom: 53px; }
-  .sec::before { padding: 0 0 6px; }
-  .blocks a { font-size: 22px; min-height: 96px; }
-  .top .wrap { padding-block: 6px; }
-  .nav ul { gap: 0 18px; }
+  .title--info { font-size: 48px; line-height: 50px; margin: 36px auto 40px; }
+  .info__section > h2 { font-size: 23px; line-height: 27px; margin-bottom: 20px; }
+  .info__grid { grid-template-columns: minmax(0, 1fr); gap: 21px; }
+  .info__item { font-size: 16px; line-height: 21px; }
+  .info__item h3 { font-size: 17px; line-height: 21px; }
 }
 
-@media print {
-  .nav, .skip { display: none; }
-  .hl { box-shadow: none; }
+/* ---------- What we offer: Source Type's Information rows ----------
+   38/40 serif rows between 2px rules, each a button. An open row shows its
+   copy under it: the description at 23/29 on the left, the points at
+   17.5/23 on the right, as in their opened sections. */
+
+.related {
+  margin: 120px 0 0;
+  padding-block: 48px 64px;
+  font-family: var(--serif);
+  letter-spacing: 1px;
+  /* the band runs the full width of the window behind the section */
+  background: var(--lime);
+  box-shadow: 0 0 0 100vmax var(--lime);
+  clip-path: inset(0 -100vmax);
 }
+.related + footer .foot, main:has(.related) + footer .foot { margin-top: 0; }
+.related__label { font-family: var(--sans); letter-spacing: var(--sans-track); font-size: 18px; line-height: 24px; margin: 0 0 16px; }
+.acc { border-bottom: 2px solid var(--ink); }
+.acc__row { border-top: 2px solid var(--ink); }
+.acc__head { margin: 0; font: inherit; }
+.acc__btn {
+  display: block; width: 100%;
+  font: inherit; font-size: 46px; line-height: 48px; letter-spacing: 0.02em;
+  color: var(--ink); background: transparent; border: 0;
+  padding: 28px 0 26px; text-align: left; cursor: pointer;
+}
+.acc__btn:hover { color: var(--brown); }
+.acc__btn:focus-visible { outline-offset: -3px; }
+.acc__panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 40px; align-items: start; padding: 4px 0 44px; }
+.acc__panel[hidden] { display: none; }
+.acc__lede { margin: 0; font-size: 28px; line-height: 35px; letter-spacing: 0.02em; text-wrap: balance; }
+.acc__body { font-size: 21px; line-height: 28px; min-width: 0; }
+.acc__body > * { margin: 0; }
+.acc__body > * + * { margin-top: 28px; }
+.acc__body .terms dt { font-style: italic; }
+
+@media (max-width: 860px) {
+  .acc__panel { grid-template-columns: minmax(0, 1fr); gap: 21px; }
+}
+@media (max-width: 640px) {
+  .related { margin-top: 63px; padding-block: 32px 40px; }
+  .acc__btn { font-size: 28px; line-height: 32px; padding: 19px 0 18px; }
+  .acc__lede { font-size: 21px; line-height: 28px; }
+  .acc__body { font-size: 19px; line-height: 25px; }
+}
+
+/* ---------- Footer ---------- */
+
+.foot {
+  margin: 100px 0 0;
+  padding-block: 16px 80px;
+  border-top: 1px solid var(--ink);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 40px;
+}
+.foot p { margin: 0; }
+.foot ul { list-style: none; margin: 0; padding: 0; }
+.foot a { color: var(--ink); display: inline-block; min-height: 24px; line-height: 24px; }  /* 24px targets, WCAG 2.5.8 */
+
+/* ---------- Narrower ---------- */
+
+
+@media (max-width: 860px) {
+  .cols, .cols--single { grid-template-columns: minmax(0, 1fr); gap: 25px; }
+  .card { position: static; }
+  .foot { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Phone: Source Type's 390px sizes */
+@media (max-width: 640px) {
+  :root { --margin: 10px; }
+  .wrap {
+    padding-left: max(var(--margin), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--margin), env(safe-area-inset-right, 0px));
+  }
+  body { font-size: 14px; line-height: 19px; }
+  .top { grid-template-columns: 1fr; justify-items: center; padding-block: 12px 0; gap: 8px; }
+  /* On a phone the header wraps to three rows (152px); pinned, it would
+     take a fifth of the screen and crowd zoomed text, so it scrolls. */
+  body > header { position: static; padding-bottom: 10px; }
+  .card { top: 24px; }
+  .brand, .crumb, .nav { justify-self: center; }
+  .nav ul { justify-content: center; }
+  .brand, .crumb, .btn, .skip { font-size: 18px; line-height: 22px; }
+  .crumb { padding: 5px 10px; max-width: 100%; white-space: normal; text-align: center; }
+  .crumb ol { flex-wrap: wrap; justify-content: center; }
+  .btn { padding: 6px 18px; }
+  .title { font-size: 23px; line-height: 27px; margin: 40px auto 20px; }
+  .content { gap: 63px; }
+  .plates {
+    margin: 0 calc(-1 * max(var(--margin), env(safe-area-inset-right, 0px))) 48px calc(-1 * max(var(--margin), env(safe-area-inset-left, 0px)));
+  }
+  .text { font-size: 16px; line-height: 21px; }
+  .text > * + * { margin-top: 21px; }
+  .text h2 { font-size: 17px; line-height: 21px; }
+  .text h2 + * { margin-top: 10px; }
+  .tags, .post__img--todo p { font-size: 14px; line-height: 19px; }
+  .foot { margin-top: 63px; }
+}
+
+/* ==========================================================================
+   Typeset after Displaay's Jokker page (user's reference, Nov 2026).
+   One family, no tracking. A bold title under a 4px rule; uppercase labels
+   over a 1px rule; prose large and tight (24/28); details small (18/23) in
+   a key column and a value column, closed by a 1px rule. No boxes, no
+   italic: Jokker has no italic cut, so terms and subtitles stay upright.
+   ========================================================================== */
+:root { --serif-track: 0; --title-track: 0; --sans-track: 0; --ui-track: 0; }
+body { font-weight: 400; letter-spacing: 0; }
+.info, .related, .title--info, .post__img p { letter-spacing: 0; }
+
+.title {
+  text-align: left; max-width: none; text-wrap: balance;
+  margin: 40px 0 64px; padding-top: 14px;
+  border-top: 4px solid var(--ink);
+  font-size: 64px; line-height: 1; font-weight: 600; letter-spacing: -0.015em;
+  overflow-wrap: break-word; hyphens: auto;  /* one long word must still fit 320px with wide spacing */
+}
+.title em {
+  font-weight: 400; letter-spacing: 0;
+  font-size: 24px; line-height: 28px; max-width: 32em; margin-top: 28px;
+}
+
+/* The plates: set as the Jokker tester, big, bold, tight, centred */
+.plate p {
+  font-family: var(--sans); font-weight: 600;
+  font-size: clamp(40px, 7.4vw, 140px); line-height: 0.96; letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.plates__count { font-size: 18px; }
+
+.text { font-size: 24px; line-height: 28px; }
+.text > * + * { margin-top: 28px; }
+.text h2, .card > h2:first-child, .related__label {
+  font-size: 16px; line-height: 20px; font-weight: 400; font-style: normal;
+  letter-spacing: 0; text-transform: uppercase;
+  padding-bottom: 10px; border-bottom: 1px solid var(--ink);
+}
+.text h2 + * { margin-top: 16px; }
+.text h3 + * { margin-top: 0; }
+.text * + h2 { margin-top: 56px; }
+
+/* Term lists, set after palace-enterprise.com: no bullets; the term a bold
+   capital label, what it means on the line under it, indented, upright */
+.terms { display: block; padding: 0; border: 0; font-size: inherit; line-height: inherit; }
+.terms > div + div { margin-top: 0.75em; }
+.terms dt, .terms dd, .acc__body .terms dt { display: block; margin: 0; }
+.terms dt, .acc__body .terms dt { font-weight: 600; font-style: normal; text-transform: uppercase; }
+.terms dd { padding-left: var(--indent); font-style: normal; }
+.terms dt::after { content: none; }
+
+/* Plain lists: no dots, each item indented (role="list" in the markup keeps
+   them lists for VoiceOver once the markers are gone) */
+.text ul { list-style: none; padding-left: var(--indent); }
+.text ul li::marker { content: none; }
+
+/* Italic, as Palace uses it: for what follows or qualifies a line */
+:root { --indent: 1.33em; }  /* Palace: 20px at 15px */
+em, i, cite { font-style: italic; }
+.title em { font-style: italic; }
+.text h3 { font-style: italic; font-weight: 400; }
+.card h2:not(:first-child) { font-style: italic; }
+.post figcaption, .tags { font-style: italic; }
+
+/* The card is a details column: rules, not a box */
+.card {
+  background: none; border-radius: 0; box-shadow: none;
+  padding: 10px 0 14px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  font-size: 18px; line-height: 23px;
+}
+.card:has(> h2:first-child) { border-top: 0; padding-top: 0; }
+.card > * + * { margin-top: 16px; }
+.card > h2:first-child + * { margin-top: 12px; }
+.card a { color: var(--link); }
+.card .btn { color: #fff; }
+
+/* What we offer */
+.related__label { margin: 0; border-bottom: 0; }
+.acc__btn { letter-spacing: -0.01em; }
+.acc__lede { font-size: 28px; line-height: 33px; letter-spacing: 0; }
+.acc__body { font-size: 24px; line-height: 28px; }
+.acc__body > * + * { margin-top: 28px; }
+
+@media (max-width: 640px) {
+  .title { font-size: clamp(30px, 11vw, 40px); margin: 24px 0 40px; padding-top: 10px; }
+  .title em { font-size: 20px; line-height: 24px; margin-top: 20px; }
+  .text, .acc__body { font-size: 20px; line-height: 24px; }
+  .text > * + *, .acc__body > * + * { margin-top: 24px; }
+  .acc__lede { font-size: 22px; line-height: 26px; }
+  .text * + h2 { margin-top: 40px; }
+}
+
+/* ==========================================================================
+   Page title, after Displaay's typeface heroes (user's reference, Nov 2026):
+   a full-width blue band, the title huge and centred in Saans Regular, the
+   subtitle small and centred under it. Black on #a2e3ff measures 15.7:1.
+   ========================================================================== */
+@font-face {
+  font-family: "Saans";
+  src: url("fonts/Saans-TRIAL-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Saans";
+  src: url("fonts/Saans-TRIAL-RegularItalic.woff2") format("woff2");
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+.title {
+  font-family: "Saans", var(--sans);
+  font-weight: 400;
+  font-size: clamp(56px, 10vw, 168px); line-height: 0.98; letter-spacing: -0.02em;
+  text-align: center; text-wrap: balance;
+  overflow-wrap: anywhere;  /* the title's text is an anonymous flex item, which break-word cannot shrink */
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  min-height: clamp(360px, 62vh, 680px);
+  margin: 0 0 72px; padding: 72px 0 48px;
+  border-top: 0;
+  /* the band runs the full width of the window behind the title */
+  background: var(--sky);
+  box-shadow: 0 0 0 100vmax var(--sky);
+  clip-path: inset(0 -100vmax);
+}
+.title em {
+  font-family: "Saans", var(--sans);
+  font-size: 20px; line-height: 24px; letter-spacing: 0;
+  max-width: 30em; margin: 56px auto 0;
+  text-wrap: balance;
+}
+/* the plates follow straight on, blue then black, as on Displaay */
+.title + .plates { margin-top: -72px; }
+
+@media (max-width: 640px) {
+  .title {
+    font-size: clamp(40px, 13vw, 56px);
+    min-height: 0; padding: 56px 0 36px; margin: 0 0 48px;
+  }
+  .title em { font-size: 17px; line-height: 22px; margin-top: 32px; }
+  .title + .plates { margin-top: -48px; }
+}
+
+/* Row arrows: each row ends in an arrow that turns down when the row is open.
+   Drawn, with empty alt text: the button's aria-expanded already says open
+   or closed, so a screen reader is not told "right arrow" as well. */
+.acc__btn { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+.acc__btn::after {
+  content: "\2192" / "";
+  flex: none;
+  font-family: var(--sans); font-weight: 300;
+  transition: transform 0.2s ease;
+}
+.acc__btn[aria-expanded="true"]::after { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .acc__btn::after { transition: none; } }
+
+/* ==========================================================================
+   Long pages, laid out as displaay.net/help/licenses: the page's sections as
+   a column of buttons in the left third, held in view while you read, the
+   one you are reading filled; the text in the right two thirds.
+   ========================================================================== */
+.toc-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+.toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.toc a {
+  display: inline-block; min-height: 36px;
+  padding: 7px 12px; border-radius: 6px; border: 1px solid transparent;
+  background: var(--cream); color: var(--ink);
+  font-size: 18px; line-height: 22px; text-decoration: none;
+}
+.toc a:hover { border-color: var(--ink); }
+/* the section being read: white on #5c5a54, 6.9:1 */
+.toc a[aria-current="true"] { background: #5c5a54; color: #fff; }
+
+@media (min-width: 1024px) {
+  .toc-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 0 var(--margin); align-items: start; }
+  .toc { position: sticky; top: 100px; }
+  .toc ul { flex-direction: column; align-items: flex-start; }
+  .toc-layout .content { --text-col: 62%; --card-col: 32%; }
+}
+
+/* ==========================================================================
+   The chat, after the accessibility scanner's (widget-business ScanChat):
+   opening questions at display size, the conversation as an interview (who
+   speaks in small print above the words), and the scanner's chat box:
+   square corners, a 2px ink edge, the actions inside it under the text.
+   ========================================================================== */
+.chat { max-width: 920px; margin: 120px 0 0; }
+.chat__label {
+  margin: 0; font-size: 16px; line-height: 20px; font-weight: 400;
+  text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid var(--ink);
+}
+.chat__prompts { display: grid; justify-items: start; gap: 10px; margin: 28px 0 44px; }
+.chat__prompt {
+  font: inherit; font-family: "Saans", var(--sans); font-size: 40px; line-height: 1.05; letter-spacing: -0.015em;
+  color: var(--ink); background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+  text-wrap: balance;
+}
+.chat__prompt:hover { color: #1f3fb0; }  /* 9.4:1 on white, as the scanner's opening questions */
+.chat__prompt:disabled { cursor: default; }
+.chat__thread { list-style: none; margin: 32px 0 36px; padding: 0; }
+.chat__turn + .chat__turn { margin-top: 1.6em; }
+.chat__who { margin: 0 0 0.3em; font-size: 15px; line-height: 20px; font-weight: 500; }
+.chat__text { font-size: 24px; line-height: 28px; min-width: 0; overflow-wrap: break-word; }
+.chat__text p { margin: 0; }
+.chat__text p + p { margin-top: 0.8em; }
+.chat__thinking { font-style: italic; }
+.chat__box { border: 2px solid var(--ink); padding: 0.5em 0.6em; background: var(--paper); }
+.chat__box:focus-within { outline: 3px solid var(--ink); outline-offset: 2px; box-shadow: 0 0 0 2px var(--paper); }
+.chat__box textarea {
+  display: block; width: 100%; min-height: 2.4em; max-height: 40vh; overflow-y: auto;
+  font: inherit; font-size: 24px; line-height: 28px; color: var(--ink);
+  border: 0; padding: 0; resize: none; background: transparent;
+}
+.chat__box textarea:focus-visible { outline: none; }
+.chat__box textarea::placeholder { color: var(--quiet); opacity: 1; }
+.chat__row { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px 16px; margin-top: 0.5em; }
+.chat__note { margin: 0; font-size: 15px; line-height: 20px; flex: 1 1 260px; min-width: 0; }
+.chat__send {
+  font: inherit; font-size: 18px; line-height: 22px;
+  min-height: 36px; padding: 6px 20px; border-radius: 999px;
+  background: var(--ink); color: var(--paper); border: 1px solid var(--ink); cursor: pointer;
+}
+.chat__send:hover:not(:disabled) { background: var(--yellow); color: #000; }  /* marker yellow, black text, as the scanner */
+.chat__send:disabled { background: var(--paper); color: var(--ink); border-style: dashed; cursor: default; }  /* dashed, never faded */
+@media (prefers-reduced-motion: no-preference) {
+  .chat__turn { animation: chat-in 0.3s ease-out both; }
+  @keyframes chat-in { from { opacity: 0; transform: translateY(6px); } }
+}
+@media (max-width: 640px) {
+  .chat { margin-top: 63px; }
+  .chat__prompt { font-size: 28px; }
+  .chat__text, .chat__box textarea { font-size: 20px; line-height: 24px; }
+}
+
+/* Header buttons, after displaay.net's top row (user's reference, Nov 2026),
+   without the outlines: rounded rectangles of one size, 18px type, a light
+   fill; the page you are on solid black. The brand is the first of them. */
+.brand, .crumb, .nav a {
+  display: inline-flex; align-items: center;
+  min-height: 38px; padding: 0 13px; border-radius: 10px;
+  font-size: 18px; line-height: 22px; letter-spacing: 0;
+}
+.brand, .nav a { background: none; color: var(--ink); }  /* no fill, no outline: the words alone */
+.crumb, .nav a[aria-current="page"] { background: #000; color: #fff; }
+.brand:hover, .nav a:hover { background: #000; color: #fff; }
+.nav ul { gap: 6px; }
+@media (max-width: 640px) {
+  .brand, .crumb, .nav a { font-size: 17px; min-height: 36px; padding: 0 11px; }
+  .crumb { padding-block: 6px; }
+}
+/* with no fill the brand is a word, not a button: it sits on the page margin */
+.brand { padding-inline: 0; }
+.brand:hover { background: none; color: var(--ink); text-decoration: underline; }
+/* Home: the studio's sentence is the title, so it is set a size down from a
+   one-word title to fit the band in three or four lines */
+.title--lede { font-size: clamp(40px, 6vw, 104px); line-height: 1.02; }
+@media (max-width: 640px) { .title--lede { font-size: clamp(32px, 9.5vw, 40px); } }
+
+/* The plates, set as Displaay's Serrif tester (user's reference, Nov 2026):
+   the statements in Serrif on the blue of the title band, black type.
+   Only the trial's Light cut is here; the tester shows Regular. */
+@font-face {
+  font-family: "Serrif";
+  src: url("fonts/Serrif-TRIAL-Light.woff2") format("woff2");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+.plate { background: var(--sky); color: #000; }  /* 15.7:1 */
+.plate p {
+  font-family: "Serrif", "Times New Roman", Times, serif;
+  font-weight: 300; letter-spacing: -0.01em; line-height: 0.98;
+  font-size: clamp(40px, 7vw, 132px);
+}
+
+/* The disabled Send button's dashed edge, drawn so the dash length can be
+   set: 6px dashes, 2px gaps (a CSS dashed border gives 3px and 2px). The
+   stroke is 2px with its outer half clipped by the button, so 1px shows. */
+.chat__send:disabled {
+  border-color: transparent; border-style: solid;
+  background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' rx='18' ry='18' fill='none' stroke='black' stroke-width='2' stroke-dasharray='6 2'/%3E%3C/svg%3E") no-repeat border-box;
+}
+
+/* The opening, in the green of the reference (user's screenshot, Nov 2026):
+   pale lime type on deep green, 11.0:1 */
+:root { --forest: #1e361f; --lime-ink: #e3f1bd; }
+.title { background: var(--forest); color: var(--lime-ink); box-shadow: 0 0 0 100vmax var(--forest); }
+
+/* the plates move on when clicked */
+.plates__track { cursor: pointer; }
+
+/* On the published site the chat is the scanner's own widget, mounted from its server */
+.chat__widget { margin-top: 28px; min-height: 320px; }
