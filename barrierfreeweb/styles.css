@@ -772,7 +772,7 @@ em, i, cite { font-style: italic; }
    typeface opening, one screen tall with a small line at its foot). The
    title band takes the height left under the header (--head, measured) and
    above the contact line; the contact line is one row on the same green:
-   its label, an email field and a Send request button. Cream field, black text 18.4:1;
+   its label, an email field, a request field and a Send request button. Cream field, black text 18.4:1;
    lime button, green text 11.0:1; label lime on green 11.0:1.
    The header is 77px, 121px where the navigation drops to a second row
    (under 1060px), then 146px and, under 440px, 188px on a phone. */
@@ -784,12 +784,13 @@ em, i, cite { font-style: italic; }
   box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
   font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
 }
-.signup__label { margin-right: 6px; }
+.signup__label { margin-right: 6px; white-space: nowrap; flex: none; }
 .signup__input {
   font: inherit; letter-spacing: 0; color: #000; background: var(--cream);
   border: 0; border-radius: 14px; height: 56px; padding: 0 18px;
   width: 320px; min-width: 0; flex: 0 1 320px;
 }
+.signup__input--wide { width: 420px; flex-basis: 420px; }
 .signup__input::placeholder { color: #4a4a4a; opacity: 1; }  /* 7.8:1 on cream */
 .signup__btn {
   font: inherit; letter-spacing: 0; color: var(--forest); background: var(--lime-ink);
@@ -800,8 +801,10 @@ em, i, cite { font-style: italic; }
 .signup + .plates { margin-top: 0; }
 @media (max-width: 1059px) { .title--lede { --head: 121px; } }
 @media (max-width: 640px) {
-  .title--lede { --head: 146px; --foot: 88px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
-  .signup { font-size: 16px; gap: 6px; min-height: 88px; padding-bottom: 32px; }
+  .title--lede { --head: 146px; --foot: 150px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
+  /* two rows on a phone: the email, then the request beside its button */
+  .signup { font-size: 16px; gap: 6px; min-height: 150px; padding-bottom: 32px; flex-wrap: wrap; align-content: flex-start; }
+  .signup__input:not(.signup__input--wide) { flex: 1 0 100%; }
   .signup__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .signup__input { flex: 1 1 0; width: auto; padding: 0 14px; }
   .signup__btn { padding: 0 16px; }

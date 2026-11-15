@@ -178,7 +178,7 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
 
 // The contact line on the home page. The site has no server of its own, so
 // the form writes an email to the studio in the visitor's mail app, with
-// their address in it. Without this script the form's mailto action does
+// their address and their request in it. Without this script the form's mailto action does
 // the same, less tidily.
 (() => {
   const form = document.querySelector("[data-signup]");
@@ -187,7 +187,8 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
     e.preventDefault();
     const email = form.elements.email.value.trim();
     const subject = encodeURIComponent("Request");
-    const body = encodeURIComponent(`I would like to send a request. Please reply to ${email}.`);
+    const request = form.elements.request.value.trim();
+    const body = encodeURIComponent(`${request}\n\nPlease reply to ${email}.`);
     window.location.href = `mailto:gf@barrierfreeweb.de?subject=${subject}&body=${body}`;
   });
 })();
