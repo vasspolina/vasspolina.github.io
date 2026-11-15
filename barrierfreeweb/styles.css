@@ -767,3 +767,43 @@ em, i, cite { font-style: italic; }
 
 /* On the published site the chat is the scanner's own widget, mounted from its server */
 .chat__widget { margin-top: 28px; min-height: 320px; }
+
+/* The opening fills the screen (user's reference, Nov 2026: Displaay's
+   typeface opening, one screen tall with a small line at its foot). The
+   title band takes the height left under the header (--head, measured) and
+   above the contact line; the contact line is one row on the same green:
+   its label, an email field and a button. Cream field, black text 18.4:1;
+   lime button, green text 11.0:1; label lime on green 11.0:1.
+   The header is 77px, 121px where the navigation drops to a second row
+   (under 1060px), then 146px and, under 440px, 188px on a phone. */
+.title--lede { --head: 77px; --foot: 96px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
+.signup {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 96px; padding: 0 0 40px; margin: 0;
+  background: var(--forest); color: var(--lime-ink);
+  box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
+  font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
+}
+.signup__label { margin-right: 6px; }
+.signup__input {
+  font: inherit; letter-spacing: 0; color: #000; background: var(--cream);
+  border: 0; border-radius: 14px; height: 56px; padding: 0 18px;
+  width: 320px; min-width: 0; flex: 0 1 320px;
+}
+.signup__input::placeholder { color: #4a4a4a; opacity: 1; }  /* 7.8:1 on cream */
+.signup__btn {
+  font: inherit; letter-spacing: 0; color: var(--forest); background: var(--lime-ink);
+  border: 0; border-radius: 14px; height: 56px; padding: 0 22px; cursor: pointer; white-space: nowrap;
+}
+.signup__btn:hover { background: #fff; }
+.signup__input:focus-visible, .signup__btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.signup + .plates { margin-top: 0; }
+@media (max-width: 1059px) { .title--lede { --head: 121px; } }
+@media (max-width: 640px) {
+  .title--lede { --head: 146px; --foot: 88px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
+  .signup { font-size: 16px; gap: 6px; min-height: 88px; padding-bottom: 32px; }
+  .signup__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .signup__input { flex: 1 1 0; width: auto; padding: 0 14px; }
+  .signup__btn { padding: 0 16px; }
+}
+@media (max-width: 439px) { .title--lede { --head: 188px; } }

@@ -175,3 +175,19 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
   prompts.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => ask(b.textContent)));
   send.disabled = true;
 });
+
+// The contact line on the home page. The site has no server of its own, so
+// the form writes an email to the studio in the visitor's mail app, with
+// their address in it. Without this script the form's mailto action does
+// the same, less tidily.
+(() => {
+  const form = document.querySelector("[data-signup]");
+  if (!form) return;
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = form.elements.email.value.trim();
+    const subject = encodeURIComponent("Contact request");
+    const body = encodeURIComponent(`Please get in touch with me at ${email}.`);
+    window.location.href = `mailto:gf@barrierfreeweb.de?subject=${subject}&body=${body}`;
+  });
+})();
