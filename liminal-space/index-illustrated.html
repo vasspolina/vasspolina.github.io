@@ -49,7 +49,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 4.5rem; }   /* a focused control is never under the sticky header (WCAG 2.4.11) */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
@@ -81,6 +81,11 @@ ul, ol { list-style: none; }
 img { display: block; max-width: 100%; }
 ::selection { background: var(--ink); color: var(--white); }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+main:focus { outline: none; }   /* focused only as the skip link's target */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 
 .wrap { padding-inline: var(--margin); }
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
@@ -221,6 +226,8 @@ section { scroll-margin-top: 3.5rem; }
 .scope li .lnum { font-size: var(--fs-s); padding-top: .45em; letter-spacing: .035em; }
 
 /* ---------- how it works — one big type block ---------- */
+.how { display: flex; flex-direction: column; }
+.how .caption { order: 2; }   /* the heading comes first in the markup, and is drawn under the block */
 .how .block { min-height: min(90vh, 62vw); padding: calc(var(--u) * 2) var(--u); }
 .how .block-type { font-size: clamp(2rem, 0.4rem + 5.6vw, 7.5rem); line-height: 1.02; }
 .how .block-type li { display: block; }
@@ -266,7 +273,7 @@ section { scroll-margin-top: 3.5rem; }
   border: 0; border-bottom: 1px solid var(--ink); border-radius: 0;
   padding: .2em 0 .3em;
   font-size: var(--fs-m); line-height: 1.2; letter-spacing: 0;
-  outline: none; appearance: none; -webkit-appearance: none;
+  appearance: none; -webkit-appearance: none;
 }
 .field textarea { resize: vertical; min-height: 7rem; }
 .field select {
@@ -277,6 +284,11 @@ section { scroll-margin-top: 3.5rem; }
 }
 .field select:invalid { color: var(--hint); }
 .field input:focus, .field select:focus, .field textarea:focus { border-bottom-width: 2px; }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.field [aria-invalid="true"] { border-bottom-width: 3px; }
+.field-error, .form-status { font-size: var(--fs-b); letter-spacing: 0.02em; }
+.form-status { grid-column: 1 / -1; }
+.form-status:empty { display: none; }
 .form-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--u); flex-wrap: wrap; }
 
 /* ---------- footer ---------- */
@@ -320,6 +332,15 @@ section { scroll-margin-top: 3.5rem; }
   .footer-meta > * { grid-column: 1 / -1 !important; justify-self: start !important; }
   .caption { flex-wrap: wrap; }
   .price .caption p:last-child { text-align: left; }
+  /* the price line ran off a 320px screen and was cut by the block's edge */
+  .price .block-type { font-size: clamp(1.6rem, 9vw, 3rem); }
+}
+
+/* ---------- forced colours (Windows contrast themes): fills are dropped, so edges and states are drawn ---------- */
+@media (forced-colors: active) {
+  .btn { border: 1px solid ButtonText; }
+  .btn--ghost[aria-pressed="true"] { forced-color-adjust: none; background: Highlight; color: HighlightText; }
+  .building[aria-pressed="true"] .block { border: 3px solid Highlight; }
 }
 </style>
 </head>
@@ -339,7 +360,7 @@ section { scroll-margin-top: 3.5rem; }
   </div>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
 
   <!-- Hero -->
   <section class="hero wrap" id="top" aria-labelledby="hero-title">
@@ -364,14 +385,15 @@ section { scroll-margin-top: 3.5rem; }
   <section class="wrap" id="cleaning" aria-labelledby="clean-title">
     <div class="grid section-head">
       <h2 id="clean-title">What we clean</h2>
-      <div class="aside btns" role="group" aria-label="Filter spaces">
+      <div class="aside btns" role="group" aria-label="Filter spaces" aria-controls="spaces-list">
         <button type="button" class="btn btn--ghost" data-filter="all" aria-pressed="true">All spaces</button>
         <button type="button" class="btn btn--ghost" data-filter="inside" aria-pressed="false">Inside</button>
         <button type="button" class="btn btn--ghost" data-filter="outside" aria-pressed="false">Outside</button>
       </div>
     </div>
 
-    <ul class="tiles">
+    <p class="visually-hidden" role="status" id="filter-status"></p>
+    <ul class="tiles" role="list" id="spaces-list">
       <li class="tile" data-zone="inside">
         <div class="block c-khaki">
           <img class="art" src="img/stairs.png" alt="">
@@ -404,7 +426,7 @@ section { scroll-margin-top: 3.5rem; }
 
     <div class="grid scope">
       <h3>Scope agreed before we&nbsp;start.</h3>
-      <ul>
+      <ul role="list">
         <li data-zone="inside"><span class="lnum">05</span><span>Lifts &amp;&nbsp;corridors</span></li>
         <li data-zone="inside"><span class="lnum">06</span><span>Basement common areas</span></li>
         <li data-zone="inside outside"><span class="lnum">07</span><span>Communal windows</span></li>
@@ -414,17 +436,17 @@ section { scroll-margin-top: 3.5rem; }
 
   <!-- How it works -->
   <section class="how wrap mt" id="how" aria-labelledby="how-title">
-    <div class="block c-green">
-      <img class="art" src="img/bucket.png" alt="">
-      <ol class="block-type">
-        <li><sup>01</sup>Weekly schedule.</li>
-        <li class="caps"><sup>02</sup>Every visit recorded.</li>
-        <li><sup>03</sup>We return to fix missed&nbsp;work.</li>
-        <li class="caps"><sup>04</sup>A direct contact.</li>
-      </ol>
-    </div>
     <div class="caption">
       <h2 class="caption-name" id="how-title">How it works.</h2>
+    </div>
+    <div class="block c-green">
+      <img class="art" src="img/bucket.png" alt="">
+      <ol class="block-type" role="list">
+        <li><sup aria-hidden="true">01</sup>Weekly schedule.</li>
+        <li class="caps"><sup aria-hidden="true">02</sup>Every visit recorded.</li>
+        <li><sup aria-hidden="true">03</sup>We return to fix missed&nbsp;work.</li>
+        <li class="caps"><sup aria-hidden="true">04</sup>A direct contact.</li>
+      </ol>
     </div>
   </section>
 
@@ -436,15 +458,15 @@ section { scroll-margin-top: 3.5rem; }
     <div class="buildings" role="group" aria-label="Number of levels">
       <button type="button" class="building" data-levels="1–3" aria-pressed="false">
         <span class="block c-mint"><span class="figure">1–3</span></span>
-        <span class="caption"><span class="caption-name">Levels</span><span class="btn">↗</span></span>
+        <span class="caption"><span class="caption-name">Levels</span><span class="btn" aria-hidden="true">↗</span></span>
       </button>
       <button type="button" class="building" data-levels="4–5" aria-pressed="false">
         <span class="block c-khaki"><span class="figure">4–5</span></span>
-        <span class="caption"><span class="caption-name">Levels</span><span class="btn">↗</span></span>
+        <span class="caption"><span class="caption-name">Levels</span><span class="btn" aria-hidden="true">↗</span></span>
       </button>
       <button type="button" class="building" data-levels="6+" aria-pressed="false">
         <span class="block c-green"><span class="figure">6+</span></span>
-        <span class="caption"><span class="caption-name">Levels</span><span class="btn">↗</span></span>
+        <span class="caption"><span class="caption-name">Levels</span><span class="btn" aria-hidden="true">↗</span></span>
       </button>
     </div>
 
@@ -467,12 +489,12 @@ section { scroll-margin-top: 3.5rem; }
     </div>
     <form class="grid form" id="enquiry" novalidate>
       <label class="field field--address">
-        <span class="label">Building address</span>
-        <input type="text" name="address" autocomplete="street-address">
+        <span class="label">Building address (required)</span>
+        <input type="text" name="address" autocomplete="street-address" required data-error="Enter the building address.">
       </label>
       <label class="field field--levels">
-        <span class="label">Number of levels</span>
-        <select name="levels" id="levels" required>
+        <span class="label">Number of levels (required)</span>
+        <select name="levels" id="levels" required data-error="Choose the number of levels.">
           <option value="" disabled selected>Choose a range</option>
           <option value="1–3">1–3</option>
           <option value="4–5">4–5</option>
@@ -487,6 +509,7 @@ section { scroll-margin-top: 3.5rem; }
         <button type="submit" class="btn">Download enquiry <span class="arrow" aria-hidden="true">↗</span></button>
         <p class="label">Downloads a text file. Nothing is sent.</p>
       </div>
+      <p class="form-status" role="status"></p>
     </form>
   </section>
 
@@ -508,7 +531,10 @@ const zoned = document.querySelectorAll('[data-zone]');
 tabs.forEach(btn => btn.addEventListener('click', () => {
   const f = btn.dataset.filter;
   tabs.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-  zoned.forEach(el => { el.hidden = f !== 'all' && !el.dataset.zone.split(' ').includes(f); });
+  let shown = 0;
+  zoned.forEach(el => { el.hidden = f !== 'all' && !el.dataset.zone.split(' ').includes(f); if (!el.hidden) shown++; });
+  /* the list changes away from focus, so the result is announced */
+  document.getElementById('filter-status').textContent = 'Showing ' + shown + ' of ' + zoned.length + ' spaces: ' + btn.textContent.trim() + '.';
 }));
 
 /* Building chooser → form */
@@ -521,10 +547,21 @@ buildings.forEach(b => b.addEventListener('click', () => {
   setTimeout(() => document.querySelector('[name="address"]').focus({ preventScroll: true }), 500);
 }));
 levelSelect.addEventListener('change', () => mark(levelSelect.value));
+buildings.forEach(b => b.addEventListener('click', () => clearError(levelSelect)));
 
 /* Download enquiry as a text file — nothing is sent */
 document.getElementById('enquiry').addEventListener('submit', e => {
   e.preventDefault();
+  const status = e.target.querySelector('.form-status');
+  status.textContent = '';
+  const bad = [...e.target.querySelectorAll('[required]')].filter(el => !el.value.trim());
+  e.target.querySelectorAll('[required]').forEach(clearError);
+  if (bad.length) {
+    bad.forEach(showError);
+    bad[0].closest('.field').scrollIntoView({ block: 'center' });
+    bad[0].focus({ preventScroll: true });
+    return;
+  }
   const d = new FormData(e.target);
   const text = ['Common space — Enquiry', '',
     'Building address: ' + (d.get('address') || ''),
@@ -533,6 +570,26 @@ document.getElementById('enquiry').addEventListener('submit', e => {
   const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
   const a = Object.assign(document.createElement('a'), { href: url, download: 'common-space-enquiry.txt' });
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  status.textContent = 'Your enquiry was downloaded as common-space-enquiry.txt. Nothing was sent.';
+});
+
+/* Errors: named in text under the field, tied to it, and focus goes to the first one (WCAG 3.3.1, 3.3.3) */
+function showError(el) {
+  const msg = document.createElement('span');
+  msg.className = 'field-error';
+  msg.id = el.name + '-error';
+  msg.textContent = 'Error: ' + el.dataset.error;
+  el.after(msg);
+  el.setAttribute('aria-invalid', 'true');
+  el.setAttribute('aria-describedby', msg.id);
+}
+function clearError(el) {
+  document.getElementById(el.name + '-error')?.remove();
+  el.removeAttribute('aria-invalid');
+  el.removeAttribute('aria-describedby');
+}
+document.querySelectorAll('#enquiry [required]').forEach(el => {
+  el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => { if (el.value.trim()) clearError(el); });
 });
 </script>
 </body>
