@@ -1203,7 +1203,7 @@ svg.art .bold { fill: none; stroke: var(--bold-ink); stroke-linecap: round; stro
   <!-- Open Flap (First Screen — Specimen block like .price) -->
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero-stage">
-      <img class="art mid" src="img/railing-line.svg" alt="" data-min="0.085">
+      <img class="art mid" src="img/railing-line.svg" alt="" data-min="0.035" data-weight="0.7">
       <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span> <span class="caps-line fg">week after week.</span></h1>
     </div>
     <div class="hero-note">
@@ -1741,7 +1741,7 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     const src = new DOMParser().parseFromString(text, 'image/svg+xml').documentElement;
     const vb = (src.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
     if (vb.length !== 4 || !vb[2] || !vb[3]) return;
-    const H = vb[3], w = W * H, gap = GAP * w;
+    const H = vb[3], w = W * H * (Number(img.dataset.weight) || 1), gap = GAP * w;   // data-weight: a finer stroke for a dense drawing
     const minPart = Number(img.dataset.min) || MIN_PART;   // data-min: keep only longer lines in a dense traced drawing
     const lines = [];
     src.querySelectorAll('path').forEach(el => {
