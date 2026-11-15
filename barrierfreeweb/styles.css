@@ -94,7 +94,7 @@ em, i, cite { font-style: italic; }
 a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 a:hover { text-decoration-thickness: 2px; }
 
-:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 0; }
 
 .skip {
   position: absolute; left: var(--margin); top: -100px; z-index: 100;
@@ -405,7 +405,7 @@ body::before {
   padding: 28px 0 26px; text-align: left; cursor: pointer;
 }
 .acc__btn:hover { color: var(--brown); }
-.acc__btn:focus-visible { outline-offset: -3px; }
+.acc__btn:focus-visible { outline-offset: -2px; }
 .acc__panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 40px; align-items: start; padding: 4px 0 44px; }
 .acc__panel[hidden] { display: none; }
 .acc__lede { margin: 0; font-size: 28px; line-height: 35px; letter-spacing: 0.02em; text-wrap: balance; }
@@ -683,7 +683,7 @@ em, i, cite { font-style: italic; }
 .chat__text p + p { margin-top: 0.8em; }
 .chat__thinking { font-style: italic; }
 .chat__box { border: 2px solid var(--ink); padding: 0.5em 0.6em; background: var(--paper); }
-.chat__box:focus-within { outline: 3px solid var(--ink); outline-offset: 2px; box-shadow: 0 0 0 2px var(--paper); }
+.chat__box:focus-within { outline: 2px solid var(--focus); outline-offset: -2px; }
 .chat__box textarea {
   display: block; width: 100%; min-height: 2.4em; max-height: 40vh; overflow-y: auto;
   font: inherit; font-size: 24px; line-height: 28px; color: var(--ink);
@@ -781,7 +781,10 @@ em, i, cite { font-style: italic; }
   display: flex; align-items: center; justify-content: center; gap: 10px;
   min-height: 96px; padding: 0 0 40px; margin: 0;
   background: var(--forest); color: var(--lime-ink);
-  box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
+  /* the clip leaves 10px above the row: a field's focus ring is 6px outside
+     it, and the fields sit on the row's top edge. The green above is the
+     title band's own, so nothing shows. */
+  box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(-10px -100vmax 0);
   font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
 }
 .signup__label { margin-right: 6px; white-space: nowrap; flex: none; }
@@ -797,7 +800,7 @@ em, i, cite { font-style: italic; }
   border: 0; border-radius: 14px; height: 56px; padding: 0 22px; cursor: pointer; white-space: nowrap;
 }
 .signup__btn:hover { background: #fff; }
-.signup__input:focus-visible, .signup__btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
 .signup + .plates { margin-top: 0; }
 @media (max-width: 1059px) { .title--lede { --head: 121px; } }
 @media (max-width: 640px) {
@@ -824,7 +827,7 @@ em, i, cite { font-style: italic; }
 .request > * { max-width: 640px; margin-inline: auto; }
 .request__title { font: inherit; font-size: 28px; line-height: 32px; margin-block: 0 16px; text-wrap: balance; }
 .request__title:focus { outline: none; }
-.request__title:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.request__title:focus-visible { outline: 2px solid var(--focus-inverse); outline-offset: 4px; }
 .request__note, .request__status { margin-block: 0 12px; }
 .request__row { display: flex; gap: 10px; }
 .request .request__input { flex: 1 1 0; width: auto; min-width: 0; }
@@ -832,14 +835,14 @@ em, i, cite { font-style: italic; }
   font: inherit; color: inherit; background: none; border: 0; padding: 12px 0; margin-top: 4px;
   display: block; width: 100%; text-align: left; text-decoration: underline; text-underline-offset: 0.15em; cursor: pointer;
 }
-.request__link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.request__link:focus-visible { outline: 2px solid var(--focus-inverse); outline-offset: 0; box-shadow: none; }
 .request__brief { margin-block: 0 24px; border-top: 1px solid var(--lime-ink); }
 .request__brief > div { display: grid; grid-template-columns: 11em minmax(0, 1fr); gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid var(--lime-ink); }
 .request__brief dt, .request__brief dd { margin: 0; overflow-wrap: anywhere; }
 .request__send { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 .request__consent { display: flex; align-items: flex-start; gap: 10px; flex: 1 1 320px; cursor: pointer; }
 .request__consent input { width: 22px; height: 22px; margin: 1px 0 0; flex: none; accent-color: var(--lime-ink); }
-.request__consent input:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.request__consent input:focus-visible { outline: 2px solid var(--focus-inverse); outline-offset: 2px; }
 .request__mail { display: inline-flex; align-items: center; text-decoration: none; }
 .request + .plates { margin-top: 0; }
 @media (max-width: 640px) {
@@ -847,3 +850,19 @@ em, i, cite { font-style: italic; }
   .request__title { font-size: 22px; line-height: 26px; }
   .request__brief > div { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Focus, after IBM Carbon (user's instruction, Nov 2026). Carbon's focus is
+   a 2px line in its focus blue #0f62fe, drawn on the control's own edge and
+   not outside it; on a filled button a 1px line of white sits inside the
+   blue, so the ring shows whatever the button's fill; on a dark ground the
+   line is white. Measured: blue on white 5.0:1, on the cream field 4.4:1,
+   on the lime button 4.2:1, on the sky band 3.5:1; white on the green
+   18:1. Text links take the same 2px line around the words. */
+:root { --focus: #0f62fe; --focus-inverse: #ffffff; }
+button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-visible, .toc a:focus-visible,
+.skip:focus-visible, .signup__btn:focus-visible {
+  outline: 2px solid var(--focus); outline-offset: -2px; box-shadow: inset 0 0 0 3px #fff;
+}
+.acc__btn:focus-visible { box-shadow: none; }
+.signup__input:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.crumb a:focus-visible { outline-color: var(--focus-inverse); }
