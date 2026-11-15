@@ -120,7 +120,8 @@ html[data-theme="light"] {
   --step-3-fg: #0a0b0a;
   --panel-bg: #b5b29c;
   --panel-fg: #0a0b0a;
-  --btn: #b5b29c;
+  --btn: #fdf8ad;          /* pale yellow: Get a quote, Back to top; black text 19:1 */
+  --btn-alt: #c9fff4;      /* mint: theme switch, nav and filter pills; black text 18:1 */
   --btn-tx-color: #0a0b0a;
   --btn-ic-bg: #0a0b0a;
   --btn-ic-fg: #f3f1e9;
@@ -273,6 +274,9 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
 .theme-toggle:hover, .theme-toggle:focus-visible {
   background: var(--ink); color: var(--paper);
 }
+
+/* the pills take the second button colour where a theme sets one (light: mint) */
+.nav a, .tabs button, .theme-toggle { background: var(--btn-alt, var(--btn)); }
 
 /* buttons — solid colour blocks, no outlines; mixed shapes set flush side by side:
    a round icon disc joined to a label */
