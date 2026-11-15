@@ -1153,6 +1153,20 @@ a, button { transition: background .2s, color .2s; }
   border: 1px solid var(--line-c);
   padding: 0 1em .08em;
 }
+
+/* ---------- bold stencil drawings (after the 'af' mark and the Coolkit stencil card):
+   each drawing is redrawn by the script at the end of the page as a few thick, even
+   lines with round ends and stencil gaps where they meet. A tone a step off the ground, so the headlines stay readable over them. */
+:root { --bold-ink: #2c3229; }
+html[data-theme="light"] { --bold-ink: #cfccbb; }
+svg.art { overflow: visible; filter: none; }
+html[data-theme="light"] svg.art { filter: none; }
+svg.art .bold { fill: none; stroke: var(--bold-ink); stroke-linecap: round; stroke-linejoin: round; }
+
+/* logo and footer wordmark: Coolkit SemiBold, set tight, like the stencil specimen */
+.logo, .wordmark { font-weight: 600; }
+.logo { letter-spacing: -0.02em; }
+.wordmark { letter-spacing: -0.03em; }
 </style>
 </head>
 <body>
@@ -1673,6 +1687,109 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     status.textContent = 'Your enquiry was downloaded as common-space-enquiry.txt. Nothing was sent.';
   });
 });
+
+/* Bold stencil drawings (after the 'af' mark and the Coolkit stencil card): inline each
+   line drawing and redraw it as a few thick, even lines with round ends. All sizes are a
+   share of the drawing's own height, so a small card drawing is the same drawing smaller.
+   - short detail strokes are left out, the rest simplified to their corners
+   - longest lines first; a line that mostly runs over one already drawn (the second line
+     of a doubled outline) is dropped
+   - every line stops short at both ends, leaving a stencil gap where lines meet
+   The plain <img> stays if the file cannot be fetched. */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 0.0115;         // stroke width
+  const GAP = 1.1;          // end gap, in stroke widths
+  const MIN_PART = 0.05;    // shortest line kept
+  const TOL = 0.004;        // simplification tolerance
+
+  function simplify(pts, tol) {
+    if (pts.length < 3) return pts;
+    const [ax, ay] = pts[0], [bx, by] = pts[pts.length - 1];
+    const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1;
+    let far = 0, at = 0;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const d = Math.abs(dy * pts[i][0] - dx * pts[i][1] + bx * ay - by * ax) / len;
+      if (d > far) { far = d; at = i; }
+    }
+    if (far <= tol) return [pts[0], pts[pts.length - 1]];
+    return simplify(pts.slice(0, at + 1), tol).slice(0, -1).concat(simplify(pts.slice(at), tol));
+  }
+  const lengthOf = pts => pts.reduce((t, p, i) => i ? t + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+  // points every `step` along a polyline
+  function samples(pts, step) {
+    const out = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], l = Math.hypot(x1 - x0, y1 - y0);
+      for (let t = step; t < l; t += step) out.push([x0 + (x1 - x0) * t / l, y0 + (y1 - y0) * t / l]);
+      out.push(pts[i]);
+    }
+    return out;
+  }
+  // cut `d` off one end of a polyline
+  function trimStart(pts, d) {
+    let i = 1;
+    while (i < pts.length) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], l = Math.hypot(x1 - x0, y1 - y0);
+      if (l > d) return [[x0 + (x1 - x0) * d / l, y0 + (y1 - y0) * d / l]].concat(pts.slice(i));
+      d -= l; i++;
+    }
+    return null;
+  }
+
+  function build(img, text) {
+    const src = new DOMParser().parseFromString(text, 'image/svg+xml').documentElement;
+    const vb = (src.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    if (vb.length !== 4 || !vb[2] || !vb[3]) return;
+    const H = vb[3], w = W * H, gap = GAP * w;
+    const lines = [];
+    src.querySelectorAll('path').forEach(el => {
+      (el.getAttribute('d') || '').split(/(?=M)/).forEach(part => {
+        const n = (part.match(/-?\d*\.?\d+/g) || []).map(Number);
+        const pts = [];
+        for (let i = 0; i + 1 < n.length; i += 2) pts.push([n[i], n[i + 1]]);
+        if (pts.length > 1 && lengthOf(pts) >= MIN_PART * H) lines.push(simplify(pts, TOL * H));
+      });
+    });
+    lines.sort((p, q) => lengthOf(q) - lengthOf(p));
+    // occupancy grid, one cell per stroke width
+    const cell = w * 1.6, taken = new Set();
+    const key = (x, y) => Math.floor((x - vb[0]) / cell) + ',' + Math.floor((y - vb[1]) / cell);
+    let d = '';
+    lines.forEach(pts => {
+      const pt = samples(pts, cell * 0.5);
+      const over = pt.filter(([x, y]) => taken.has(key(x, y))).length / pt.length;
+      if (over > 0.45) return;                                   // a doubled outline
+      pt.forEach(([x, y]) => taken.add(key(x, y)));
+      let cut = trimStart(pts, gap);
+      cut = cut && trimStart(cut.reverse(), gap);
+      if (!cut) return;
+      d += 'M' + cut.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+    });
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', vb.join(' '));
+    svg.setAttribute('width', vb[2]);
+    svg.setAttribute('height', vb[3]);
+    svg.setAttribute('class', img.getAttribute('class'));
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'bold');
+    g.setAttribute('stroke-width', w.toFixed(2));
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', d);
+    g.appendChild(path);
+    svg.appendChild(g);
+    img.replaceWith(svg);
+  }
+
+  document.querySelectorAll('img.art[src$="-line.svg"]').forEach(img => {
+    fetch(img.getAttribute('src'))
+      .then(r => r.ok ? r.text() : Promise.reject(r.status))
+      .then(t => build(img, t))
+      .catch(() => {});
+  });
+})();
 </script>
 </body>
 </html>
