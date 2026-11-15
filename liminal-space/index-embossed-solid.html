@@ -1186,6 +1186,29 @@ svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
 
 /* the price figure stands out: Documan SemiBold */
 .price .tnum { font-weight: 600; letter-spacing: -0.03em; }
+
+/* building chooser: the whole tile answers the pointer. Hover and keyboard focus fill it with
+   the pill colour (mint in light), the figure turns to the button ink and the arrow lifts;
+   the chosen tile is solid ink. */
+.building {
+  padding: calc(var(--u) * .5) .9rem .9rem;
+  border-radius: 0;   /* square while idle, so its top rule stays straight */
+  transition: background .25s ease, color .25s ease, border-color .25s ease, border-radius .25s ease;
+}
+.building:hover, .building:focus-visible, .building[aria-pressed="true"] { border-radius: 10px; }
+/* dark theme: a hover fill that clearly stands off the black ground (text on it 10:1) */
+html:not([data-theme="light"]) .building:hover, html:not([data-theme="light"]) .building:focus-visible { background: #34402f; color: #e8ede2; }
+.building:hover, .building:focus-visible {
+  background: var(--btn-alt, var(--btn));
+  color: var(--btn-tx-color);
+  border-top-color: transparent;
+}
+.building:hover .figure { letter-spacing: -0.01em; }
+.building .figure { transition: letter-spacing .35s ease; }
+.building:hover .arrow, .building:focus-visible .arrow { transform: translate(4px, -4px); }
+.building[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-top-color: transparent; }
+.building[aria-pressed="true"] .row { text-decoration: none; }
+@media (forced-colors: active) { .building:hover, .building[aria-pressed="true"] { outline: 2px solid Highlight; } }
 </style>
 </head>
 <body>
