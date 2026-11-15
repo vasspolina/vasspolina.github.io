@@ -1203,7 +1203,7 @@ svg.art .bold { fill: none; stroke: var(--bold-ink); stroke-linecap: round; stro
   <!-- Open Flap (First Screen — Specimen block like .price) -->
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero-stage">
-      <img class="art mid" src="img/stairwell-line.svg" alt="">
+      <img class="art mid" src="img/railing-line.svg" alt="" data-min="0.085">
       <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span> <span class="caps-line fg">week after week.</span></h1>
     </div>
     <div class="hero-note">
@@ -1452,7 +1452,7 @@ svg.art .bold { fill: none; stroke: var(--bold-ink); stroke-linecap: round; stro
         <p class="form-status" role="status"></p>
       </form>
       <div class="quote-art-wrap">
-        <img class="art quote-art" src="img/bucket-line.svg" alt="">
+        <img class="art quote-art" src="img/lift-line.svg" alt="" data-min="0.075">
       </div>
     </div>
   </section>
@@ -1742,13 +1742,14 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     const vb = (src.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
     if (vb.length !== 4 || !vb[2] || !vb[3]) return;
     const H = vb[3], w = W * H, gap = GAP * w;
+    const minPart = Number(img.dataset.min) || MIN_PART;   // data-min: keep only longer lines in a dense traced drawing
     const lines = [];
     src.querySelectorAll('path').forEach(el => {
       (el.getAttribute('d') || '').split(/(?=M)/).forEach(part => {
         const n = (part.match(/-?\d*\.?\d+/g) || []).map(Number);
         const pts = [];
         for (let i = 0; i + 1 < n.length; i += 2) pts.push([n[i], n[i + 1]]);
-        if (pts.length > 1 && lengthOf(pts) >= MIN_PART * H) lines.push(simplify(pts, TOL * H));
+        if (pts.length > 1 && lengthOf(pts) >= minPart * H) lines.push(simplify(pts, TOL * H));
       });
     });
     lines.sort((p, q) => lengthOf(q) - lengthOf(p));
