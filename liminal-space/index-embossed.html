@@ -1692,20 +1692,15 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
   const NS = 'http://www.w3.org/2000/svg';
   // in screen pixels, for a drawing about 800px tall (the hero); smaller
   // drawings take a lighter stroke, down to half, or the dense ones fill in
-  // warp: a slow, wide swell that bends the straight lines of the drawing
-  // into strands; rough: the fine eroded edge on top of it
-  const PX = { stroke: 7, warp: 38, warpFreq: 0.005, rough: 3, rim: 1.1, blur: 5, dx: 1.5, dy: 5, noise: 0.9, grain: 2.2 };
-  const MIN_PART = 0.035;   // strokes shorter than this share of the drawing's height are left out
+  const PX = { stroke: 5, rough: 3, rim: 1.1, blur: 4, dx: 1.5, dy: 4, noise: 0.9, grain: 2.2 };
   const REF_H = 800;
   const items = [];
   let n = 0;
 
   function filterMarkup(id) {
     return `<filter id="${id}" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" numOctaves="2" seed="11" result="swell" data-k="warpFreq"/>
-      <feDisplacementMap in="SourceGraphic" in2="swell" xChannelSelector="R" yChannelSelector="G" result="warped" data-k="warp"/>
       <feTurbulence type="fractalNoise" numOctaves="2" seed="7" result="noise" data-k="noise"/>
-      <feDisplacementMap in="warped" in2="noise" xChannelSelector="R" yChannelSelector="G" result="rough" data-k="rough"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" xChannelSelector="R" yChannelSelector="G" result="rough" data-k="rough"/>
       <feMorphology in="rough" operator="dilate" result="fat" data-k="rim"/>
       <feComposite in="fat" in2="rough" operator="out" result="rim"/>
       <feTurbulence type="fractalNoise" numOctaves="1" seed="2" result="grain" data-k="grain"/>
@@ -1731,8 +1726,6 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     const f = it.filter;
     it.g.setAttribute('stroke-width', u(PX.stroke));
     f.querySelector('[data-k="noise"]').setAttribute('baseFrequency', (PX.noise * s).toFixed(4));
-    f.querySelector('[data-k="warpFreq"]').setAttribute('baseFrequency', (PX.warpFreq * s / k).toFixed(5));
-    f.querySelector('[data-k="warp"]').setAttribute('scale', u(PX.warp));
     f.querySelector('[data-k="grain"]').setAttribute('baseFrequency', (PX.grain * s).toFixed(4));
     f.querySelector('[data-k="rough"]').setAttribute('scale', u(PX.rough));
     f.querySelector('[data-k="rim"]').setAttribute('radius', (PX.rim / s).toFixed(2));
@@ -1757,19 +1750,9 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     const g = document.createElementNS(NS, 'g');
     g.setAttribute('class', 'emboss');
     g.setAttribute('filter', `url(#${id})`);
-    // keep the long strokes only: the drawing loses its small detail and
-    // reads as a few broad gestures
-    const minLen = MIN_PART * vb[3];
-    src.querySelectorAll('path').forEach(el => {
-      const parts = (el.getAttribute('d') || '').split(/(?=M)/).filter(part => {
-        const nums = (part.match(/-?\d*\.?\d+/g) || []).map(Number);
-        let len = 0;
-        for (let i = 2; i + 1 < nums.length; i += 2) len += Math.hypot(nums[i] - nums[i - 2], nums[i + 1] - nums[i - 1]);
-        return len >= minLen;
-      });
-      if (!parts.length) return;
-      const c = document.createElementNS(NS, 'path');
-      c.setAttribute('d', parts.join(' '));
+    src.querySelectorAll('path, circle').forEach(el => {
+      const c = document.importNode(el, true);
+      ['stroke', 'fill', 'stroke-width', 'style', 'class'].forEach(a => c.removeAttribute(a));
       g.appendChild(c);
     });
     svg.appendChild(g);
