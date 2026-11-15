@@ -1172,6 +1172,14 @@ svg.art.mid .emboss { opacity: 1; }
 svg.art.mid { z-index: -1; }
 svg.art .emboss-rim { flood-color: var(--emboss-rim); }
 svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
+
+/* menu and filter pills: each its own round pill with a thin edge, like the theme switch */
+.nav, .tabs { gap: .5rem; }
+.nav a:nth-child(n), .tabs button:nth-child(n) {
+  border-radius: 999px;
+  border: 1px solid var(--line-c);
+  padding: 0 1em .08em;
+}
 </style>
 </head>
 <body>
@@ -1208,7 +1216,7 @@ svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
   <!-- Open Flap (First Screen — Specimen block like .price) -->
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero-stage">
-      <img class="art mid" src="img/stairwell-line.svg" alt="">
+      <img class="art mid" src="img/railing-line.svg" alt="" data-weight="0.6">
       <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span> <span class="caps-line fg">week after week.</span></h1>
     </div>
     <div class="hero-note">

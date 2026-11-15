@@ -1145,6 +1145,14 @@ a, button { transition: background .2s, color .2s; }
 .footer-meta { position: relative; z-index: 3; align-items: center; }
 .wordmark-wrap { position: relative; isolation: isolate; z-index: 2;
   margin-inline: calc(var(--margin) * -1); padding-inline: var(--margin); }
+
+/* menu and filter pills: each its own round pill with a thin edge, like the theme switch */
+.nav, .tabs { gap: .5rem; }
+.nav a:nth-child(n), .tabs button:nth-child(n) {
+  border-radius: 999px;
+  border: 1px solid var(--line-c);
+  padding: 0 1em .08em;
+}
 </style>
 </head>
 <body>
