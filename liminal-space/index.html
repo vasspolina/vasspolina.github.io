@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liminal space — Stairwell and common-area cleaning, Berlin</title>
+<title>Common space — Stairwell and common-area cleaning, Berlin</title>
 <meta name="description" content="Stairwell and common&#8209;area cleaning for residential buildings in Berlin.">
 <link rel="preload" href="fonts/CoolkitVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -65,9 +65,11 @@
   --field-bg: #2b2e2a;
   --field-fg: #e8ede2;
   --submit-bg: #3b3e39;
-  --submit-fg: #a8b0a4;
+  --submit-fg: #e8ede2;   /* was #a8b0a4 (4.87:1), which read as a disabled button at this thin weight */
   --front-bg: #2b2e2a;
   --front-fg: #adb5a8;
+  --field-label: #a8b596;   /* 6.36:1 on the field ground */
+  --field-edge: #7b836e;    /* 5.31:1 against the page, so a field can be found (WCAG 1.4.11) */
 
   --font-sans: "Coolkit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font: var(--font-sans);
@@ -126,6 +128,8 @@ html[data-theme="light"] {
   --submit-fg: #f3f1e9;
   --front-bg: #b5b29c;
   --front-fg: #0a0b0a;
+  --field-label: #363d2c;   /* was #545f47, 3.16:1 on the field ground; now above 4.5:1 */
+  --field-edge: #5c6256;    /* 5.57:1 against the page */
   --line-c: #526442;
 }
 html[data-theme="light"] .art,
@@ -137,11 +141,13 @@ html[data-theme="light"] .logo-art {
 
 html { overflow-x: clip;
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--u) * 2.5 + 1rem);   /* a focused control is never under the sticky header (WCAG 2.4.11) */
   -webkit-text-size-adjust: 100%;
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
+  .hero { transform: none !important; }   /* no scroll-driven movement */
 }
 
 body {
@@ -167,7 +173,12 @@ button, input, select, textarea { font: inherit; color: inherit; letter-spacing:
 button { background: none; border: 0; cursor: pointer; }
 ul, ol { list-style: none; }
 ::selection { background: var(--ink); color: var(--paper); }
-:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+main:focus { outline: none; }   /* focused only as the skip link's target */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 
 /* ---------- shared type roles ---------- */
 .label {
@@ -212,7 +223,8 @@ ul, ol { list-style: none; }
 }
 .logo {
   grid-column: 1 / span 3;
-  display: inline-block;
+  display: inline-flex; align-items: center;
+  min-height: 1.5rem;   /* 24px target (WCAG 2.5.8) */
   font-family: var(--font);
   font-size: var(--fs-m);
   font-weight: 100;
@@ -494,7 +506,6 @@ section {
   transition: font-weight .45s ease;
 }
 /* sentence case, as written */
-.tile { cursor: pointer; }
 .tile h3 .caps, .tile h3 .lc { display: block; }
 .tile h3 .caps { color: var(--c-link); }
 .tile h3 .lc { color: var(--ink); }
@@ -832,6 +843,7 @@ a, button { transition: background .2s, color .2s; }
   position: relative;
   background: var(--field-bg);
   color: var(--field-fg);
+  border: 1px solid var(--field-edge);
   border-radius: 8px;
   padding: 0.65rem 0.9rem 0.75rem;
   min-height: 4.5rem;
@@ -839,7 +851,7 @@ a, button { transition: background .2s, color .2s; }
 .field .label {
   font-size: var(--fs-s);
   line-height: 1.2;
-  color: var(--c-link);
+  color: var(--field-label);
 }
 .field input, .field select, .field textarea {
   width: 100%;
@@ -855,7 +867,15 @@ a, button { transition: background .2s, color .2s; }
   appearance: none; -webkit-appearance: none;
 }
 .field textarea { resize: vertical; min-height: 4.2rem; }
-.field:focus-within { outline: 1px solid var(--accent); }
+.field:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.field.is-invalid { border: 2px solid var(--ink); }
+.field-error, .form-status, .form-note {
+  font-size: var(--fs-s);
+  line-height: 1.3;
+  color: var(--ink);
+}
+.field-error { margin-top: -0.25rem; }
+.form-status:empty { display: none; }
 
 /* Custom select dropdown */
 .c-select {
@@ -881,13 +901,14 @@ a, button { transition: background .2s, color .2s; }
   color: var(--field-fg);
 }
 .c-select__trigger.is-placeholder {
-  color: var(--c-link);
+  color: var(--field-label);
 }
+.c-select__trigger:focus-visible { outline: none; }   /* the field block draws the focus ring */
 .c-select__arrow {
   font-family: var(--font-sans);
   font-size: var(--fs-s);
   transition: transform .25s ease;
-  color: var(--c-link);
+  color: var(--field-label);
 }
 .c-select.is-open .c-select__arrow {
   transform: rotate(180deg);
@@ -933,10 +954,12 @@ a, button { transition: background .2s, color .2s; }
   transition: background 0.15s ease;
   user-select: none;
 }
-.c-select__option:hover {
+.c-select__option:hover,
+.c-select__option.is-active {
   background: var(--btn);
   color: var(--btn-tx-color);
 }
+.c-select__option.is-active { outline: 2px solid var(--accent); outline-offset: -2px; }
 .c-select__option.is-selected {
   font-weight: 400;
 }
@@ -953,6 +976,7 @@ a, button { transition: background .2s, color .2s; }
   gap: 0.55rem;
   background: var(--field-bg);
   color: var(--field-fg);
+  border: 1px solid var(--field-edge);
   border-radius: 8px;
   padding: 0.7rem 0.9rem;
   margin-top: 0.65rem;
@@ -961,8 +985,8 @@ a, button { transition: background .2s, color .2s; }
   cursor: pointer;
 }
 .field-notice input[type="checkbox"] {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.5rem;    /* 24px target (WCAG 2.5.8) */
+  height: 1.5rem;
   border: 1px solid currentColor;
   border-radius: 2px;
   appearance: none;
@@ -977,6 +1001,7 @@ a, button { transition: background .2s, color .2s; }
   font-size: var(--fs-s);
   line-height: 1;
 }
+.field-notice input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .field-notice u {
   text-underline-offset: 0.16em;
 }
@@ -1039,8 +1064,9 @@ a, button { transition: background .2s, color .2s; }
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   .nav { display: none; }
-  .logo { grid-column: 1 / span 6; }
-  .header-cta { grid-column: 7 / -1; }
+  /* logo and actions wrap onto two rows instead of overlapping on a narrow phone */
+  .site-header .grid { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .4rem var(--gutter); padding-block: .4rem; }
+  html { scroll-padding-top: 7rem; }
   .hero-foot p { grid-column: 1 / -1; grid-row: 1; white-space: normal; }
   .hero-foot .btn { grid-row: 2; margin-top: var(--u); }
   .hero h1 .line { white-space: normal; }
@@ -1064,6 +1090,12 @@ a, button { transition: background .2s, color .2s; }
   .buildings { grid-template-columns: 1fr; }
   .field--address, .field--levels { grid-column: 1 / -1; }
   .footer-meta > * { grid-column: 1 / -1 !important; justify-self: start !important; }
+}
+
+/* ---------- forced colours (Windows contrast themes): fills are dropped, so edges and states are drawn ---------- */
+@media (forced-colors: active) {
+  .nav a, .tabs button, .btn-tx, .btn-ic, .theme-toggle, .btn-submit-block, .building { border: 1px solid ButtonText; }
+  .tabs button[aria-pressed="true"], .c-select__option.is-active { forced-color-adjust: none; background: Highlight; color: HighlightText; }
 }
 
 /* ---------- ink illustrations — olive ink #868f67, always shown whole ---------- */
@@ -1123,28 +1155,28 @@ a, button { transition: background .2s, color .2s; }
 
 <header class="site-header wrap">
   <div class="grid">
-    <a class="logo" href="#top">Liminal space</a>
+    <a class="logo" href="#top">Common space</a>
     <nav class="nav" aria-label="Primary">
       <a href="#cleaning">Cleaning</a>
       <a href="#how">How it works</a>
       <a href="#building">Your building</a>
     </nav>
     <div class="header-actions">
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme">
-        <span id="theme-label">Light</span>
+      <button type="button" class="theme-toggle" id="theme-toggle">
+        <span><span class="visually-hidden">Switch to </span><span id="theme-label">Light</span><span class="visually-hidden"> theme</span></span>
       </button>
       <a class="btn header-cta" href="#quote"><span class="btn-ic"><span class="arrow" aria-hidden="true">↗</span></span><span class="btn-tx">Get a quote</span></a>
     </div>
   </div>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
 
   <!-- Open Flap (First Screen — Specimen block like .price) -->
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero-stage">
       <img class="art mid" src="img/stairwell-line.svg" alt="">
-      <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span><span class="caps-line fg">week after week.</span></h1>
+      <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span> <span class="caps-line fg">week after week.</span></h1>
     </div>
     <div class="hero-note">
       <p class="label">Berlin, DE.</p>
@@ -1157,23 +1189,25 @@ a, button { transition: background .2s, color .2s; }
     <div class="grid hero-body">
       <div class="hero-left">
         <p class="hero-lead">Stairwell and common&#8209;area cleaning for residential buildings in Berlin. Quiet, regular care of entrances, landings, handrails, courtyards, and bin areas, with a fixed monthly quote after a short visit to your&nbsp;building.</p>
-        <p class="hero-subhead">Your Details</p>
+        <h2 class="hero-subhead">Your Details</h2>
         <form class="hero-form" id="hero-enquiry" novalidate>
+          <p class="form-note"><span aria-hidden="true">*</span> Required</p>
           <label class="field">
-            <span class="label">Building address*</span>
-            <input type="text" name="address" autocomplete="street-address">
+            <span class="label">Building address<span aria-hidden="true">*</span></span>
+            <input type="text" name="address" autocomplete="street-address" required data-error="Enter the building address.">
           </label>
           <label class="field">
-            <span class="label">Number of levels*</span>
-            <input type="text" name="levels" placeholder="1–3, 4–5, or 6+">
+            <span class="label">Number of levels: 1–3, 4–5, or 6+<span aria-hidden="true">*</span></span>
+            <input type="text" name="levels" required data-error="Enter the number of levels: 1–3, 4–5, or 6+.">
           </label>
           <label class="field-notice">
-            <input type="checkbox" name="confirm" checked>
-            <span>Downloads a <u>text file</u>. Nothing is sent*</span>
+            <input type="checkbox" name="confirm" checked required data-error="Tick the box to confirm that the enquiry is downloaded as a text file and not sent.">
+            <span>Downloads a <u>text file</u>. Nothing is sent<span aria-hidden="true">*</span></span>
           </label>
           <button type="submit" class="btn-submit-block">
             <span>Request a Fixed Quote</span>
           </button>
+          <p class="form-status" role="status"></p>
         </form>
       </div>
     </div>
@@ -1183,14 +1217,15 @@ a, button { transition: background .2s, color .2s; }
   <section class="wrap" id="cleaning" aria-labelledby="clean-title">
     <div class="grid section-head">
       <h2 id="clean-title"><span class="t-accent">What</span> we clean</h2>
-      <div class="aside tabs" role="group" aria-label="Filter spaces">
+      <div class="aside tabs" role="group" aria-label="Filter spaces" aria-controls="spaces-list">
         <button type="button" data-filter="all" aria-pressed="true">All spaces</button>
         <button type="button" data-filter="inside" aria-pressed="false">Inside</button>
         <button type="button" data-filter="outside" aria-pressed="false">Outside</button>
       </div>
     </div>
 
-    <ul class="tiles">
+    <p class="visually-hidden" role="status" id="filter-status"></p>
+    <ul class="tiles" role="list" id="spaces-list">
       <li class="tile" data-zone="inside">
         <div class="tile-box"><img class="art" src="img/staircase-line.svg" alt=""><h3><span class="caps fg">Staircases</span> <span class="lc">and&nbsp;landings.</span></h3></div>
         <div class="tile-caption label"><span>01</span><span class="arrow" aria-hidden="true">↗</span></div>
@@ -1211,7 +1246,7 @@ a, button { transition: background .2s, color .2s; }
 
     <div class="grid scope">
       <h3>Scope agreed before we&nbsp;start.</h3>
-      <ul>
+      <ul role="list">
         <li data-zone="inside"><span class="num">05</span><span>Lifts and&nbsp;corridors</span></li>
         <li data-zone="inside"><span class="num">06</span><span>Basement common areas</span></li>
         <li data-zone="inside outside"><span class="num">07</span><span>Communal windows</span></li>
@@ -1227,9 +1262,9 @@ a, button { transition: background .2s, color .2s; }
     <div class="info-grid">
       <div class="info-col">
         <div class="info-desc">
-          <p>Liminal space is a dedicated stairwell and common&#8209;area cleaning service for residential buildings across Berlin. We look after the shared thresholds of daily life — entrances, landings, banisters, lifts, basement corridors, and courtyards — on a fixed weekly schedule.</p>
-          <p>In <a href="#cleaning">stairwells</a> (wooden Altbau treads or stone landings), steps are swept and wet&#8209;mopped from the top floor down to the street door. In <a href="#cleaning">hallways</a> and <a href="#cleaning">handrails</a>, brass fittings, glass panels, letterboxes, and intercoms are wiped clean on every visit.</p>
-          <p>Every building is paired with a consistent team and a direct point of contact for property managers and <a href="#building">Hausverwaltungen</a>, with every visit logged and a 24&#8209;hour return guarantee.</p>
+          <p>Common space is a dedicated stairwell and common&#8209;area cleaning service for residential buildings across Berlin. We look after the shared thresholds of daily life — entrances, landings, banisters, lifts, basement corridors, and courtyards — on a fixed weekly schedule.</p>
+          <p>In <a href="#cleaning">stairwells</a> (wooden <span lang="de">Altbau</span> treads or stone landings), steps are swept and wet&#8209;mopped from the top floor down to the street door. In <a href="#cleaning">hallways</a> and <a href="#cleaning">handrails</a>, brass fittings, glass panels, letterboxes, and intercoms are wiped clean on every visit.</p>
+          <p>Every building is paired with a consistent team and a direct point of contact for property managers and <a href="#building" lang="de">Hausverwaltungen</a>, with every visit logged and a 24&#8209;hour return guarantee.</p>
         </div>
       </div>
       <div class="info-col">
@@ -1256,34 +1291,34 @@ a, button { transition: background .2s, color .2s; }
         <div class="row"><dt>Coverage</dt><dd>Berlin, all districts</dd></div>
       </dl>
     </div>
-    <ol class="steps">
-      <li class="step"><span class="num">01</span>Weekly schedule.</li>
-      <li class="step"><span class="num">02</span>Every visit recorded.</li>
-      <li class="step"><span class="num">03</span>We return to fix missed&nbsp;work.</li>
+    <ol class="steps" role="list">
+      <li class="step"><span class="num" aria-hidden="true">01</span>Weekly schedule.</li>
+      <li class="step"><span class="num" aria-hidden="true">02</span>Every visit recorded.</li>
+      <li class="step"><span class="num" aria-hidden="true">03</span>We return to fix missed&nbsp;work.</li>
     </ol>
     <div class="panel">
       <div>
         <h3>What we clean</h3>
-        <ul class="group">
-          <li><span class="lnum">01</span>Staircases and landings.</li>
-          <li><span class="lnum">02</span>Entrances and hallways.</li>
-          <li><span class="lnum">03</span>Handrails and doors.</li>
+        <ul class="group" role="list">
+          <li><span class="lnum">01</span> Staircases and landings.</li>
+          <li><span class="lnum">02</span> Entrances and hallways.</li>
+          <li><span class="lnum">03</span> Handrails and doors.</li>
         </ul>
-        <ul class="group">
-          <li><span class="lnum">04</span>Courtyards and bin areas.</li>
+        <ul class="group" role="list">
+          <li><span class="lnum">04</span> Courtyards and bin areas.</li>
         </ul>
-        <ul class="group">
-          <li><span class="lnum">05</span>Lifts and corridors</li>
-          <li><span class="lnum">06</span>Basement common areas</li>
-          <li><span class="lnum">07</span>Communal windows</li>
+        <ul class="group" role="list">
+          <li><span class="lnum">05</span> Lifts and corridors</li>
+          <li><span class="lnum">06</span> Basement common areas</li>
+          <li><span class="lnum">07</span> Communal windows</li>
         </ul>
       </div>
       <div>
         <h3>Weekly cleaning</h3>
         <div class="group">
           <h4>Packages (excl. VAT)</h4>
-          <div class="price-row"><span>1–3 Levels — Stairwell and entrance</span><span class="lnum">169 €</span><span class="lnum strike">199 €</span></div>
-          <div class="price-row"><span>4–5 Levels — Full common areas</span><span class="lnum">219 €</span><span class="lnum strike">259 €</span></div>
+          <div class="price-row"><span>1–3 Levels — Stairwell and entrance</span><span class="lnum"><span class="visually-hidden">now </span>169 €</span><s class="lnum strike"><span class="visually-hidden">was </span>199 €</s></div>
+          <div class="price-row"><span>4–5 Levels — Full common areas</span><span class="lnum"><span class="visually-hidden">now </span>219 €</span><s class="lnum strike"><span class="visually-hidden">was </span>259 €</s></div>
         </div>
         <div class="group">
           <h4>Custom Quote</h4>
@@ -1292,12 +1327,12 @@ a, button { transition: background .2s, color .2s; }
       </div>
       <div>
         <h3>Your building</h3>
-        <div class="tier-table">
-          <div class="tier-row tier-head"><span>Tier</span><span>Cadence</span><span>Guarantee</span></div>
-          <div class="tier-row"><span class="lnum">01 1–3 Levels</span><span>Weekly</span><span>24h return</span></div>
-          <div class="tier-row"><span class="lnum">02 4–5 Levels</span><span>Weekly</span><span>24h return</span></div>
-          <div class="tier-row"><span class="lnum">03 6+ Levels</span><span>1–2× / week</span><span>24h return</span></div>
-          <div class="tier-row"><span class="lnum">04 Courtyards</span><span>Weekly</span><span>Direct contact</span></div>
+        <div class="tier-table" role="table" aria-label="Cadence and guarantee by tier">
+          <div class="tier-row tier-head" role="row"><span role="columnheader">Tier</span><span role="columnheader">Cadence</span><span role="columnheader">Guarantee</span></div>
+          <div class="tier-row" role="row"><span class="lnum" role="cell">01 1–3 Levels</span><span role="cell">Weekly</span><span role="cell">24h return</span></div>
+          <div class="tier-row" role="row"><span class="lnum" role="cell">02 4–5 Levels</span><span role="cell">Weekly</span><span role="cell">24h return</span></div>
+          <div class="tier-row" role="row"><span class="lnum" role="cell">03 6+ Levels</span><span role="cell">1–2× / week</span><span role="cell">24h return</span></div>
+          <div class="tier-row" role="row"><span class="lnum" role="cell">04 Courtyards</span><span role="cell">Weekly</span><span role="cell">Direct contact</span></div>
         </div>
       </div>
     </div>
@@ -1326,7 +1361,7 @@ a, button { transition: background .2s, color .2s; }
     <div class="price">
       <div class="price-block">
         <img class="art mid" src="img/vestibule-line.svg" alt="">
-        <h3><span><span class="fg">Weekly</span> cleaning</span><span class="caps-line fg">from <span class="tnum">€169</span>/month.</span></h3>
+        <h3><span><span class="fg">Weekly</span> cleaning</span> <span class="caps-line fg">from <span class="tnum">€169</span>/month.</span></h3>
       </div>
       <div class="price-note">
         <p class="label">Excluding VAT.</p>
@@ -1344,38 +1379,35 @@ a, button { transition: background .2s, color .2s; }
     <div class="grid quote-layout">
       <form class="form" id="enquiry" novalidate>
         <h3 class="quote-subhead">Your Details</h3>
+        <p class="form-note"><span aria-hidden="true">*</span> Required</p>
         <label class="field field--address">
-          <span class="label">Building address*</span>
-          <input type="text" name="address" autocomplete="street-address">
+          <span class="label">Building address<span aria-hidden="true">*</span></span>
+          <input type="text" name="address" autocomplete="street-address" required data-error="Enter the building address.">
         </label>
         <div class="field field--levels">
-          <span class="label">Number of levels*</span>
+          <span class="label" id="levels-label">Number of levels<span aria-hidden="true">*</span></span>
           <div class="c-select" id="custom-levels">
-            <button type="button" class="c-select__trigger is-placeholder" aria-haspopup="listbox" aria-expanded="false" id="levels-button">
+            <!-- a select-only combobox (WAI-ARIA Authoring Practices): focus stays on the button, arrow keys move through the list -->
+            <button type="button" class="c-select__trigger is-placeholder" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="levels-list" aria-labelledby="levels-label" aria-required="true" id="levels-button" data-error="Choose the number of levels.">
               <span class="c-select__value">Choose a range</span>
               <span class="c-select__arrow" aria-hidden="true">↓</span>
             </button>
-            <ul class="c-select__menu" role="listbox" tabindex="-1" aria-labelledby="levels-button">
-              <li class="c-select__header" aria-hidden="true">Choose a range</li>
-              <li class="c-select__option" role="option" data-value="1–3" aria-selected="false">
+            <ul class="c-select__menu" role="listbox" id="levels-list" aria-labelledby="levels-label">
+              <li class="c-select__header" role="presentation" aria-hidden="true">Choose a range</li>
+              <li class="c-select__option" role="option" id="levels-opt-1" data-value="1–3" aria-selected="false">
                 <span>1–3</span>
                 <span class="check-icon" aria-hidden="true">✓</span>
               </li>
-              <li class="c-select__option" role="option" data-value="4–5" aria-selected="false">
+              <li class="c-select__option" role="option" id="levels-opt-2" data-value="4–5" aria-selected="false">
                 <span>4–5</span>
                 <span class="check-icon" aria-hidden="true">✓</span>
               </li>
-              <li class="c-select__option" role="option" data-value="6+" aria-selected="false">
+              <li class="c-select__option" role="option" id="levels-opt-3" data-value="6+" aria-selected="false">
                 <span>6+</span>
                 <span class="check-icon" aria-hidden="true">✓</span>
               </li>
             </ul>
-            <select name="levels" id="levels" required style="position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;">
-              <option value="" disabled selected>Choose a range</option>
-              <option value="1–3">1–3</option>
-              <option value="4–5">4–5</option>
-              <option value="6+">6+</option>
-            </select>
+            <input type="hidden" name="levels" id="levels">
           </div>
         </div>
         <label class="field field--details">
@@ -1383,12 +1415,13 @@ a, button { transition: background .2s, color .2s; }
           <textarea name="details" rows="3"></textarea>
         </label>
         <label class="field-notice">
-          <input type="checkbox" name="confirm" checked>
-          <span>Downloads a <u>text file</u>. Nothing is sent*</span>
+          <input type="checkbox" name="confirm" checked required data-error="Tick the box to confirm that the enquiry is downloaded as a text file and not sent.">
+          <span>Downloads a <u>text file</u>. Nothing is sent<span aria-hidden="true">*</span></span>
         </label>
         <button type="submit" class="btn-submit-block">
           <span>Download Your Enquiry</span>
         </button>
+        <p class="form-status" role="status"></p>
       </form>
       <div class="quote-art-wrap">
         <img class="art quote-art" src="img/bucket-line.svg" alt="">
@@ -1405,7 +1438,7 @@ a, button { transition: background .2s, color .2s; }
     <a class="btn btn--up" href="#top"><span class="btn-ic"><span class="arrow" aria-hidden="true">↑</span></span><span class="btn-tx">Back to top</span></a>
   </div>
   <div class="wordmark-wrap">
-    <p class="wordmark" aria-hidden="true">Liminal space</p>
+    <p class="wordmark" aria-hidden="true">Common space</p>
   </div>
 </footer>
 
@@ -1426,78 +1459,115 @@ if (themeToggle) {
   });
 }
 
-/* Layered scroll: top flap (#top) is a half-sheet that drops/lifts up on scroll over #quick-quote */
+/* Layered scroll: top flap (#top) is a half-sheet that lifts on scroll over #quick-quote.
+   Skipped for anyone who asks for reduced motion. */
 const heroSection = document.getElementById('top');
-const secondScreen = document.getElementById('quick-quote');
-if (heroSection && secondScreen) {
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+if (heroSection) {
   const updateScrollDrop = () => {
-    const y = window.scrollY;
-    const flapLift = Math.round(Math.min(y * 0.45, 220));
+    const flapLift = reduceMotion.matches ? 0 : Math.round(Math.min(window.scrollY * 0.45, 220));
     heroSection.style.setProperty('--flap-y', (-flapLift) + 'px');
-    secondScreen.style.setProperty('--drop-y', '0px');
   };
   updateScrollDrop();
   window.addEventListener('scroll', updateScrollDrop, { passive: true });
   window.addEventListener('resize', updateScrollDrop);
+  reduceMotion.addEventListener('change', updateScrollDrop);
 }
 
-/* Filter: All spaces / Inside / Outside */
+/* Filter: All spaces / Inside / Outside. The result is announced, since the list changes away from focus. */
 const tabs = document.querySelectorAll('[data-filter]');
 const zoned = document.querySelectorAll('[data-zone]');
+const filterStatus = document.getElementById('filter-status');
 tabs.forEach(btn => btn.addEventListener('click', () => {
   const f = btn.dataset.filter;
   tabs.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+  let shown = 0;
   zoned.forEach(el => {
     el.hidden = f !== 'all' && !el.dataset.zone.split(' ').includes(f);
+    if (!el.hidden) shown++;
   });
+  filterStatus.textContent = 'Showing ' + shown + ' of ' + zoned.length + ' spaces: ' + btn.textContent.trim() + '.';
 }));
 
-/* Custom Dropdown for Number of levels */
+/* Number of levels: a select-only combobox, usable with the keyboard alone.
+   Down/Up/Enter/Space open it; arrows, Home, End and a typed figure move; Enter, Space or Tab choose; Escape closes. */
 const customSelect = document.getElementById('custom-levels');
 const selectTrigger = customSelect.querySelector('.c-select__trigger');
 const selectValue = customSelect.querySelector('.c-select__value');
-const selectOptions = customSelect.querySelectorAll('.c-select__option');
-const levelSelect = document.getElementById('levels');
+const selectOptions = [...customSelect.querySelectorAll('.c-select__option')];
+const levelInput = document.getElementById('levels');
+const heroForm = document.getElementById('hero-enquiry');
+const quoteForm = document.getElementById('enquiry');
 const buildings = document.querySelectorAll('.building');
+let activeIndex = -1;
 
 function setCustomValue(val) {
-  levelSelect.value = val;
-  if (!val) {
-    selectValue.textContent = 'Choose a range';
-    selectTrigger.classList.add('is-placeholder');
-  } else {
-    selectValue.textContent = val;
-    selectTrigger.classList.remove('is-placeholder');
-  }
+  levelInput.value = val;
+  selectValue.textContent = val || 'Choose a range';
+  selectTrigger.classList.toggle('is-placeholder', !val);
   selectOptions.forEach(opt => {
     const isMatch = opt.dataset.value === val;
     opt.classList.toggle('is-selected', isMatch);
     opt.setAttribute('aria-selected', String(isMatch));
   });
+  if (val) clearError(selectTrigger);
   markBuilding(val);
 }
+function setActive(i) {
+  activeIndex = Math.max(0, Math.min(selectOptions.length - 1, i));
+  selectOptions.forEach((opt, n) => opt.classList.toggle('is-active', n === activeIndex));
+  selectTrigger.setAttribute('aria-activedescendant', selectOptions[activeIndex].id);
+}
+function openSelect() {
+  customSelect.classList.add('is-open');
+  selectTrigger.setAttribute('aria-expanded', 'true');
+  const current = selectOptions.findIndex(opt => opt.dataset.value === levelInput.value);
+  setActive(current < 0 ? 0 : current);
+}
+function closeSelect() {
+  customSelect.classList.remove('is-open');
+  selectTrigger.setAttribute('aria-expanded', 'false');
+  selectTrigger.removeAttribute('aria-activedescendant');
+  selectOptions.forEach(opt => opt.classList.remove('is-active'));
+  activeIndex = -1;
+}
+function chooseActive() {
+  if (activeIndex >= 0) setCustomValue(selectOptions[activeIndex].dataset.value);
+  closeSelect();
+}
+const isOpen = () => customSelect.classList.contains('is-open');
 
-selectTrigger.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const isOpen = customSelect.classList.toggle('is-open');
-  selectTrigger.setAttribute('aria-expanded', String(isOpen));
-});
-
-selectOptions.forEach(opt => {
-  opt.addEventListener('click', (e) => {
-    e.stopPropagation();
-    setCustomValue(opt.dataset.value);
-    customSelect.classList.remove('is-open');
-    selectTrigger.setAttribute('aria-expanded', 'false');
-  });
-});
-
-document.addEventListener('click', (e) => {
-  if (!customSelect.contains(e.target)) {
-    customSelect.classList.remove('is-open');
-    selectTrigger.setAttribute('aria-expanded', 'false');
+selectTrigger.addEventListener('click', () => { isOpen() ? closeSelect() : openSelect(); });
+selectTrigger.addEventListener('keydown', (e) => {
+  const k = e.key;
+  if (!isOpen()) {
+    if (['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Home', 'End'].includes(k)) {
+      e.preventDefault();
+      openSelect();
+      if (k === 'Home') setActive(0);
+      if (k === 'End') setActive(selectOptions.length - 1);
+    }
+    return;
+  }
+  if (k === 'ArrowDown') { e.preventDefault(); setActive(activeIndex + 1); }
+  else if (k === 'ArrowUp') { e.preventDefault(); setActive(activeIndex - 1); }
+  else if (k === 'Home') { e.preventDefault(); setActive(0); }
+  else if (k === 'End') { e.preventDefault(); setActive(selectOptions.length - 1); }
+  else if (k === 'Enter' || k === ' ') { e.preventDefault(); chooseActive(); }
+  else if (k === 'Escape') { e.preventDefault(); closeSelect(); }
+  else if (k === 'Tab') { chooseActive(); }
+  else if (k.length === 1) {
+    const hit = selectOptions.findIndex(opt => opt.dataset.value.startsWith(k));
+    if (hit >= 0) setActive(hit);
   }
 });
+selectTrigger.addEventListener('blur', () => { if (isOpen()) closeSelect(); });
+selectOptions.forEach((opt, n) => {
+  /* mousedown would take focus from the button and close the list before the click lands */
+  opt.addEventListener('mousedown', (e) => e.preventDefault());
+  opt.addEventListener('click', () => { setActive(n); chooseActive(); });
+});
+document.getElementById('levels-label').addEventListener('click', () => selectTrigger.focus());
 
 /* Building chooser → form */
 function markBuilding(v) {
@@ -1506,17 +1576,75 @@ function markBuilding(v) {
 buildings.forEach(b => b.addEventListener('click', () => {
   setCustomValue(b.dataset.levels);
   document.getElementById('quote').scrollIntoView();
-  setTimeout(() => document.querySelector('[name="address"]').focus({ preventScroll: true }), 500);
+  setTimeout(() => quoteForm.elements.address.focus({ preventScroll: true }), reduceMotion.matches ? 0 : 500);
 }));
-levelSelect.addEventListener('change', () => setCustomValue(levelSelect.value));
+
+/* What was typed in the first form is carried into the second, so nothing is asked twice (WCAG 3.3.7) */
+heroForm.elements.address.addEventListener('input', (e) => {
+  quoteForm.elements.address.value = e.target.value;
+  if (e.target.value.trim()) clearError(quoteForm.elements.address);
+});
+heroForm.elements.levels.addEventListener('input', (e) => {
+  const v = e.target.value.trim().replace(/\s+/g, '').replace('-', '–');
+  if (selectOptions.some(opt => opt.dataset.value === v)) setCustomValue(v);
+});
+
+/* Errors: named in text beside the field, tied to it, and focus goes to the first one (WCAG 3.3.1, 3.3.3) */
+let errorCount = 0;
+function fieldBlock(control) { return control.closest('.field, .field-notice'); }
+function showError(control) {
+  clearError(control);
+  const block = fieldBlock(control);
+  const msg = document.createElement('p');
+  msg.className = 'field-error';
+  msg.id = 'field-error-' + (++errorCount);
+  msg.textContent = 'Error: ' + control.dataset.error;
+  block.after(msg);
+  block.classList.add('is-invalid');
+  control.setAttribute('aria-invalid', 'true');
+  control.setAttribute('aria-describedby', msg.id);
+}
+function clearError(control) {
+  const id = control.getAttribute('aria-describedby');
+  if (!id) return;
+  document.getElementById(id)?.remove();
+  fieldBlock(control).classList.remove('is-invalid');
+  control.removeAttribute('aria-invalid');
+  control.removeAttribute('aria-describedby');
+}
+function invalidControls(form) {
+  const bad = [];
+  form.querySelectorAll('input[required]').forEach(el => {
+    const ok = el.type === 'checkbox' ? el.checked : el.value.trim() !== '';
+    if (!ok) bad.push(el);
+  });
+  if (form === quoteForm && !levelInput.value) bad.splice(bad[0] && bad[0].name === 'address' ? 1 : 0, 0, selectTrigger);
+  return bad;
+}
+document.querySelectorAll('#enquiry input[required], #hero-enquiry input[required]').forEach(el => {
+  el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
+    if (el.type === 'checkbox' ? el.checked : el.value.trim()) clearError(el);
+  });
+});
 
 /* Download enquiry as a text file — nothing is sent */
-document.querySelectorAll('#enquiry, #hero-enquiry').forEach(form => {
+[quoteForm, heroForm].forEach(form => {
+  const status = form.querySelector('.form-status');
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const d = new FormData(e.target);
+    status.textContent = '';
+    form.querySelectorAll('[aria-invalid]').forEach(clearError);
+    const bad = invalidControls(form);
+    if (bad.length) {
+      bad.forEach(showError);
+      /* centred, so the field and its message are clear of the sticky header */
+      fieldBlock(bad[0]).scrollIntoView({ block: 'center' });
+      bad[0].focus({ preventScroll: true });
+      return;
+    }
+    const d = new FormData(form);
     const text = [
-      'Liminal space — Enquiry',
+      'Common space — Enquiry',
       '',
       'Building address: ' + (d.get('address') || ''),
       'Number of levels: ' + (d.get('levels') || ''),
@@ -1525,9 +1653,10 @@ document.querySelectorAll('#enquiry, #hero-enquiry').forEach(form => {
       d.get('details') || ''
     ].join('\n');
     const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
-    const a = Object.assign(document.createElement('a'), { href: url, download: 'liminal-space-enquiry.txt' });
+    const a = Object.assign(document.createElement('a'), { href: url, download: 'common-space-enquiry.txt' });
     document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
+    status.textContent = 'Your enquiry was downloaded as common-space-enquiry.txt. Nothing was sent.';
   });
 });
 </script>
