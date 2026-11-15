@@ -1696,15 +1696,19 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
   const NS = 'http://www.w3.org/2000/svg';
   // in screen pixels, for a drawing about 800px tall (the hero); smaller
   // drawings take a lighter stroke, down to half, or the dense ones fill in
-  const PX = { stroke: 5, rough: 3, rim: 1.1, blur: 4, dx: 1.5, dy: 4, noise: 0.9, grain: 2.2 };
+  // melt: a light fill that closes the narrowest gaps (between stair treads,
+  // panel mouldings) while the drawing keeps its lines
+  const PX = { stroke: 5.5, melt: 1.6, rough: 3, rim: 1.1, blur: 4, dx: 1.5, dy: 4, noise: 0.9, grain: 2.2 };
   const REF_H = 800;
   const items = [];
   let n = 0;
 
   function filterMarkup(id) {
     return `<filter id="${id}" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" result="soft" data-k="melt"/>
+      <feColorMatrix in="soft" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="blob"/>
       <feTurbulence type="fractalNoise" numOctaves="2" seed="7" result="noise" data-k="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" xChannelSelector="R" yChannelSelector="G" result="rough" data-k="rough"/>
+      <feDisplacementMap in="blob" in2="noise" xChannelSelector="R" yChannelSelector="G" result="rough" data-k="rough"/>
       <feMorphology in="rough" operator="dilate" result="fat" data-k="rim"/>
       <feComposite in="fat" in2="rough" operator="out" result="rim"/>
       <feTurbulence type="fractalNoise" numOctaves="1" seed="2" result="grain" data-k="grain"/>
@@ -1725,11 +1729,14 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     const r = it.svg.getBoundingClientRect();
     if (!r.width || !r.height) return;
     const s = Math.min(r.width / it.vw, r.height / it.vh);   // screen px per user unit
-    const k = Math.min(1, Math.max(0.5, (it.vh * s) / REF_H));
+    // the stroke grows with the drawing, so on a large screen the lines keep
+    // their weight and close the same gaps instead of thinning out
+    const k = Math.min(2.5, Math.max(0.5, (it.vh * s) / REF_H));
     const u = v => (v * k / s).toFixed(2);
     const f = it.filter;
     it.g.setAttribute('stroke-width', u(PX.stroke));
     f.querySelector('[data-k="noise"]').setAttribute('baseFrequency', (PX.noise * s).toFixed(4));
+    f.querySelector('[data-k="melt"]').setAttribute('stdDeviation', u(PX.melt));
     f.querySelector('[data-k="grain"]').setAttribute('baseFrequency', (PX.grain * s).toFixed(4));
     f.querySelector('[data-k="rough"]').setAttribute('scale', u(PX.rough));
     f.querySelector('[data-k="rim"]').setAttribute('radius', (PX.rim / s).toFixed(2));
