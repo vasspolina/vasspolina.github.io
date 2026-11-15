@@ -10,7 +10,9 @@
 /* ------------------------------------------------------------------
    Typefaces:
    — Coolkit Variable Font (CoolkitVF-TRIAL.woff2)
-   — Display & sizes >= 18px: Thin/ExtraLight (font-weight: 100)
+   — Headlines (hero, section, tile and price titles): Light (font-weight: 300),
+     so the strokes hold where a line drawing crosses the words
+   — Other sizes >= 18px: Thin (font-weight: 100)
    — Body & sizes < 18px: Regular (font-weight: 400)
    ------------------------------------------------------------------ */
 @font-face {
@@ -342,7 +344,7 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
 }
 .hero h1 {
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   color: var(--ink);
   line-height: .98;
   letter-spacing: -0.02em;
@@ -446,7 +448,7 @@ section {
 .section-head h2 {
   grid-column: 1 / span 6;
   font-size: var(--fs-l);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 0.98;
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -499,7 +501,7 @@ section {
   z-index: 2;
   text-align: left;
   font-size: var(--fs-l);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 0.98;
   letter-spacing: -0.02em;
   max-width: 14ch;
@@ -791,7 +793,7 @@ section {
 }
 .price h3 {
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   line-height: .98;
   letter-spacing: -0.02em;
 }
