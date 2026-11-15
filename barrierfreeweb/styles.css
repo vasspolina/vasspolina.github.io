@@ -522,12 +522,12 @@ body { font-weight: 400; letter-spacing: 0; }
 .text * + h2 { margin-top: 56px; }
 
 /* Term lists, set after palace-enterprise.com: no bullets; the term a bold
-   capital label, what it means on the line under it, indented, upright */
+   capital label, what it means on the line under it, upright */
 .terms { display: block; padding: 0; border: 0; font-size: inherit; line-height: inherit; }
 .terms > div + div { margin-top: 0.75em; }
 .terms dt, .terms dd, .acc__body .terms dt { display: block; margin: 0; }
 .terms dt, .acc__body .terms dt { font-weight: 600; font-style: normal; text-transform: uppercase; }
-.terms dd { padding-left: var(--indent); font-style: normal; }
+.terms dd { padding-left: 0; font-style: normal; }  /* no indent: the bold capital label already sets the line off */
 .terms dt::after { content: none; }
 
 /* Plain lists: no dots, each item indented (role="list" in the markup keeps
