@@ -671,7 +671,7 @@ em, i, cite { font-style: italic; }
 .chat__prompt {
   font: inherit; font-family: "Saans", var(--sans); font-size: 40px; line-height: 1.05; letter-spacing: -0.015em;
   color: var(--ink); background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
-  text-wrap: balance;
+  text-wrap: wrap;  /* a line runs to the end of the measure before it turns (it was balanced) */
 }
 .chat__prompt:hover { color: #1f3fb0; }  /* 9.4:1 on white, as the scanner's opening questions */
 .chat__prompt:disabled { cursor: default; }
