@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liminal space — Stairwell &amp; common-area cleaning, Berlin</title>
+<title>Common space — Stairwell &amp; common-area cleaning, Berlin</title>
 <meta name="description" content="Stairwell and common-area cleaning for residential buildings in Berlin.">
 <link rel="preload" href="fonts/AguzzoVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -329,7 +329,7 @@ section { scroll-margin-top: 3.5rem; }
 
 <header class="site-header wrap">
   <div class="grid">
-    <a class="logo" href="#top">Liminal space</a>
+    <a class="logo" href="#top">Common space</a>
     <nav class="nav" aria-label="Primary">
       <a href="#cleaning">Cleaning</a>
       <a href="#how">How it works</a>
@@ -498,7 +498,7 @@ section { scroll-margin-top: 3.5rem; }
     <span>Berlin,&nbsp;DE.</span>
     <a href="#top">Back to top <span class="arrow" aria-hidden="true">↑</span></a>
   </div>
-  <p class="wordmark" aria-hidden="true">Liminal space</p>
+  <p class="wordmark" aria-hidden="true">Common space</p>
 </footer>
 
 <script>
@@ -526,12 +526,12 @@ levelSelect.addEventListener('change', () => mark(levelSelect.value));
 document.getElementById('enquiry').addEventListener('submit', e => {
   e.preventDefault();
   const d = new FormData(e.target);
-  const text = ['Liminal space — Enquiry', '',
+  const text = ['Common space — Enquiry', '',
     'Building address: ' + (d.get('address') || ''),
     'Number of levels: ' + (d.get('levels') || ''), '',
     'Additional details:', d.get('details') || ''].join('\n');
   const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
-  const a = Object.assign(document.createElement('a'), { href: url, download: 'liminal-space-enquiry.txt' });
+  const a = Object.assign(document.createElement('a'), { href: url, download: 'common-space-enquiry.txt' });
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 </script>
