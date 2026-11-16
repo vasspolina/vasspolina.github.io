@@ -1028,3 +1028,11 @@ body > header::after {
   .acc__lede { font-size: 22px; }
   .acc__body { font-size: 17px; }
 }
+
+/* The starter blocks' hover is a change of ground, not an underline (user's
+   instruction, Nov 2026): every block turns marker yellow with black words,
+   as the scanner's buttons do. Black on #f8ff58 19.4:1. */
+.chat__prompt:hover, .chat__prompt:first-child:hover, .chat__prompt:nth-child(n + 2):hover {
+  background: var(--yellow); color: #000; text-decoration: none;
+}
+@media (prefers-reduced-motion: no-preference) { .chat__prompt { transition: background-color 0.15s, color 0.15s; } }
