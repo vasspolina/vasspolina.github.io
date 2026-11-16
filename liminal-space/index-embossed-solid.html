@@ -5,19 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Common space — Stairwell and common-area cleaning, Berlin</title>
 <meta name="description" content="Stairwell and common&#8209;area cleaning for residential buildings in Berlin.">
-<link rel="preload" href="fonts/Documan-TRIAL-Light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/JokkerVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* ------------------------------------------------------------------
    Typefaces:
-   — Documan (Documan-TRIAL-*.woff2): Light 300, Regular 400, SemiBold 600
+   — Jokker variable (JokkerVF-TRIAL.woff2): Light 300, Regular 400, Medium 500, SemiBold 600
    — Headlines (hero, section, tile and price titles): Light (font-weight: 300),
      so the strokes hold where a line drawing crosses the words
    — Other sizes >= 18px: Light too; Thin (100) is not used, it is too fine to read
    — Body & sizes < 18px: Regular (font-weight: 400)
    ------------------------------------------------------------------ */
-@font-face { font-family: "Documan"; src: url("fonts/Documan-TRIAL-Light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
-@font-face { font-family: "Documan"; src: url("fonts/Documan-TRIAL-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: "Documan"; src: url("fonts/Documan-TRIAL-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Jokker"; src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
 
 /* ------------------------------------------------------------------
    System
@@ -71,7 +69,7 @@
   --field-label: #a8b596;   /* 6.36:1 on the field ground */
   --field-edge: #7b836e;    /* 5.31:1 against the page, so a field can be found (WCAG 1.4.11) */
 
-  --font-sans: "Documan", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Jokker", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font: var(--font-sans);
 
   /* 4-size modular scale */
@@ -1179,12 +1177,12 @@ svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
   padding: 0 1em .08em;
 }
 
-/* logo and footer wordmark: Documan SemiBold, set tight, like the stencil specimen */
+/* logo and footer wordmark: Jokker SemiBold, set tight, like the stencil specimen */
 .logo, .wordmark { font-weight: 600; }
 .logo { letter-spacing: -0.02em; }
 .wordmark { letter-spacing: -0.03em; }
 
-/* the price figure stands out: Documan SemiBold */
+/* the price figure stands out: Jokker SemiBold */
 .price .tnum { font-weight: 600; letter-spacing: -0.03em; }
 
 /* building chooser: the whole tile answers the pointer. Hover and keyboard focus fill it with
