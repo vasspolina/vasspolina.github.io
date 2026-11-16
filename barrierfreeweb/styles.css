@@ -1051,3 +1051,8 @@ body > header::after {
 .acc__body .terms dt, .acc__body .terms dd { display: block; }
 .acc__body .terms dt { text-transform: uppercase; }
 .acc__body .terms dt::after { content: none; }
+
+/* Round corners on the chat too (user's instruction, Nov 2026): the starter
+   blocks at 20px, as first drawn, and the box you type in at 20px. */
+.chat__prompt { border-radius: 20px; }
+.chat__box { border-radius: 20px; }
