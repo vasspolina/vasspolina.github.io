@@ -887,7 +887,7 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
 }
 .acc__btn:focus-visible { box-shadow: none; }
 .signup__input:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
-.crumb a:focus-visible { outline-color: var(--focus-inverse); }
+.crumb a:focus-visible { outline-color: var(--mark-ink); }  /* white on the black pill, black on the white one in dark */
 
 /* A page title with a line under it (About): the heading is the h1 alone and
    the line is a paragraph beside it in the same band, so a screen reader
