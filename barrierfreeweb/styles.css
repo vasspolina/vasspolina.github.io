@@ -1030,3 +1030,8 @@ body > header::after {
   background: var(--yellow); color: #000; text-decoration: none;
 }
 @media (prefers-reduced-motion: no-preference) { .chat__prompt { transition: background-color 0.15s, color 0.15s; } }
+
+/* The request form's fields and buttons take round corners again (user's
+   instruction, Nov 2026: "it can have round corners"), 14px as first drawn.
+   The chat's starter blocks stay square. */
+.signup__field, .signup__input, .signup__field > .signup__input, .signup__btn, .request .request__input { border-radius: 14px; }
