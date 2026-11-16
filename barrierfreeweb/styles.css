@@ -45,6 +45,11 @@
   --lime: #e4f5a4;      /* "What we offer" band, light green-yellow: black text 18:1, blue links 8:1 */
   --page: var(--paper);  /* the ground the sticky header paints */
   --link: #0000ff;      /* 8.6:1 on paper */
+  --pill-ink: #ffffff;  /* the words on a pill */
+  --mark-bg: #000000;   /* the breadcrumb, the current page, a hovered nav word */
+  --mark-ink: #ffffff;
+  --band-ink: #000000;  /* the words on the sky band */
+  --toc: var(--cream);  /* the section buttons on long pages */
 
   /* displaay specimen grounds, tiles only */
   --mint: #beffbd;
@@ -98,7 +103,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .skip {
   position: absolute; left: var(--margin); top: -100px; z-index: 100;
-  background: var(--pill); color: #fff; text-decoration: none;
+  background: var(--pill); color: var(--pill-ink); text-decoration: none;
   font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
   padding: 5px 15px; border-radius: 21px;
 }
@@ -148,13 +153,13 @@ body::before {
 .crumb {
   justify-self: center;
   background: var(--pill);
-  color: #fff;
+  color: var(--mark-ink);
   border-radius: 21px;
   padding: 5px 15px;
   font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
   white-space: nowrap;
 }
-.crumb a { color: #fff; text-decoration: none; }
+.crumb a { color: var(--mark-ink); text-decoration: none; }
 .crumb a:hover { text-decoration: underline; }
 .crumb ol { list-style: none; margin: 0; padding: 0; display: flex; }
 .crumb li + li::before { content: "\2009\2192\2009"; }
@@ -258,7 +263,7 @@ body::before {
 .btn, .card .btn {
   display: inline-block;
   background: var(--pill);
-  color: #fff;
+  color: var(--pill-ink);
   font-size: 19px; line-height: 24px; letter-spacing: var(--ui-track);
   padding: 10px 18px;
   border-radius: 8px;
@@ -553,7 +558,7 @@ em, i, cite { font-style: italic; }
 .card > * + * { margin-top: 16px; }
 .card > h2:first-child + * { margin-top: 12px; }
 .card a { color: var(--link); }
-.card .btn { color: #fff; }
+.card .btn { color: var(--pill-ink); }
 
 /* What we offer */
 .related__label { margin: 0; border-bottom: 0; }
@@ -642,7 +647,7 @@ em, i, cite { font-style: italic; }
 .toc a {
   display: inline-block; min-height: 36px;
   padding: 7px 12px; border-radius: 6px; border: 1px solid transparent;
-  background: var(--cream); color: var(--ink);
+  background: var(--toc); color: var(--ink);
   font-size: 18px; line-height: 22px; text-decoration: none;
 }
 .toc a:hover { border-color: var(--ink); }
@@ -719,8 +724,8 @@ em, i, cite { font-style: italic; }
   font-size: 18px; line-height: 22px; letter-spacing: 0;
 }
 .brand, .nav a { background: none; color: var(--ink); }  /* no fill, no outline: the words alone */
-.crumb, .nav a[aria-current="page"] { background: #000; color: #fff; }
-.brand:hover, .nav a:hover { background: #000; color: #fff; }
+.crumb, .nav a[aria-current="page"] { background: var(--mark-bg); color: var(--mark-ink); }
+.brand:hover, .nav a:hover { background: var(--mark-bg); color: var(--mark-ink); }
 .nav ul { gap: 6px; }
 @media (max-width: 640px) {
   .brand, .crumb, .nav a { font-size: 17px; min-height: 36px; padding: 0 11px; }
@@ -742,7 +747,7 @@ em, i, cite { font-style: italic; }
   src: url("fonts/Serrif-TRIAL-Light.woff2") format("woff2");
   font-weight: 300; font-style: normal; font-display: swap;
 }
-.plate { background: var(--sky); color: #000; }  /* 15.7:1 */
+.plate { background: var(--sky); color: var(--band-ink); }  /* 15.7:1 */
 .plate p {
   font-family: "Serrif", "Times New Roman", Times, serif;
   font-weight: 300; letter-spacing: -0.01em; line-height: 0.98;
@@ -926,3 +931,58 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
   .chat__prompts { grid-template-columns: minmax(0, 1fr); }
   .chat__prompt { min-height: 96px; font-size: 24px; padding: 20px 18px; }
 }
+
+/* ==========================================================================
+   Dark mode (user's instruction, Nov 2026). It follows the system setting
+   and the Light / Dark button in the header, which wins once pressed
+   (data-theme on <html>, kept in localStorage).
+
+   The page is white on black. The colour bands turn to deep versions of
+   their own hue with white words, so a band is still a band: sky #0c2f42
+   (white 14.6:1), lime band #1f2a0c (16.6:1), the green Accessibility page
+   #0f2b17 (16.1:1), cards and chips #262626 (15.3:1). Links are #9db8ff
+   (10.4:1 on black, 8.0:1 or better on every band). The opening's green
+   band, the cream form fields and the cyan and mint blocks are the same in
+   both themes: each carries its own fixed text colour. The focus blue
+   #0f62fe is kept: 4.2:1 on black, 4.4:1 on the cream field.
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #000000; --ink: #ffffff; --plate: #ffffff; --plate-ink: #000000;
+    --card: #262626; --chip: #262626; --toc: #262626; --quiet: #b8b8b8;
+    --pill: #e6e6e6; --pill-ink: #000000; --mark-bg: #ffffff; --mark-ink: #000000;
+    --link: #9db8ff; --brown: #f0c79a;
+    --sky: #0c2f42; --band-ink: #ffffff; --lime: #1f2a0c; --info-green: #0f2b17;
+    --send-dash: white;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #000000; --ink: #ffffff; --plate: #ffffff; --plate-ink: #000000;
+  --card: #262626; --chip: #262626; --toc: #262626; --quiet: #b8b8b8;
+  --pill: #e6e6e6; --pill-ink: #000000; --mark-bg: #ffffff; --mark-ink: #000000;
+  --link: #9db8ff; --brown: #f0c79a;
+  --sky: #0c2f42; --band-ink: #ffffff; --lime: #1f2a0c; --info-green: #0f2b17;
+  --send-dash: white;
+}
+:root[data-theme="light"] { color-scheme: light; }
+/* the first starter block is the page's opposite, so it shows on either ground */
+.chat__prompt:first-child { background: var(--mark-bg); color: var(--mark-ink); }
+.chat__prompt:first-child:hover { color: var(--mark-ink); }
+/* the section being read, on the dark chips: white, black words */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .toc a[aria-current="true"] { background: #fff; color: #000; } }
+:root[data-theme="dark"] .toc a[aria-current="true"] { background: #fff; color: #000; }
+/* the disabled Send button's dashes are drawn in an image, which cannot read
+   a colour token, so dark has its own copy in white */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chat__send:disabled { background: var(--paper); color: var(--ink); border-style: dashed; cursor: default; } }
+:root[data-theme="dark"] .chat__send:disabled { background: var(--paper); color: var(--ink); border-style: dashed; cursor: default; }
+
+/* The Light / Dark button: the last thing in the footer's list. It was tried
+   in the header, where it pushed the navigation onto a second row below
+   1290px. */
+.theme {
+  font: inherit; color: var(--ink); background: none; border: 1px solid var(--ink); border-radius: 999px;
+  min-height: 34px; padding: 0 14px; margin-top: 6px; cursor: pointer; white-space: nowrap;
+}
+.theme:hover { background: var(--mark-bg); color: var(--mark-ink); }

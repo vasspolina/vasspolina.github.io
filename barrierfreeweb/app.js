@@ -358,3 +358,24 @@ How to answer: plain English, short paragraphs, no markdown, no headings, no bul
     next();
   });
 })();
+
+// Light / Dark. The page follows the system until the button is pressed;
+// after that the choice is kept (data-theme on <html>, and localStorage where
+// it is allowed) and the button names the mode it will switch to.
+(() => {
+  const btn = document.querySelector("[data-theme-toggle]");
+  if (!btn) return;
+  const root = document.documentElement;
+  const system = matchMedia("(prefers-color-scheme: dark)");
+  const current = () => root.dataset.theme || (system.matches ? "dark" : "light");
+  const label = () => { btn.textContent = current() === "dark" ? "Light mode" : "Dark mode"; };
+  btn.addEventListener("click", () => {
+    const next = current() === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    try { localStorage.setItem("bfw-theme", next); } catch {}
+    label();
+  });
+  system.addEventListener("change", label);
+  btn.hidden = false;
+  label();
+})();
