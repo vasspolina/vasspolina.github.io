@@ -1,21 +1,15 @@
+/* PP Telegraf Light, the one face of the site (user's instruction, Nov 2026,
+   replacing Jokker, Saans and Serrif). It is declared for every weight, so a
+   bold label or heading is drawn in the same Light cut and never faked. */
+@font-face {
+  font-family: "PP Telegraf";
+  src: url("fonts/PPTelegraf-Light.otf") format("opentype");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
 /* Jokker VF (Displaay, trial licence), wght 100-900, no italic cut. Check the
    trial terms before the site goes public. */
-@font-face {
-  font-family: "Jokker";
-  src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
 /* the same file again for the italics: Jokker's own slant axis (slnt 0 to -16),
    drawn by the designer, so nothing is skewed by the browser */
-@font-face {
-  font-family: "Jokker";
-  src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: oblique 0deg 16deg;
-  font-display: swap;
-}
 
 /* BarrierFreeWeb.
    Layout after the Source Type store page: a dark crumb pill, a centred
@@ -59,8 +53,8 @@
   --yellow: #f8ff58;
   --cream: #f2f0e6;
 
-  --serif: "Jokker", "Helvetica Neue", Helvetica, Arial, sans-serif;  /* the serif roles, now set in Jokker */
-  --sans: "Jokker", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "PP Telegraf", "Helvetica Neue", Helvetica, Arial, sans-serif;  /* the serif roles, set in Telegraf */
+  --sans: "PP Telegraf", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --serif-track: 0.076em;
   --title-track: 0.09em;
   --sans-track: 0.1em;
@@ -87,7 +81,7 @@ body {
   line-height: 20px;
   letter-spacing: var(--sans-track);
   font-kerning: normal;
-  font-synthesis: none;  /* Jokker has no italic cut and a sloped roman is not one: emphasis is weight */
+  font-synthesis: none;  /* one Light cut only: no faked bold, and no sloped roman passed off as italic */
   font-feature-settings: "ss04", "ss05";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -581,18 +575,8 @@ em, i, cite { font-style: italic; }
    a full-width blue band, the title huge and centred in Saans Regular, the
    subtitle small and centred under it. Black on #a2e3ff measures 15.7:1.
    ========================================================================== */
-@font-face {
-  font-family: "Saans";
-  src: url("fonts/Saans-TRIAL-Regular.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "Saans";
-  src: url("fonts/Saans-TRIAL-RegularItalic.woff2") format("woff2");
-  font-weight: 400; font-style: italic; font-display: swap;
-}
 .title {
-  font-family: "Saans", var(--sans);
+  font-family: var(--sans);
   font-weight: 400;
   font-size: clamp(56px, 10vw, 168px); line-height: 0.98; letter-spacing: -0.02em;
   text-align: center; text-wrap: balance;
@@ -607,7 +591,7 @@ em, i, cite { font-style: italic; }
   clip-path: inset(0 -100vmax);
 }
 .title :is(em, .title__sub) {
-  font-family: "Saans", var(--sans);
+  font-family: var(--sans);
   font-size: 20px; line-height: 24px; letter-spacing: 0;
   max-width: 30em; margin: 56px auto 0;
   text-wrap: balance;
@@ -674,7 +658,7 @@ em, i, cite { font-style: italic; }
 }
 .chat__prompts { display: grid; justify-items: start; gap: 10px; margin: 28px 0 44px; }
 .chat__prompt {
-  font: inherit; font-family: "Saans", var(--sans); font-size: 40px; line-height: 1.05; letter-spacing: -0.015em;
+  font: inherit; font-family: var(--sans); font-size: 40px; line-height: 1.05; letter-spacing: -0.015em;
   color: var(--ink); background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
   text-wrap: wrap;  /* a line runs to the end of the measure before it turns (it was balanced) */
 }
@@ -742,14 +726,9 @@ em, i, cite { font-style: italic; }
 /* The plates, set as Displaay's Serrif tester (user's reference, Nov 2026):
    the statements in Serrif on the blue of the title band, black type.
    Only the trial's Light cut is here; the tester shows Regular. */
-@font-face {
-  font-family: "Serrif";
-  src: url("fonts/Serrif-TRIAL-Light.woff2") format("woff2");
-  font-weight: 300; font-style: normal; font-display: swap;
-}
 .plate { background: var(--sky); color: var(--band-ink); }  /* 15.7:1 */
 .plate p {
-  font-family: "Serrif", "Times New Roman", Times, serif;
+  font-family: var(--sans);
   font-weight: 300; letter-spacing: -0.01em; line-height: 0.98;
   font-size: clamp(40px, 7vw, 132px);
 }
@@ -780,7 +759,8 @@ em, i, cite { font-style: italic; }
    its label, an email field, a request field and a Send request button. Cream field, black text 18.4:1;
    lime button, green text 11.0:1; label lime on green 11.0:1.
    The header is 77px, 121px where the navigation drops to a second row
-   (under 1060px), then 146px and, under 440px, 188px on a phone. */
+   (under 1020px), then 146px under 650px and 188px under 430px (measured in
+   PP Telegraf with the logo). */
 .title--lede { --head: 77px; --foot: 96px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
 .signup {
   display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -790,51 +770,33 @@ em, i, cite { font-style: italic; }
      it, and the fields sit on the row's top edge. The green above is the
      title band's own, so nothing shows. */
   box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(-10px -100vmax 0);
-  font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
+  font-family: var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
 }
 .signup__label { margin: 0 6px 0 0; white-space: nowrap; flex: none; }
 .signup__input {
   font: inherit; letter-spacing: 0; color: #000; background: var(--cream);
-  border: 0; border-radius: 14px; height: 56px; padding: 0 18px;
+  border: 0; border-radius: 0; height: 56px; padding: 0 18px;
   width: 320px; min-width: 0; flex: 0 1 320px;
 }
-/* Each field shows its own label, small, inside the field's top edge, so
-   the label stays when something is typed (a placeholder does not), and
-   says the field is required. The field is the cream block; the input
-   inside it is bare. Label #000 on cream 18.4:1. */
-.signup__field {
-  position: relative; width: 320px; min-width: 0; flex: 0 1 320px; height: 56px;
-  background: var(--cream); border-radius: 14px; color: #000;
-}
-.signup__field--wide { width: 420px; flex-basis: 420px; }
-.signup__field > label { position: absolute; left: 18px; top: 7px; font-size: 14px; line-height: 16px; pointer-events: none; white-space: nowrap; }
-.signup__field > .signup__input {
-  display: block; width: 100%; flex: none; height: 56px; padding: 22px 18px 0; background: transparent; border-radius: 14px;
-}
-.signup__field > .signup__input:focus-visible { outline: none; }
-.signup__field:focus-within { outline: 2px solid var(--focus, #0f62fe); outline-offset: -2px; }
 .signup__input::placeholder { color: #4a4a4a; opacity: 1; }  /* 7.8:1 on cream */
 .signup__btn {
   font: inherit; letter-spacing: 0; color: var(--forest); background: var(--lime-ink);
-  border: 0; border-radius: 14px; height: 56px; padding: 0 22px; cursor: pointer; white-space: nowrap;
+  border: 0; border-radius: 0; height: 56px; padding: 0 22px; cursor: pointer; white-space: nowrap;
 }
 .signup__btn:hover { background: #fff; }
 
 .signup + .plates { margin-top: 0; }
-@media (max-width: 1059px) { .title--lede { --head: 121px; } }
+@media (max-width: 1019px) { .title--lede { --head: 121px; } }
+@media (max-width: 649px) { .title--lede { --head: 146px; } }
 @media (max-width: 640px) {
-  .title--lede { --head: 146px; --foot: 150px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
+  .title--lede { --head: 146px; --foot: 198px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
   /* two rows on a phone: the email, then the request beside its button */
   .signup { font-size: 16px; gap: 6px; min-height: 150px; padding-bottom: 32px; flex-wrap: wrap; align-content: flex-start; }
-  .signup__field { flex: 1 1 0; width: auto; }
-  .signup__field:not(.signup__field--wide) { flex: 1 0 100%; }
-  .signup__field > label { left: 14px; }
-  .signup__field > .signup__input { padding: 22px 14px 0; }
   .signup__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .signup__input { flex: 1 1 0; width: auto; padding: 0 14px; }
   .signup__btn { padding: 0 16px; }
 }
-@media (max-width: 439px) { .title--lede { --head: 188px; } }
+@media (max-width: 429px) { .title--lede { --head: 188px; } }
 
 /* The request, after the row is sent: the assistant's questions, then what
    will be sent and the consent box, on the same green as the opening. Lime
@@ -843,7 +805,7 @@ em, i, cite { font-style: italic; }
 .request {
   background: var(--forest); color: var(--lime-ink);
   box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(0 -100vmax);
-  font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
+  font-family: var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
   padding: 8px 0 56px;
 }
 .request > * { max-width: 640px; margin-inline: auto; }
@@ -900,8 +862,8 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
    only by its fill vanishes into the page. A transparent 1px border costs
    nothing normally and is drawn in the system's own colour there, so the
    fields and buttons of the request form keep an edge. */
-.signup__field, .signup__btn, .signup__input, .request__brief > div { border: 1px solid transparent; }
-.signup__field > .signup__input { border: 0; }
+.signup__btn, .signup__input, .request__brief > div { border: 1px solid transparent; }
+.signup__bar { outline: 1px solid transparent; outline-offset: -1px; }  /* an outline, not a border: a transparent border let the cream show round the button */
 .request__brief > div { border-width: 0 0 1px; border-bottom-color: var(--lime-ink); }
 /* The pill links and the breadcrumb pill take a transparent outline for the
    same reason; an outline adds no size, so nothing moves. Declared with
@@ -986,3 +948,83 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
   min-height: 34px; padding: 0 14px; margin-top: 6px; cursor: pointer; white-space: nowrap;
 }
 .theme:hover { background: var(--mark-bg); color: var(--mark-ink); }
+
+/* The logo beside the studio's name: four petals in the brand's colours,
+   decoration beside the words (aria-hidden), so it carries no meaning of
+   its own. */
+.brand { display: inline-flex; align-items: center; gap: 10px; }
+.brand__logo { width: 30px; height: 30px; flex: none; }
+
+/* A colour line along the bottom of the header (user's instruction, Nov
+   2026): the logo's four colours in equal lengths, 4px, across the full
+   width. It sits in the header's own bottom padding, so the header keeps its
+   measured height. Decoration only. */
+body > header::after {
+  content: ""; position: absolute; bottom: 0; height: 4px;
+  left: 0; right: 0;  /* the header's padding box is already the full width */
+  background: linear-gradient(90deg, #e5b87d 0 25%, #7dbfff 25% 50%, #14c7aa 50% 75%, #f491f4 75% 100%);
+}
+@media (max-width: 640px) { body > header { position: relative; } }
+@media print { body > header::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
+
+/* The request row, redone as one bar (user's instruction, Nov 2026: "a
+   modern version", "no round corners"). A cream bar holds both fields and
+   the button, square, split by a hairline. Each field's label sits inside it
+   like a placeholder and moves up, small, once the field has focus or text,
+   so the label never disappears (a placeholder would). No field says
+   "required": both are, the inputs carry `required`, and an empty one is
+   answered by the browser's own message. Black on cream 18.4:1, the resting
+   label #4a4a4a 7.8:1; the button white on black 21:1. */
+.signup__bar { display: flex; align-items: stretch; width: min(820px, 100%); height: 56px; background: var(--cream); color: #000; }
+.signup__field { position: relative; flex: 1 1 0; min-width: 0; }
+.signup__field--wide { flex-grow: 1.5; }
+.signup__field + .signup__field { border-left: 1px solid #a8a596; }
+.signup__control {
+  display: block; width: 100%; height: 100%; margin: 0; border: 0; background: transparent; color: #000;
+  font: inherit; font-size: 18px; letter-spacing: 0; padding: 20px 18px 0;
+}
+.signup__control:focus-visible { outline: none; }
+.signup__field:focus-within { outline: 2px solid var(--focus); outline-offset: -2px; }
+.signup__field > label {
+  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+  font-size: 18px; line-height: 22px; color: #4a4a4a; pointer-events: none; white-space: nowrap;
+  transition: top 0.15s, transform 0.15s, font-size 0.15s;
+}
+.signup__control:focus + label, .signup__control:not(:placeholder-shown) + label { top: 8px; transform: none; font-size: 14px; line-height: 16px; }
+.signup__bar > .signup__btn { flex: none; height: auto; border-radius: 0; padding: 0 26px; background: #000; color: #fff; }
+.signup__bar > .signup__btn:hover { background: var(--forest); color: var(--lime-ink); }
+@media (prefers-reduced-motion: reduce) { .signup__field > label { transition: none; } }
+@media (max-width: 640px) {
+  .signup__bar { flex-direction: column; height: auto; }
+  .signup__field { flex: none; height: 56px; }
+  .signup__field + .signup__field { border-left: 0; border-top: 1px solid #a8a596; }
+  .signup__control { padding-inline: 14px; }
+  .signup__field > label { left: 14px; }
+  .signup__bar > .signup__btn { height: 52px; }
+}
+
+/* No round corners on the chat's starter blocks either (user's instruction, Nov 2026). */
+.chat__prompt { border-radius: 0; }
+
+/* "What we offer", opened, set as a licence guide (user's reference, Nov
+   2026): a rule across, then two columns. On the left the row's one-line
+   promise in a red accent at 28px; on the right the points as a bulleted
+   list, each term followed by what it means. Red #b3260b on the lime band
+   5.6:1 (on white 6.9:1); in dark #ff8a6a on the dark band 6.5:1. */
+:root { --accent: #b3260b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #ff8a6a; } }
+:root[data-theme="dark"] { --accent: #ff8a6a; }
+.acc__panel { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 0 48px; padding: 28px 0 56px; border-top: 1px solid var(--ink); }
+.acc__lede { color: var(--accent); font-size: 28px; line-height: 1.15; letter-spacing: 0; }
+.acc__body { font-size: 20px; line-height: 1.45; }
+.acc__body > * + * { margin-top: 16px; }
+.acc__body .terms > div { position: relative; margin: 0; padding-left: 1.1em; }
+.acc__body .terms > div + div { margin-top: 2px; }
+.acc__body .terms > div::before { content: "\2022" / ""; position: absolute; left: 0.1em; }
+.acc__body .terms dt, .acc__body .terms dd { display: inline; margin: 0; padding: 0; text-transform: none; font-weight: inherit; }
+.acc__body .terms dt::after { content: ": " / ""; }
+@media (max-width: 860px) {
+  .acc__panel { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 20px 0 40px; }
+  .acc__lede { font-size: 22px; }
+  .acc__body { font-size: 17px; }
+}
