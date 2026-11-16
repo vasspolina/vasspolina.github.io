@@ -955,14 +955,14 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand__logo { width: 30px; height: 30px; flex: none; }
 
-/* A colour line along the bottom of the header (user's instruction, Nov
-   2026): the logo's four colours in equal lengths, 4px, across the full
-   width. It sits in the header's own bottom padding, so the header keeps its
+/* A line along the bottom of the header (user's instruction, Nov 2026),
+   4px, across the full width, in the pale yellow of the opening's headline
+   (#e3f1bd). It sits in the header's own bottom padding, so the header keeps its
    measured height. Decoration only. */
 body > header::after {
   content: ""; position: absolute; bottom: 0; height: 4px;
   left: 0; right: 0;  /* the header's padding box is already the full width */
-  background: linear-gradient(90deg, #e5b87d 0 25%, #7dbfff 25% 50%, #14c7aa 50% 75%, #f491f4 75% 100%);
+  background: var(--lime-ink);  /* the headline's pale yellow, one colour across (user's instruction, Nov 2026) */
 }
 @media (max-width: 640px) { body > header { position: relative; } }
 @media print { body > header::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
