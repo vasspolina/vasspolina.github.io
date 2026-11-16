@@ -902,3 +902,27 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
    same reason; an outline adds no size, so nothing moves. Declared with
    :where() so every focus rule still wins. */
 :where(.btn, .crumb) { outline: 1px solid transparent; outline-offset: -1px; }
+
+/* The chat's starter questions, set as Displaay's Download / Test / Buy
+   blocks (user's reference, Nov 2026): three round blocks in one row, the
+   first black with white words, the second cyan, the third mint, the
+   words centred. Displaay's wide block is the last; here it is the first,
+   which holds the longest question. White on black 21:1; black on #b8fbff 18.6:1
+   and on #beffbd 18.2:1. They stack on a phone. Hover underlines the
+   words; a disabled block (while an answer is coming) keeps its look. */
+.chat__prompts { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) minmax(0, 2fr); justify-items: stretch; gap: 10px; }
+.chat__prompt {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 150px; padding: 24px 22px; border-radius: 20px;
+  font-size: 28px; line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance;
+  background: #000; color: #fff;
+}
+.chat__prompt:nth-child(2) { background: var(--cyan); color: #000; }
+.chat__prompt:nth-child(3) { background: var(--mint); color: #000; }
+.chat__prompt:hover { color: #fff; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.12em; }
+.chat__prompt:nth-child(n + 2):hover { color: #000; }
+:where(.chat__prompt) { outline: 1px solid transparent; outline-offset: -1px; }  /* an edge in high-contrast mode */
+@media (max-width: 860px) {
+  .chat__prompts { grid-template-columns: minmax(0, 1fr); }
+  .chat__prompt { min-height: 96px; font-size: 24px; padding: 20px 18px; }
+}
