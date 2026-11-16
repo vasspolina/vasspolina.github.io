@@ -778,6 +778,22 @@ em, i, cite { font-style: italic; }
   border: 0; border-radius: 0; height: 56px; padding: 0 18px;
   width: 320px; min-width: 0; flex: 0 1 320px;
 }
+/* Each field shows its own label, small, inside the field's top edge, so
+   the label stays when something is typed (a placeholder does not). The
+   field is the cream block; the input inside it is bare. Square, like the
+   rest of the form (user's instruction, Nov 2026). Label #000 on cream
+   18.4:1. Restored at the user's request after the one-bar version. */
+.signup__field {
+  position: relative; width: 320px; min-width: 0; flex: 0 1 320px; height: 56px;
+  background: var(--cream); color: #000;
+}
+.signup__field--wide { width: 420px; flex-basis: 420px; }
+.signup__field > label { position: absolute; left: 18px; top: 7px; font-size: 14px; line-height: 16px; pointer-events: none; white-space: nowrap; }
+.signup__field > .signup__input {
+  display: block; width: 100%; flex: none; height: 56px; padding: 22px 18px 0; background: transparent;
+}
+.signup__field > .signup__input:focus-visible { outline: none; }
+.signup__field:focus-within { outline: 2px solid var(--focus, #0f62fe); outline-offset: -2px; }
 .signup__input::placeholder { color: #4a4a4a; opacity: 1; }  /* 7.8:1 on cream */
 .signup__btn {
   font: inherit; letter-spacing: 0; color: var(--forest); background: var(--lime-ink);
@@ -789,10 +805,14 @@ em, i, cite { font-style: italic; }
 @media (max-width: 1019px) { .title--lede { --head: 121px; } }
 @media (max-width: 649px) { .title--lede { --head: 146px; } }
 @media (max-width: 640px) {
-  .title--lede { --head: 146px; --foot: 198px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
+  .title--lede { --head: 146px; --foot: 150px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
   /* two rows on a phone: the email, then the request beside its button */
   .signup { font-size: 16px; gap: 6px; min-height: 150px; padding-bottom: 32px; flex-wrap: wrap; align-content: flex-start; }
   .signup__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .signup__field { flex: 1 1 0; width: auto; }
+  .signup__field:not(.signup__field--wide) { flex: 1 0 100%; }
+  .signup__field > label { left: 14px; }
+  .signup__field > .signup__input { padding: 22px 14px 0; }
   .signup__input { flex: 1 1 0; width: auto; padding: 0 14px; }
   .signup__btn { padding: 0 16px; }
 }
@@ -862,8 +882,8 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
    only by its fill vanishes into the page. A transparent 1px border costs
    nothing normally and is drawn in the system's own colour there, so the
    fields and buttons of the request form keep an edge. */
-.signup__btn, .signup__input, .request__brief > div { border: 1px solid transparent; }
-.signup__bar { outline: 1px solid transparent; outline-offset: -1px; }  /* an outline, not a border: a transparent border let the cream show round the button */
+.signup__field, .signup__btn, .signup__input, .request__brief > div { border: 1px solid transparent; }
+.signup__field > .signup__input { border: 0; }
 .request__brief > div { border-width: 0 0 1px; border-bottom-color: var(--lime-ink); }
 /* The pill links and the breadcrumb pill take a transparent outline for the
    same reason; an outline adds no size, so nothing moves. Declared with
@@ -953,7 +973,17 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
    decoration beside the words (aria-hidden), so it carries no meaning of
    its own. */
 .brand { display: inline-flex; align-items: center; gap: 10px; }
-.brand__logo { width: 30px; height: 30px; flex: none; }
+.brand__logo { width: 51px; height: 51px; flex: none; margin-block: -8px; }  /* 70% larger than the first 30px; the negative margin keeps the header's height */
+/* The petals in the site's own colours (user's instruction, Nov 2026): the
+   opening's forest green, the sky of the statements band, the mint and the
+   marker yellow of the chat's blocks. In dark the green petal takes the
+   headline's pale yellow, since forest green would vanish on black. */
+.brand__petal-a { fill: var(--forest); }
+.brand__petal-b { fill: var(--sky-fixed, #a2e3ff); }
+.brand__petal-c { fill: var(--mint); }
+.brand__petal-d { fill: var(--yellow); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand__petal-a { fill: var(--lime-ink); } }
+:root[data-theme="dark"] .brand__petal-a { fill: var(--lime-ink); }
 
 /* A line along the bottom of the header (user's instruction, Nov 2026),
    4px, across the full width, in the pale yellow of the opening's headline
@@ -966,42 +996,6 @@ body > header::after {
 }
 @media (max-width: 640px) { body > header { position: relative; } }
 @media print { body > header::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
-
-/* The request row, redone as one bar (user's instruction, Nov 2026: "a
-   modern version", "no round corners"). A cream bar holds both fields and
-   the button, square, split by a hairline. Each field's label sits inside it
-   like a placeholder and moves up, small, once the field has focus or text,
-   so the label never disappears (a placeholder would). No field says
-   "required": both are, the inputs carry `required`, and an empty one is
-   answered by the browser's own message. Black on cream 18.4:1, the resting
-   label #4a4a4a 7.8:1; the button white on black 21:1. */
-.signup__bar { display: flex; align-items: stretch; width: min(820px, 100%); height: 56px; background: var(--cream); color: #000; }
-.signup__field { position: relative; flex: 1 1 0; min-width: 0; }
-.signup__field--wide { flex-grow: 1.5; }
-.signup__field + .signup__field { border-left: 1px solid #a8a596; }
-.signup__control {
-  display: block; width: 100%; height: 100%; margin: 0; border: 0; background: transparent; color: #000;
-  font: inherit; font-size: 18px; letter-spacing: 0; padding: 20px 18px 0;
-}
-.signup__control:focus-visible { outline: none; }
-.signup__field:focus-within { outline: 2px solid var(--focus); outline-offset: -2px; }
-.signup__field > label {
-  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
-  font-size: 18px; line-height: 22px; color: #4a4a4a; pointer-events: none; white-space: nowrap;
-  transition: top 0.15s, transform 0.15s, font-size 0.15s;
-}
-.signup__control:focus + label, .signup__control:not(:placeholder-shown) + label { top: 8px; transform: none; font-size: 14px; line-height: 16px; }
-.signup__bar > .signup__btn { flex: none; height: auto; border-radius: 0; padding: 0 26px; background: #000; color: #fff; }
-.signup__bar > .signup__btn:hover { background: var(--forest); color: var(--lime-ink); }
-@media (prefers-reduced-motion: reduce) { .signup__field > label { transition: none; } }
-@media (max-width: 640px) {
-  .signup__bar { flex-direction: column; height: auto; }
-  .signup__field { flex: none; height: 56px; }
-  .signup__field + .signup__field { border-left: 0; border-top: 1px solid #a8a596; }
-  .signup__control { padding-inline: 14px; }
-  .signup__field > label { left: 14px; }
-  .signup__bar > .signup__btn { height: 52px; }
-}
 
 /* No round corners on the chat's starter blocks either (user's instruction, Nov 2026). */
 .chat__prompt { border-radius: 0; }
