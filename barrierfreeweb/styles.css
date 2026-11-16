@@ -1041,3 +1041,13 @@ body > header::after {
    holds at text size too. */
 .acc__lede { font-size: 20px; line-height: 1.45; }
 @media (max-width: 860px) { .acc__lede { font-size: 17px; } }
+
+/* The terms as they were (user's instruction, Nov 2026): each term in
+   capitals on its own line, what it means on the line under it, no bullet
+   and no colon. The two columns and the red line stay. */
+.acc__body .terms > div { padding-left: 0; }
+.acc__body .terms > div + div { margin-top: 0.75em; }
+.acc__body .terms > div::before { content: none; }
+.acc__body .terms dt, .acc__body .terms dd { display: block; }
+.acc__body .terms dt { text-transform: uppercase; }
+.acc__body .terms dt::after { content: none; }
