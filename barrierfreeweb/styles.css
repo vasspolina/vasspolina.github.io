@@ -1035,3 +1035,9 @@ body > header::after {
    instruction, Nov 2026: "it can have round corners"), 14px as first drawn.
    The chat's starter blocks stay square. */
 .signup__field, .signup__input, .signup__field > .signup__input, .signup__btn, .request .request__input { border-radius: 14px; }
+
+/* The opened row's red line and its list are one size (user's instruction,
+   Nov 2026): 20px, 17px on a phone. #b3260b on the lime band is 5.6:1, so it
+   holds at text size too. */
+.acc__lede { font-size: 20px; line-height: 1.45; }
+@media (max-width: 860px) { .acc__lede { font-size: 17px; } }
