@@ -184,7 +184,7 @@ body::before {
   max-width: 980px;
   text-wrap: balance;
 }
-.title em { display: block; font-style: italic; }
+.title :is(em, .title__sub) { display: block; font-style: italic; }
 
 /* ---------- Columns: 605px of text, 40px, a 390px card ---------- */
 
@@ -497,7 +497,7 @@ body { font-weight: 400; letter-spacing: 0; }
   font-size: 64px; line-height: 1; font-weight: 600; letter-spacing: -0.015em;
   overflow-wrap: break-word; hyphens: auto;  /* one long word must still fit 320px with wide spacing */
 }
-.title em {
+.title :is(em, .title__sub) {
   font-weight: 400; letter-spacing: 0;
   font-size: 24px; line-height: 28px; max-width: 32em; margin-top: 28px;
 }
@@ -538,7 +538,7 @@ body { font-weight: 400; letter-spacing: 0; }
 /* Italic, as Palace uses it: for what follows or qualifies a line */
 :root { --indent: 1.33em; }  /* Palace: 20px at 15px */
 em, i, cite { font-style: italic; }
-.title em { font-style: italic; }
+.title :is(em, .title__sub) { font-style: italic; }
 .text h3 { font-style: italic; font-weight: 400; }
 .card h2:not(:first-child) { font-style: italic; }
 .post figcaption, .tags { font-style: italic; }
@@ -564,7 +564,7 @@ em, i, cite { font-style: italic; }
 
 @media (max-width: 640px) {
   .title { font-size: clamp(30px, 11vw, 40px); margin: 24px 0 40px; padding-top: 10px; }
-  .title em { font-size: 20px; line-height: 24px; margin-top: 20px; }
+  .title :is(em, .title__sub) { font-size: 20px; line-height: 24px; margin-top: 20px; }
   .text, .acc__body { font-size: 20px; line-height: 24px; }
   .text > * + *, .acc__body > * + * { margin-top: 24px; }
   .acc__lede { font-size: 22px; line-height: 26px; }
@@ -601,7 +601,7 @@ em, i, cite { font-style: italic; }
   box-shadow: 0 0 0 100vmax var(--sky);
   clip-path: inset(0 -100vmax);
 }
-.title em {
+.title :is(em, .title__sub) {
   font-family: "Saans", var(--sans);
   font-size: 20px; line-height: 24px; letter-spacing: 0;
   max-width: 30em; margin: 56px auto 0;
@@ -615,7 +615,7 @@ em, i, cite { font-style: italic; }
     font-size: clamp(40px, 13vw, 56px);
     min-height: 0; padding: 56px 0 36px; margin: 0 0 48px;
   }
-  .title em { font-size: 17px; line-height: 22px; margin-top: 32px; }
+  .title :is(em, .title__sub) { font-size: 17px; line-height: 22px; margin-top: 32px; }
   .title + .plates { margin-top: -48px; }
 }
 
@@ -883,3 +883,22 @@ button:focus-visible, .btn:focus-visible, .nav a:focus-visible, .brand:focus-vis
 .acc__btn:focus-visible { box-shadow: none; }
 .signup__input:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
 .crumb a:focus-visible { outline-color: var(--focus-inverse); }
+
+/* A page title with a line under it (About): the heading is the h1 alone and
+   the line is a paragraph beside it in the same band, so a screen reader
+   reads the title as the title and not the two run together as one heading.
+   The h1 takes the band's type; the paragraph takes what the em had. */
+.title > h1 { font: inherit; letter-spacing: inherit; margin: 0; text-wrap: inherit; overflow-wrap: inherit; }
+.title > .title__sub { display: block; font-style: italic; margin-bottom: 0; }
+
+/* High-contrast mode (forced colours) removes every fill, so a control drawn
+   only by its fill vanishes into the page. A transparent 1px border costs
+   nothing normally and is drawn in the system's own colour there, so the
+   fields and buttons of the request form keep an edge. */
+.signup__field, .signup__btn, .signup__input, .request__brief > div { border: 1px solid transparent; }
+.signup__field > .signup__input { border: 0; }
+.request__brief > div { border-width: 0 0 1px; border-bottom-color: var(--lime-ink); }
+/* The pill links and the breadcrumb pill take a transparent outline for the
+   same reason; an outline adds no size, so nothing moves. Declared with
+   :where() so every focus rule still wins. */
+:where(.btn, .crumb) { outline: 1px solid transparent; outline-offset: -1px; }
