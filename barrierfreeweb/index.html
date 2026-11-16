@@ -18,11 +18,16 @@
 </header>
 <main id="main" class="wrap" tabindex="-1">
   <h1 class="title title--lede">We’re a design studio in Berlin building websites that everyone can use.</h1>
-  <form class="signup" action="mailto:gf@barrierfreeweb.de" method="post" enctype="text/plain" data-signup data-api-base="https://a11y-checker-v2-production.up.railway.app">
-    <label class="signup__label" for="signup-email">Contact us</label>
-    <input class="signup__input" id="signup-email" name="email" type="email" autocomplete="email" placeholder="Your email" required>
-    <label class="sr-only" for="signup-request">Your request</label>
-    <input class="signup__input signup__input--wide" id="signup-request" name="request" type="text" maxlength="2000" placeholder="Your request" required>
+  <form class="signup" action="mailto:gf@barrierfreeweb.de" method="post" enctype="text/plain" aria-labelledby="signup-title" data-signup data-api-base="https://a11y-checker-v2-production.up.railway.app">
+    <p class="signup__label" id="signup-title">Contact us</p>
+    <div class="signup__field">
+      <label for="signup-email">Email (required)</label>
+      <input class="signup__input" id="signup-email" name="email" type="email" autocomplete="email" required>
+    </div>
+    <div class="signup__field signup__field--wide">
+      <label for="signup-request">Request (required)</label>
+      <input class="signup__input" id="signup-request" name="request" type="text" maxlength="2000" required>
+    </div>
     <input class="signup__trap" name="company_url" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button class="signup__btn" type="submit">Send request</button>
   </form>

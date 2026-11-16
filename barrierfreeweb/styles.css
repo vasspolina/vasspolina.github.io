@@ -787,13 +787,27 @@ em, i, cite { font-style: italic; }
   box-shadow: 0 0 0 100vmax var(--forest); clip-path: inset(-10px -100vmax 0);
   font-family: "Saans", var(--sans); font-size: 18px; line-height: 24px; letter-spacing: 0;
 }
-.signup__label { margin-right: 6px; white-space: nowrap; flex: none; }
+.signup__label { margin: 0 6px 0 0; white-space: nowrap; flex: none; }
 .signup__input {
   font: inherit; letter-spacing: 0; color: #000; background: var(--cream);
   border: 0; border-radius: 14px; height: 56px; padding: 0 18px;
   width: 320px; min-width: 0; flex: 0 1 320px;
 }
-.signup__input--wide { width: 420px; flex-basis: 420px; }
+/* Each field shows its own label, small, inside the field's top edge, so
+   the label stays when something is typed (a placeholder does not), and
+   says the field is required. The field is the cream block; the input
+   inside it is bare. Label #000 on cream 18.4:1. */
+.signup__field {
+  position: relative; width: 320px; min-width: 0; flex: 0 1 320px; height: 56px;
+  background: var(--cream); border-radius: 14px; color: #000;
+}
+.signup__field--wide { width: 420px; flex-basis: 420px; }
+.signup__field > label { position: absolute; left: 18px; top: 7px; font-size: 14px; line-height: 16px; pointer-events: none; white-space: nowrap; }
+.signup__field > .signup__input {
+  display: block; width: 100%; flex: none; height: 56px; padding: 22px 18px 0; background: transparent; border-radius: 14px;
+}
+.signup__field > .signup__input:focus-visible { outline: none; }
+.signup__field:focus-within { outline: 2px solid var(--focus, #0f62fe); outline-offset: -2px; }
 .signup__input::placeholder { color: #4a4a4a; opacity: 1; }  /* 7.8:1 on cream */
 .signup__btn {
   font: inherit; letter-spacing: 0; color: var(--forest); background: var(--lime-ink);
@@ -807,7 +821,10 @@ em, i, cite { font-style: italic; }
   .title--lede { --head: 146px; --foot: 150px; min-height: calc(100vh - var(--head) - var(--foot)); min-height: calc(100svh - var(--head) - var(--foot)); margin-bottom: 0; }
   /* two rows on a phone: the email, then the request beside its button */
   .signup { font-size: 16px; gap: 6px; min-height: 150px; padding-bottom: 32px; flex-wrap: wrap; align-content: flex-start; }
-  .signup__input:not(.signup__input--wide) { flex: 1 0 100%; }
+  .signup__field { flex: 1 1 0; width: auto; }
+  .signup__field:not(.signup__field--wide) { flex: 1 0 100%; }
+  .signup__field > label { left: 14px; }
+  .signup__field > .signup__input { padding: 22px 14px 0; }
   .signup__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .signup__input { flex: 1 1 0; width: auto; padding: 0 14px; }
   .signup__btn { padding: 0 16px; }
