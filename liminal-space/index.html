@@ -5,21 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Common space — Stairwell and common-area cleaning, Berlin</title>
 <meta name="description" content="Stairwell and common&#8209;area cleaning for residential buildings in Berlin.">
-<link rel="preload" href="fonts/CoolkitVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/JokkerVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* ------------------------------------------------------------------
    Typefaces:
-   — Coolkit Variable Font (CoolkitVF-TRIAL.woff2)
+   — Jokker variable (JokkerVF-TRIAL.woff2): Light 300, Regular 400, Medium 500, SemiBold 600
    — Headlines (hero, section, tile and price titles): Light (font-weight: 300),
      so the strokes hold where a line drawing crosses the words
-   — Other sizes >= 18px: Thin (font-weight: 100)
+   — Other sizes >= 18px: Light too; Thin (100) is not used, it is too fine to read
    — Body & sizes < 18px: Regular (font-weight: 400)
    ------------------------------------------------------------------ */
-@font-face {
-  font-family: "Coolkit";
-  src: url("fonts/CoolkitVF-TRIAL.woff2") format("woff2");
-  font-weight: 100 900; font-style: normal; font-display: swap;
-}
+@font-face { font-family: "Jokker"; src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
 
 /* ------------------------------------------------------------------
    System
@@ -73,7 +69,7 @@
   --field-label: #a8b596;   /* 6.36:1 on the field ground */
   --field-edge: #7b836e;    /* 5.31:1 against the page, so a field can be found (WCAG 1.4.11) */
 
-  --font-sans: "Coolkit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Jokker", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font: var(--font-sans);
 
   /* 4-size modular scale */
@@ -230,7 +226,7 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
   min-height: 1.5rem;   /* 24px target (WCAG 2.5.8) */
   font-family: var(--font);
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   letter-spacing: -0.015em;
   line-height: 1.15;
   position: relative;
@@ -420,7 +416,7 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
 }
 .hero-lead {
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.32;
   color: var(--ink);
   max-width: 44ch;
@@ -533,7 +529,7 @@ section {
 .scope h3 {
   grid-column: 1 / span 4;
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.15;
   letter-spacing: -0.005em;
 }
@@ -544,7 +540,7 @@ section {
   padding-block: calc(var(--u) * .45);
   border-bottom: var(--line);
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.15;
   letter-spacing: -0.005em;
 }
@@ -576,7 +572,7 @@ section {
   white-space: nowrap;
   padding: .36em 0;
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1;
   text-transform: uppercase;
   letter-spacing: -0.01em;
@@ -602,7 +598,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: .35em;
-  font-weight: 100;
+  font-weight: 300;
 }
 .tape .logo-bold svg {
   width: .88em;
@@ -610,7 +606,7 @@ section {
   fill: currentColor;
 }
 .tape .statement {
-  font-weight: 100;
+  font-weight: 300;
   letter-spacing: .04em;
   opacity: .95;
 }
@@ -634,7 +630,7 @@ section {
 }
 .info-desc {
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.24;
   letter-spacing: -0.005em;
   max-width: 46ch;
@@ -704,7 +700,7 @@ section {
   font-size: var(--fs-m);
   line-height: 1.12;
   letter-spacing: -0.01em;
-  font-weight: 100;
+  font-weight: 300;
   text-wrap: balance;
 }
 .step .num {
@@ -773,7 +769,7 @@ section {
 }
 .building .figure {
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   line-height: .9;
   padding-top: .12em;
   letter-spacing: -0.03em;
@@ -1023,7 +1019,7 @@ a, button { transition: background .2s, color .2s; }
   align-items: center;
   white-space: nowrap;
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.12;
   letter-spacing: -0.015em;
   transition: background .2s, color .2s, font-weight .35s ease;
@@ -1056,7 +1052,7 @@ a, button { transition: background .2s, color .2s; }
 .wordmark {
   font-family: var(--font);
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   line-height: .78;
   letter-spacing: -0.035em;
   white-space: nowrap;
@@ -1145,6 +1141,84 @@ a, button { transition: background .2s, color .2s; }
 .footer-meta { position: relative; z-index: 3; align-items: center; }
 .wordmark-wrap { position: relative; isolation: isolate; z-index: 2;
   margin-inline: calc(var(--margin) * -1); padding-inline: var(--margin); }
+
+/* menu and filter pills: each its own round pill with a thin edge, like the theme switch */
+.nav, .tabs { gap: .5rem; }
+.nav a:nth-child(n), .tabs button:nth-child(n) {
+  border-radius: 999px;
+  border: 1px solid var(--line-c);
+  padding: 0 1em .08em;
+}
+
+/* ---------- bold stencil drawings (after the 'af' mark and the Coolkit stencil card):
+   each drawing is redrawn by the script at the end of the page as a few thick, even
+   lines with round ends and stencil gaps where they meet. A tone a step off the ground, so the headlines stay readable over them. */
+:root { --bold-ink: #2c3229; }
+html[data-theme="light"] { --bold-ink: #cfccbb; }
+svg.art { overflow: visible; filter: none; }
+html[data-theme="light"] svg.art { filter: none; }
+svg.art .bold { fill: none; stroke: var(--bold-ink); stroke-linecap: round; stroke-linejoin: round; }
+
+/* logo and footer wordmark: Jokker SemiBold, set tight, like the stencil specimen */
+.logo, .wordmark { font-weight: 600; }
+.logo { letter-spacing: -0.02em; }
+.wordmark { letter-spacing: -0.03em; }
+
+/* the price figure stands out: Jokker SemiBold */
+.price .tnum { font-weight: 600; letter-spacing: -0.03em; }
+
+/* building chooser: the whole tile answers the pointer. Hover and keyboard focus fill it with
+   the pill colour (mint in light), the figure turns to the button ink and the arrow lifts;
+   the chosen tile is solid ink. */
+.building {
+  padding: calc(var(--u) * .5) .9rem .9rem;
+  border-radius: 0;   /* square while idle, so its top rule stays straight */
+  transition: background .25s ease, color .25s ease, border-color .25s ease, border-radius .25s ease;
+}
+.building:hover, .building:focus-visible, .building[aria-pressed="true"] { border-radius: 10px; }
+/* dark theme: a hover fill that clearly stands off the black ground (text on it 10:1) */
+html:not([data-theme="light"]) .building:hover, html:not([data-theme="light"]) .building:focus-visible { background: #34402f; color: #e8ede2; }
+.building:hover, .building:focus-visible {
+  background: var(--btn-alt, var(--btn));
+  color: var(--btn-tx-color);
+  border-top-color: transparent;
+}
+.building:hover .figure { letter-spacing: -0.01em; }
+.building .figure { transition: letter-spacing .35s ease; }
+.building:hover .arrow, .building:focus-visible .arrow { transform: translate(4px, -4px); }
+.building[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-top-color: transparent; }
+.building[aria-pressed="true"] .row { text-decoration: none; }
+@media (forced-colors: active) { .building:hover, .building[aria-pressed="true"] { outline: 2px solid Highlight; } }
+
+/* ---------- opening as a type specimen (after the Documan type tester): no drawing, the
+   headline set big in Jokker Medium on a centred axis, a small caption above and below,
+   short tick marks at the edges, and a round figure badge after the last word. ---------- */
+.hero--specimen { justify-content: center; gap: calc(var(--u) * 1.2); text-align: center; }
+.hero--specimen .hero-stage { flex: 0 0 auto; min-height: 0; padding: 0; }
+.hero--specimen h1 {
+  font-weight: 500;
+  font-size: clamp(3rem, 0.6rem + 8.6vw, 9.5rem);
+  line-height: .95;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.hero--specimen .spec-cap { font-size: var(--fs-s); font-weight: 400; letter-spacing: 0.01em; }
+.spec-dot {                 /* a round figure badge, like the specimen's numbered dots */
+  display: inline-grid; place-items: center;
+  width: 1.35em; height: 1.35em; margin-left: .25em;
+  border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  font-size: .3em; line-height: 1; font-weight: 600; letter-spacing: 0;
+  vertical-align: .9em;
+}
+.hero--specimen::before, .hero--specimen::after {
+  content: ""; position: absolute; top: 50%; width: 1.4rem; height: .55rem;
+  border-block: 1px solid var(--ink); pointer-events: none;
+}
+.hero--specimen::before { left: var(--margin); }
+.hero--specimen::after { right: var(--margin); }
+@media (max-width: 640px) { .hero--specimen::before, .hero--specimen::after { display: none; } .hero--specimen .hero-note p { text-align: left; } }
+.hero--specimen .hero-note { position: absolute; left: var(--margin); right: var(--margin); bottom: calc(var(--u) * 1.25); }
 </style>
 </head>
 <body>
@@ -1179,11 +1253,12 @@ a, button { transition: background .2s, color .2s; }
 <main id="main" tabindex="-1">
 
   <!-- Open Flap (First Screen — Specimen block like .price) -->
-  <section class="hero" id="top" aria-labelledby="hero-title">
+  <section class="hero hero--specimen" id="top" aria-labelledby="hero-title">
+    <p class="spec-cap">Stairwells, entrances, landings, courtyards</p>
     <div class="hero-stage">
-      <img class="art mid" src="img/stairwell-line.svg" alt="">
-      <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span> <span class="caps-line fg">week after week.</span></h1>
+      <h1 id="hero-title"><span>Clean shared spaces</span> <span>week after week.<span class="spec-dot" aria-hidden="true">7</span></span></h1>
     </div>
+    <p class="spec-cap">Weekly cleaning for residential buildings in Berlin</p>
     <div class="hero-note">
       <p class="label">Berlin, DE.</p>
       <p class="label">A fixed monthly quote after a visit to your&nbsp;building.</p>
@@ -1430,7 +1505,7 @@ a, button { transition: background .2s, color .2s; }
         <p class="form-status" role="status"></p>
       </form>
       <div class="quote-art-wrap">
-        <img class="art quote-art" src="img/bucket-line.svg" alt="">
+        <img class="art quote-art" src="img/lift-line.svg" alt="" data-min="0.06" data-weight="0.8">
       </div>
     </div>
   </section>
@@ -1665,6 +1740,110 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     status.textContent = 'Your enquiry was downloaded as common-space-enquiry.txt. Nothing was sent.';
   });
 });
+
+/* Bold stencil drawings (after the 'af' mark and the Coolkit stencil card): inline each
+   line drawing and redraw it as a few thick, even lines with round ends. All sizes are a
+   share of the drawing's own height, so a small card drawing is the same drawing smaller.
+   - short detail strokes are left out, the rest simplified to their corners
+   - longest lines first; a line that mostly runs over one already drawn (the second line
+     of a doubled outline) is dropped
+   - every line stops short at both ends, leaving a stencil gap where lines meet
+   The plain <img> stays if the file cannot be fetched. */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 0.0115;         // stroke width
+  const GAP = 1.1;          // end gap, in stroke widths
+  const MIN_PART = 0.05;    // shortest line kept
+  const TOL = 0.004;        // simplification tolerance
+
+  function simplify(pts, tol) {
+    if (pts.length < 3) return pts;
+    const [ax, ay] = pts[0], [bx, by] = pts[pts.length - 1];
+    const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1;
+    let far = 0, at = 0;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const d = Math.abs(dy * pts[i][0] - dx * pts[i][1] + bx * ay - by * ax) / len;
+      if (d > far) { far = d; at = i; }
+    }
+    if (far <= tol) return [pts[0], pts[pts.length - 1]];
+    return simplify(pts.slice(0, at + 1), tol).slice(0, -1).concat(simplify(pts.slice(at), tol));
+  }
+  const lengthOf = pts => pts.reduce((t, p, i) => i ? t + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+  // points every `step` along a polyline
+  function samples(pts, step) {
+    const out = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], l = Math.hypot(x1 - x0, y1 - y0);
+      for (let t = step; t < l; t += step) out.push([x0 + (x1 - x0) * t / l, y0 + (y1 - y0) * t / l]);
+      out.push(pts[i]);
+    }
+    return out;
+  }
+  // cut `d` off one end of a polyline
+  function trimStart(pts, d) {
+    let i = 1;
+    while (i < pts.length) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], l = Math.hypot(x1 - x0, y1 - y0);
+      if (l > d) return [[x0 + (x1 - x0) * d / l, y0 + (y1 - y0) * d / l]].concat(pts.slice(i));
+      d -= l; i++;
+    }
+    return null;
+  }
+
+  function build(img, text) {
+    const src = new DOMParser().parseFromString(text, 'image/svg+xml').documentElement;
+    const vb = (src.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    if (vb.length !== 4 || !vb[2] || !vb[3]) return;
+    const H = vb[3], w = W * H * (Number(img.dataset.weight) || 1), gap = GAP * w;   // data-weight: a finer stroke for a dense drawing
+    const minPart = Number(img.dataset.min) || MIN_PART;   // data-min: keep only longer lines in a dense traced drawing
+    const lines = [];
+    src.querySelectorAll('path').forEach(el => {
+      (el.getAttribute('d') || '').split(/(?=M)/).forEach(part => {
+        const n = (part.match(/-?\d*\.?\d+/g) || []).map(Number);
+        const pts = [];
+        for (let i = 0; i + 1 < n.length; i += 2) pts.push([n[i], n[i + 1]]);
+        if (pts.length > 1 && lengthOf(pts) >= minPart * H) lines.push(simplify(pts, TOL * H));
+      });
+    });
+    lines.sort((p, q) => lengthOf(q) - lengthOf(p));
+    // occupancy grid, one cell per stroke width
+    const cell = w * 1.6, taken = new Set();
+    const key = (x, y) => Math.floor((x - vb[0]) / cell) + ',' + Math.floor((y - vb[1]) / cell);
+    let d = '';
+    lines.forEach(pts => {
+      const pt = samples(pts, cell * 0.5);
+      const over = pt.filter(([x, y]) => taken.has(key(x, y))).length / pt.length;
+      if (over > 0.45) return;                                   // a doubled outline
+      pt.forEach(([x, y]) => taken.add(key(x, y)));
+      let cut = trimStart(pts, gap);
+      cut = cut && trimStart(cut.reverse(), gap);
+      if (!cut) return;
+      d += 'M' + cut.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+    });
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', vb.join(' '));
+    svg.setAttribute('width', vb[2]);
+    svg.setAttribute('height', vb[3]);
+    svg.setAttribute('class', img.getAttribute('class'));
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'bold');
+    g.setAttribute('stroke-width', w.toFixed(2));
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', d);
+    g.appendChild(path);
+    svg.appendChild(g);
+    img.replaceWith(svg);
+  }
+
+  document.querySelectorAll('img.art[src$="-line.svg"]').forEach(img => {
+    fetch(img.getAttribute('src'))
+      .then(r => r.ok ? r.text() : Promise.reject(r.status))
+      .then(t => build(img, t))
+      .catch(() => {});
+  });
+})();
 </script>
 </body>
 </html>

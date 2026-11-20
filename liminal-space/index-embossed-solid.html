@@ -5,21 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Common space — Stairwell and common-area cleaning, Berlin</title>
 <meta name="description" content="Stairwell and common&#8209;area cleaning for residential buildings in Berlin.">
-<link rel="preload" href="fonts/CoolkitVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/JokkerVF-TRIAL.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* ------------------------------------------------------------------
    Typefaces:
-   — Coolkit Variable Font (CoolkitVF-TRIAL.woff2)
+   — Jokker variable (JokkerVF-TRIAL.woff2): Light 300, Regular 400, Medium 500, SemiBold 600
    — Headlines (hero, section, tile and price titles): Light (font-weight: 300),
      so the strokes hold where a line drawing crosses the words
-   — Other sizes >= 18px: Thin (font-weight: 100)
+   — Other sizes >= 18px: Light too; Thin (100) is not used, it is too fine to read
    — Body & sizes < 18px: Regular (font-weight: 400)
    ------------------------------------------------------------------ */
-@font-face {
-  font-family: "Coolkit";
-  src: url("fonts/CoolkitVF-TRIAL.woff2") format("woff2");
-  font-weight: 100 900; font-style: normal; font-display: swap;
-}
+@font-face { font-family: "Jokker"; src: url("fonts/JokkerVF-TRIAL.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
 
 /* ------------------------------------------------------------------
    System
@@ -73,7 +69,7 @@
   --field-label: #a8b596;   /* 6.36:1 on the field ground */
   --field-edge: #7b836e;    /* 5.31:1 against the page, so a field can be found (WCAG 1.4.11) */
 
-  --font-sans: "Coolkit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Jokker", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font: var(--font-sans);
 
   /* 4-size modular scale */
@@ -230,7 +226,7 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
   min-height: 1.5rem;   /* 24px target (WCAG 2.5.8) */
   font-family: var(--font);
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   letter-spacing: -0.015em;
   line-height: 1.15;
   position: relative;
@@ -420,7 +416,7 @@ main:focus { outline: none; }   /* focused only as the skip link's target */
 }
 .hero-lead {
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.32;
   color: var(--ink);
   max-width: 44ch;
@@ -533,7 +529,7 @@ section {
 .scope h3 {
   grid-column: 1 / span 4;
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.15;
   letter-spacing: -0.005em;
 }
@@ -544,7 +540,7 @@ section {
   padding-block: calc(var(--u) * .45);
   border-bottom: var(--line);
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.15;
   letter-spacing: -0.005em;
 }
@@ -576,7 +572,7 @@ section {
   white-space: nowrap;
   padding: .36em 0;
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1;
   text-transform: uppercase;
   letter-spacing: -0.01em;
@@ -602,7 +598,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: .35em;
-  font-weight: 100;
+  font-weight: 300;
 }
 .tape .logo-bold svg {
   width: .88em;
@@ -610,7 +606,7 @@ section {
   fill: currentColor;
 }
 .tape .statement {
-  font-weight: 100;
+  font-weight: 300;
   letter-spacing: .04em;
   opacity: .95;
 }
@@ -634,7 +630,7 @@ section {
 }
 .info-desc {
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.24;
   letter-spacing: -0.005em;
   max-width: 46ch;
@@ -704,7 +700,7 @@ section {
   font-size: var(--fs-m);
   line-height: 1.12;
   letter-spacing: -0.01em;
-  font-weight: 100;
+  font-weight: 300;
   text-wrap: balance;
 }
 .step .num {
@@ -773,7 +769,7 @@ section {
 }
 .building .figure {
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   line-height: .9;
   padding-top: .12em;
   letter-spacing: -0.03em;
@@ -1023,7 +1019,7 @@ a, button { transition: background .2s, color .2s; }
   align-items: center;
   white-space: nowrap;
   font-size: var(--fs-m);
-  font-weight: 100;
+  font-weight: 300;
   line-height: 1.12;
   letter-spacing: -0.015em;
   transition: background .2s, color .2s, font-weight .35s ease;
@@ -1056,7 +1052,7 @@ a, button { transition: background .2s, color .2s; }
 .wordmark {
   font-family: var(--font);
   font-size: var(--fs-xl);
-  font-weight: 100;
+  font-weight: 300;
   line-height: .78;
   letter-spacing: -0.035em;
   white-space: nowrap;
@@ -1172,6 +1168,45 @@ svg.art.mid .emboss { opacity: 1; }
 svg.art.mid { z-index: -1; }
 svg.art .emboss-rim { flood-color: var(--emboss-rim); }
 svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
+
+/* menu and filter pills: each its own round pill with a thin edge, like the theme switch */
+.nav, .tabs { gap: .5rem; }
+.nav a:nth-child(n), .tabs button:nth-child(n) {
+  border-radius: 999px;
+  border: 1px solid var(--line-c);
+  padding: 0 1em .08em;
+}
+
+/* logo and footer wordmark: Jokker SemiBold, set tight, like the stencil specimen */
+.logo, .wordmark { font-weight: 600; }
+.logo { letter-spacing: -0.02em; }
+.wordmark { letter-spacing: -0.03em; }
+
+/* the price figure stands out: Jokker SemiBold */
+.price .tnum { font-weight: 600; letter-spacing: -0.03em; }
+
+/* building chooser: the whole tile answers the pointer. Hover and keyboard focus fill it with
+   the pill colour (mint in light), the figure turns to the button ink and the arrow lifts;
+   the chosen tile is solid ink. */
+.building {
+  padding: calc(var(--u) * .5) .9rem .9rem;
+  border-radius: 0;   /* square while idle, so its top rule stays straight */
+  transition: background .25s ease, color .25s ease, border-color .25s ease, border-radius .25s ease;
+}
+.building:hover, .building:focus-visible, .building[aria-pressed="true"] { border-radius: 10px; }
+/* dark theme: a hover fill that clearly stands off the black ground (text on it 10:1) */
+html:not([data-theme="light"]) .building:hover, html:not([data-theme="light"]) .building:focus-visible { background: #34402f; color: #e8ede2; }
+.building:hover, .building:focus-visible {
+  background: var(--btn-alt, var(--btn));
+  color: var(--btn-tx-color);
+  border-top-color: transparent;
+}
+.building:hover .figure { letter-spacing: -0.01em; }
+.building .figure { transition: letter-spacing .35s ease; }
+.building:hover .arrow, .building:focus-visible .arrow { transform: translate(4px, -4px); }
+.building[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-top-color: transparent; }
+.building[aria-pressed="true"] .row { text-decoration: none; }
+@media (forced-colors: active) { .building:hover, .building[aria-pressed="true"] { outline: 2px solid Highlight; } }
 </style>
 </head>
 <body>
@@ -1208,7 +1243,7 @@ svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
   <!-- Open Flap (First Screen — Specimen block like .price) -->
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero-stage">
-      <img class="art mid" src="img/stairwell-line.svg" alt="">
+      <img class="art mid" src="img/railing-line.svg" alt="" data-weight="0.42">
       <h1 id="hero-title"><span><span class="fg">Clean</span> shared spaces</span> <span class="caps-line fg">week after week.</span></h1>
     </div>
     <div class="hero-note">
@@ -1457,7 +1492,7 @@ svg.art .emboss-shadow { flood-color: var(--emboss-shadow); }
         <p class="form-status" role="status"></p>
       </form>
       <div class="quote-art-wrap">
-        <img class="art quote-art" src="img/bucket-line.svg" alt="">
+        <img class="art quote-art" src="img/lift-line.svg" alt="" data-weight="0.55">
       </div>
     </div>
   </section>
@@ -1704,7 +1739,7 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
   // shapes, while single lines stay lines and openings stay open.
   const Q = new URLSearchParams(location.search);
   const num = (k, d) => Q.has(k) ? Number(Q.get(k)) : d;
-  const PX = { stroke: num('stroke', 5.5), warp: num('warp', 0), warpFreq: 0.004, melt: num('melt', 3), rough: num('rough', 2.2), rim: 1.2, blur: 5, dx: 1.5, dy: 5, noise: 0.9, grain: 2.2 };
+  const PX = { stroke: num('stroke', 6), warp: num('warp', 0), warpFreq: 0.004, melt: num('melt', 3.6), rough: num('rough', 2.2), rim: 1.2, blur: 5, dx: 1.5, dy: 5, noise: 0.9, grain: 2.2 };
   const REF_H = 800;
   const items = [];
   let n = 0;
@@ -1737,7 +1772,9 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     const r = it.svg.getBoundingClientRect();
     if (!r.width || !r.height) return;
     const s = Math.min(r.width / it.vw, r.height / it.vh);   // screen px per user unit
-    const k = Math.min(1, Math.max(0.5, (it.vh * s) / REF_H));
+    // the stroke grows with the drawing, so on a large screen the lines keep
+    // their weight and close the same gaps instead of thinning out
+    const k = Math.min(2.5, Math.max(0.5, (it.vh * s) / REF_H)) * it.weight;   // data-weight: a finer stroke for a dense drawing
     const u = v => (v * k / s).toFixed(2);
     const f = it.filter;
     it.g.setAttribute('stroke-width', u(PX.stroke));
@@ -1772,12 +1809,12 @@ document.querySelectorAll('#enquiry input[required], #hero-enquiry input[require
     // every stroke of the drawing is kept; the filter closes the narrow gaps
     src.querySelectorAll('path, circle').forEach(el => {
       const c = document.importNode(el, true);
-      ['stroke', 'fill', 'stroke-width', 'style', 'class'].forEach(a => c.removeAttribute(a));
+      ['stroke', 'fill', 'stroke-width', 'style', 'class', 'vector-effect'].forEach(a => c.removeAttribute(a));
       g.appendChild(c);
     });
     svg.appendChild(g);
     img.replaceWith(svg);
-    const it = { svg, g, vw: vb[2], vh: vb[3], filter: svg.querySelector('filter') };
+    const it = { svg, g, vw: vb[2], vh: vb[3], filter: svg.querySelector('filter'), weight: Number(img.dataset.weight) || 1 };
     items.push(it);
     fit(it);
     if (ro) ro.observe(svg);
