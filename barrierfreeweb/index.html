@@ -5,24 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>BarrierFreeWeb</title>
 <meta name="description" content="We&#x27;re a design studio in Berlin building websites that everyone can use.">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
+<script>try{var t=localStorage.getItem("bfw-theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="wrap">
   <div class="top">
-    <a class="brand" href="index.html">BarrierFreeWeb</a>
+    <a class="brand" href="index.html"><svg class="brand__logo" aria-hidden="true" focusable="false" viewBox="-62 -62 124 124"><defs><clipPath id="bfw-logo-clip"><circle r="61"/></clipPath></defs><g clip-path="url(#bfw-logo-clip)"><circle cy="-68.5" r="46" class="brand__petal-a"/><circle cx="68.5" r="46" class="brand__petal-b"/><circle cy="68.5" r="46" class="brand__petal-c"/><circle cx="-68.5" r="46" class="brand__petal-d"/></g></svg>BarrierFreeWeb</a>
     <nav class="crumb" aria-label="Breadcrumb"><ol><li><span aria-current="page">Home</span></li></ol></nav>
     <nav class="nav" aria-label="Main"><ul role="list"><li><a href="services.html">Services</a></li><li><a href="accessibility.html">Accessibility</a></li><li><a href="about.html">About</a></li><li><a href="newsletters.html">Newsletters</a></li></ul></nav>
   </div>
 </header>
 <main id="main" class="wrap" tabindex="-1">
   <h1 class="title title--lede">We’re a design studio in Berlin building websites that everyone can use.</h1>
-  <form class="signup" action="mailto:gf@barrierfreeweb.de" method="post" enctype="text/plain" data-signup data-api-base="https://a11y-checker-v2-production.up.railway.app">
-    <label class="signup__label" for="signup-email">Contact us</label>
-    <input class="signup__input" id="signup-email" name="email" type="email" autocomplete="email" placeholder="Your email" required>
-    <label class="sr-only" for="signup-request">Your request</label>
-    <input class="signup__input signup__input--wide" id="signup-request" name="request" type="text" maxlength="2000" placeholder="Your request" required>
+  <form class="signup" action="mailto:gf@barrierfreeweb.de" method="post" enctype="text/plain" aria-labelledby="signup-title" data-signup data-api-base="https://a11y-checker-v2-production.up.railway.app">
+    <p class="signup__label" id="signup-title">Contact us</p>
+    <div class="signup__field">
+      <label for="signup-email">Email</label>
+      <input class="signup__input" id="signup-email" name="email" type="email" autocomplete="email" required>
+    </div>
+    <div class="signup__field signup__field--wide">
+      <label for="signup-request">Your request</label>
+      <input class="signup__input" id="signup-request" name="request" type="text" maxlength="2000" required>
+    </div>
     <input class="signup__trap" name="company_url" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button class="signup__btn" type="submit">Send request</button>
   </form>
@@ -40,7 +47,7 @@
   <div class="foot">
     <p>BarrierFreeWeb</p>
     <p>Contact: <a href="mailto:gf@barrierfreeweb.de">gf@barrierfreeweb.de</a></p>
-    <ul role="list"><li><a href="services.html">Services</a></li><li><a href="accessibility.html">Accessibility</a></li><li><a href="about.html">About</a></li><li><a href="newsletters.html">Newsletters</a></li></ul>
+    <ul role="list"><li><a href="services.html">Services</a></li><li><a href="accessibility.html">Accessibility</a></li><li><a href="about.html">About</a></li><li><a href="newsletters.html">Newsletters</a></li><li><button type="button" class="theme" data-theme-toggle hidden>Dark mode</button></li></ul>
   </div>
 </footer>
 <script src="app.js" defer></script>
